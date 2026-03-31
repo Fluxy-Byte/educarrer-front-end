@@ -21,7 +21,6 @@ export interface CreateExperienceDTO {
 
 // PUT
 export interface UpdateExperienceDTO {
-  id: string;
   name?: string;
   seniority?: string;
   about?: string;

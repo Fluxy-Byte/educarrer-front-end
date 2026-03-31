@@ -23,12 +23,7 @@ export interface CreateUserDTO {
 
 // PUT
 export interface UpdateUserDTO {
-  id: string;
   name?: string;
   email?: string;
   image?: string;
-  role?: string;
-  banned?: boolean;
-  banReason?: string;
-  banExpires?: Date;
 }

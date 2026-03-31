@@ -17,7 +17,6 @@ export interface CreateSkillDTO {
 
 // PUT
 export interface UpdateSkillDTO {
-  id: string;
   name?: string;
   level?: number;
   about?: string;

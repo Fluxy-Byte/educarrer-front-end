@@ -8,8 +8,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Fluxy - Agentes IA para WhatsApp',
-  description: 'Automatize suas conversas no WhatsApp com inteligência artificial. Gerencie agentes, aumente vendas e melhore atendimento ao cliente.',
+  title: 'EduCarrer AI',
+  description: 'Aprenda a estudar para vagas de mercado reais com nossos agentes treinados para modelar seu conhecimento para o formato de vagas de emprego reais, e te ajudar a se preparar para elas.',
   generator: 'V1.0',
   icons: {
     icon: [
