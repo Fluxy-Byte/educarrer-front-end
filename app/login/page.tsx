@@ -20,7 +20,6 @@ export default function LoginPage() {
     e.preventDefault()
     setError("")
     setIsLoading(true)
-
     try {
       const result = await authClient.signIn.email({
         email,
@@ -39,149 +38,137 @@ export default function LoginPage() {
     }
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4 overflow-hidden relative">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-600 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-pink-500 to-transparent rounded-full blur-3xl"></div>
+  return (<div className="min-h-screen flex items-center justify-center bg-white p-4 relative">
+
+    ```
+    {/* Background clean */ }
+    <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-gray-100"></div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl relative z-10">
+
+      {/* Left side - Brand */}
+      <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-[#061735] via-[#06264D] to-[#061735] rounded-2xl p-12 relative overflow-hidden text-white">
+
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
+              <MessageCircle className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold">EduCarrer AI</h1>
+          </div>
+
+          <h2 className="text-4xl font-bold mb-4 leading-tight">
+            Inteligência para impulsionar sua carreira
+          </h2>
+
+          <p className="text-white/80 text-lg mb-6">
+            Plataforma inteligente para gestão, análise e crescimento profissional.
+          </p>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 text-white/80">
+              <Zap className="w-5 h-5 text-red-400" />
+              <span>Automação com IA</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/80">
+              <Zap className="w-5 h-5 text-red-400" />
+              <span>Análises inteligentes</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/80">
+              <Zap className="w-5 h-5 text-red-400" />
+              <span>Escalabilidade profissional</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-white/60 text-sm">
+          Transformando dados em oportunidades
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl relative z-10">
-        {/* Left side - Brand */}
-        <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 rounded-2xl p-12 relative overflow-hidden">
-          {/* Decorative elements */}
-          <div className="absolute top-6 right-6 w-32 h-32 bg-gradient-to-br from-orange-400 to-yellow-500 rounded-full blur-2xl opacity-30 rotate-45"></div>
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-gradient-to-t from-yellow-400 to-transparent rounded-full blur-3xl opacity-20"></div>
+      {/* Right side - Login */}
+      <div className="flex flex-col justify-center">
+        <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 shadow-xl">
 
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-white">Fluxy ERP</h1>
-            </div>
-            <h2 className="text-4xl font-bold text-white mb-4 leading-tight">
-              Seu sistema completo de gerenciamento para sua empresa
-            </h2>
-            <p className="text-white/90 text-lg mb-6">
-              Gerencie seu estoque, sua contabilidade e seus funcionarios.
+          <div className="mb-8">
+            <p className="text-[#AE0001] text-sm font-semibold uppercase mb-2">
+              Bem-vindo
             </p>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 text-white/80">
-                <Zap className="w-5 h-5 text-yellow-300" />
-                <span>Automação inteligente em tempo real</span>
-              </div>
-              <div className="flex items-center gap-3 text-white/80">
-                <Zap className="w-5 h-5 text-yellow-300" />
-                <span>Análise avançada</span>
-              </div>
-              <div className="flex items-center gap-3 text-white/80">
-                <Zap className="w-5 h-5 text-yellow-300" />
-                <span>Escalabilidade sem limites</span>
-              </div>
-            </div>
+            <h3 className="text-3xl font-bold text-gray-900 mb-2">
+              Acesse sua conta
+            </h3>
+            <p className="text-gray-500">
+              Entre para continuar na plataforma
+            </p>
           </div>
 
-          <div className="text-white/70 text-sm relative z-10">
-            Transforme seu negócio em resultado
-          </div>
-        </div>
-
-        {/* Right side - Login Form */}
-        <div className="flex flex-col justify-center">
-          <div className="bg-card border border-purple-500/20 backdrop-blur-md rounded-2xl p-8 md:p-12 shadow-2xl">
-            <div className="mb-8">
-              <p className="text-purple-400 text-sm font-semibold tracking-wide uppercase mb-2">
-                Bem-vindo
-              </p>
-              <h3 className="text-3xl font-bold text-foreground mb-2">
-                Acesse sua Conta
-              </h3>
-              <p className="text-muted-foreground">
-                Entre com suas credenciais para gerenciar seus agentes
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-lg border border-destructive/20">
-                  {error}
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground font-medium">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="bg-input border-purple-500/20 text-foreground placeholder:text-muted-foreground focus:border-purple-500 focus:ring-purple-500/20"
-                />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 rounded-lg border border-red-200">
+                {error}
               </div>
+            )}
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-foreground font-medium">
-                  Senha
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                  className="bg-input border-purple-500/20 text-foreground placeholder:text-muted-foreground focus:border-purple-500 focus:ring-purple-500/20"
-                />
-              </div>
-
-              <Button
-                type="submit"
+            <div className="space-y-2">
+              <Label className="text-zinc-600" htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 disabled={isLoading}
-                className="w-full bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 text-white font-semibold py-6 rounded-lg transition-all duration-300 transform hover:scale-105"
-              >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Entrando...
-                  </div>
-                ) : (
-                  "Entrar"
-                )}
-              </Button>
+                className="bg-white! border-zinc-300 focus:border-zinc-300 focus:border-zinc-300"
+              />
+            </div>
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-purple-500/20"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-card text-muted-foreground">
-                    Não tem uma conta?
-                  </span>
-                </div>
+            <div className="space-y-2">
+              <Label className="text-zinc-600" htmlFor="password">Senha</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isLoading}
+                className=""
+              />
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#AE0001] hover:bg-red-700 text-white font-semibold py-6 rounded-lg transition-all duration-300"
+            >
+              {isLoading ? "Entrando..." : "Entrar"}
+            </Button>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
               </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Não tem uma conta?
+                </span>
+              </div>
+            </div>
 
-              <Link
-                href="/signup"
-                className="block w-full text-center px-4 py-3 rounded-lg border border-purple-500/30 text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/50 transition-all duration-300 font-medium"
-              >
-                Criar nova conta
-              </Link>
-            </form>
-          </div>
-
-          <p className="text-center text-muted-foreground text-xs mt-6">
-            © 2024 Fluxy Technologies. Todos os direitos reservados.
-          </p>
+            <Link
+              href="/signup"
+              className="block w-full text-center px-4 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition font-medium"
+            >
+              Criar nova conta
+            </Link>
+          </form>
         </div>
+
+        <p className="text-center text-gray-400 text-xs mt-6">
+          © 2026 EduCarrer AI. Todos os direitos reservados.
+        </p>
       </div>
     </div>
-  )
+  </div >)
 }
