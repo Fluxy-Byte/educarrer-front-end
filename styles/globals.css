@@ -7,26 +7,27 @@
 :root {
 /* 🔥 Paleta principal */
 --primary: #AE0001;
+--primary-actived: #06264D;
 --secondary: #06264D;
 --tertiary: #061735;
 
 /* 🌍 Base */
---background: var(--tertiary);
+--background: #ffffff;
 --foreground: #ffffff;
 
 /* 🧱 Componentes */
---card: #0b1f3a;
+--card: #ffffff;
 --card-foreground: #ffffff;
 
---popover: #0b1f3a;
---popover-foreground: #ffffff;
+--popover: #ffffff;
+--text-popover: #00000000;
 
 /* 🎯 Ações */
 --primary-foreground: #ffffff;
 
 --secondary-foreground: #ffffff;
 
---muted: #0b1f3a;
+--muted: ffffff;
 --muted-foreground: #9ca3af;
 
 --accent: var(--primary);
@@ -51,60 +52,14 @@
 --radius: 0.625rem;
 
 /* 📌 Sidebar */
---sidebar: var(--tertiary);
---sidebar-foreground: #ffffff;
---sidebar-primary: var(--primary);
+--sidebar: #ffffff;
+--sidebar-foreground: #000000;
+--sidebar-primary: #06264D;
 --sidebar-primary-foreground: #ffffff;
---sidebar-accent: var(--secondary);
---sidebar-accent-foreground: #ffffff;
---sidebar-border: #1e3a5f;
---sidebar-ring: var(--primary);
-}
-
-/* 🌙 Dark mode (mesma identidade) */
-.dark {
---background: #020617;
---foreground: #ffffff;
-
---card: #020617;
---card-foreground: #ffffff;
-
---popover: #020617;
---popover-foreground: #ffffff;
-
---primary: #AE0001;
---primary-foreground: #ffffff;
-
---secondary: #06264D;
---secondary-foreground: #ffffff;
-
---muted: #020617;
---muted-foreground: #9ca3af;
-
---accent: #AE0001;
---accent-foreground: #ffffff;
-
---destructive: #ff4d4d;
---destructive-foreground: #ffffff;
-
---border: #1e293b;
---input: #020617;
---ring: #AE0001;
-
---chart-1: #AE0001;
---chart-2: #06264D;
---chart-3: #061735;
---chart-4: #1e3a5f;
---chart-5: #9ca3af;
-
---sidebar: #020617;
---sidebar-foreground: #ffffff;
---sidebar-primary: #AE0001;
---sidebar-primary-foreground: #ffffff;
---sidebar-accent: #06264D;
---sidebar-accent-foreground: #ffffff;
+--sidebar-accent: ##ffffff;
+--sidebar-accent-foreground: #000000;
 --sidebar-border: #1e293b;
---sidebar-ring: #AE0001;
+--sidebar-ring: #06264D;
 }
 
 /* 🎨 Tailwind Mapping */

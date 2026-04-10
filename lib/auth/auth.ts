@@ -3,7 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma"
 import { admin } from "better-auth/plugins"
 import { prisma } from "./../prisma"
 
-const PORT = "4002"
+const PORT = process.env.PORT ?? "5401"
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

@@ -2,9 +2,10 @@
 
 import * as React from "react"
 import {
-  LayoutDashboard,
-  Megaphone,
-  Cog,
+  BookOpenText,
+  BriefcaseBusiness,
+  BookMarked,
+  UserCog,
   LogOut,
   User,
 } from "lucide-react"
@@ -36,19 +37,19 @@ import {
 
 const menuItems = [
   {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
+    title: "Vagas",
+    url: "/jobs",
+    icon: BriefcaseBusiness,
   },
   {
-    title: "Campaign",
-    url: "/dashboard/campaign",
-    icon: Megaphone,
+    title: "Estudo",
+    url: "/learning",
+    icon: BookMarked,
   },
   {
-    title: "Configurações",
-    url: "/dashboard/configurations",
-    icon: Cog,
+    title: "Perfil",
+    url: "/profile",
+    icon: UserCog,
   },
 ]
 
@@ -59,19 +60,19 @@ export function AppSidebar() {
 
   const handleLogout = async () => {
     await authClient.signOut()
-    router.push("/login")
+    router.push("/singin")
   }
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b px-6 py-4">
+    <Sidebar className="h-full">
+      <SidebarHeader className="border-b border-secondary flex items-start justify-center py-5 px-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <LayoutDashboard className="h-5 w-5" />
+          <div className="flex h-8 w-8 items-center justify-center rounded-md text-white bg-blue-900">
+            <BookOpenText className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold">Fluxy Technologies</p>
-            <p className="text-xs text-muted-foreground">Gerenciamento</p>
+            <p className="text-sm font-semibold">EduCarrer AI</p>
+            <p className="text-xs text-muted-foreground">Carreira inteligente</p>
           </div>
         </div>
       </SidebarHeader>
@@ -82,10 +83,10 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    asChild 
+                  <SidebarMenuButton
+                    asChild
                     isActive={pathname === item.url}
-                    className={pathname === item.url ? "bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 text-white" : ""}
+                    className={pathname === item.url ? "bg-blue-900! text-white! h-12" : "hover:bg-blue-700/20! hover:text-black! h-12"}
                   >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
@@ -98,10 +99,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t p-4">
+      <SidebarFooter className="border-t border-white p-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start gap-2">
+            <Button variant="sidebar" className="w-full justify-start gap-2">
               <User className="h-4 w-4" />
               <div className="flex flex-col items-start text-left">
                 <span className="text-sm font-medium">
@@ -116,9 +117,9 @@ export function AppSidebar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Sair</span>
+            <DropdownMenuItem className="text-white cursor-pointer h-10" onClick={handleLogout}>
+              <LogOut className="mr-1 text-white h-4 w-4" />
+              <span>Deslogar</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
