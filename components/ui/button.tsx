@@ -9,18 +9,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "cursor-pointer w-full bg-[#AE0001] mb-0 hover:bg-red-700 text-white font-semibold py-6 rounded-lg transition-all duration-300",
+        default: "cursor-pointer bg-[#AE0001] mb-0 hover:bg-[#AE0001]/60 text-white font-semibold py-6 rounded-lg transition-all duration-300",
         destructive:
           "cursor-pointer bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "cursor-pointer border bg-background shadow-xs hover:bg-accent dark:bg-accent/50 dark:border-input dark:hover:bg-accent",
         secondary:
-          "cursor-pointer bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "cursor-pointer bg-secondary text-secondary-foreground hover:bg-secondary/90",
         ghost:
           "cursor-pointer hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         sidebar:
           "cursor-pointer w-full h-auto bg-trasnparent hover:bg-blue-700/20! text-black font-semibold  rounded-lg transition-all duration-300",
         link: "cursor-pointer w-full bg-trasnparent hover:bg-gray-100 text-gray-700 font-semibold py-6 rounded-lg transition-all duration-300 border border-gray-300",
+        close: "cursor-pointer w-auto bg-olive-900 text-black border hover:bg-olive-900",
       },
       size: {
         default: "h-12 px-4 py-2 has-[>svg]:px-3",

@@ -20,7 +20,7 @@ export async function deleteExperience(id: string) {
         where: {
             id
         }
-    })
+    });
 }
 
 export async function updateExperience(id: string, data: Partial<UpdateExperienceDTO>): Promise<ExperienceDTO> {
@@ -29,5 +29,5 @@ export async function updateExperience(id: string, data: Partial<UpdateExperienc
             id
         },
         data
-    })
+    });
 }

@@ -37,7 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="font-sans antialiased dark">
+      <body className="font-sans antialiased dark"
+        cz-shortcut-listen="true"
+      >
         {children}
         <Analytics />
         <Toaster />

@@ -13,12 +13,16 @@ export default function DashboardLayout({
   return (
     <AuthProvider>
       <SidebarProvider>
-        <div className="flex min-h-screen w-full">
+        <div className="flex min-h-screen w-full bg-white">
           <AppSidebar />
-          <main className="flex-1 overflow-auto">
-            <div className="border-b bg-background">
-              <div className="flex h-14 items-center gap-4 px-4">
+          <main className="flex-1 flex flex-col min-h-screen">
+             <div className="sticky top-0 z-10 bg-white border-b border-secondary flex items-center justify-start gap-2">
+              <div className="flex py-6 items-center text-black px-4">
                 <SidebarTrigger />
+              </div>
+              <div className="text-black block items-start hidden md:flex md:flex-col">
+                <h1 className="font-semibold text-md">Aprendizado inteligente</h1>
+                <p className="text-zinc-500 text-sm">Descubra novas habilidades e avance na sua carreira com conteúdos personalizados</p>
               </div>
             </div>
             <div className="p-6">{children}</div>

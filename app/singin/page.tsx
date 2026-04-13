@@ -163,7 +163,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="mb-0"
+                className="mb-0 w-full"
               >
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>

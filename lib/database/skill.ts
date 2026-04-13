@@ -12,7 +12,7 @@ export async function getSkillByUserId(userId: string): Promise<SkillDTO[]> {
 export async function createSkill(data: CreateSkillDTO): Promise<SkillDTO> {
     return await prisma.skill.create({
         data
-    })
+    });
 }
 
 export async function deleteSkill(id: string) {
@@ -20,7 +20,7 @@ export async function deleteSkill(id: string) {
         where: {
             id
         }
-    })
+    });
 }
 
 export async function updateSkill(id: string, data: UpdateSkillDTO): Promise<SkillDTO> {
@@ -29,6 +29,5 @@ export async function updateSkill(id: string, data: UpdateSkillDTO): Promise<Ski
             id
         },
         data
-    })
-
+    });
 }
