@@ -65,14 +65,14 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="h-full">
-      <SidebarHeader className="border-b border-secondary flex items-start justify-center py-5 px-4">
+      <SidebarHeader className="flex items-start justify-center py-5 px-4">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md text-white bg-blue-900">
             <BookOpenText className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-semibold">EduCarrer AI</p>
-            <p className="text-xs text-muted-foreground">Carreira inteligente</p>
+            <p className="text-lg font-semibold">EduCarrer AI</p>
+            <p className="text-sm text-muted-foreground">Carreira inteligente</p>
           </div>
         </div>
       </SidebarHeader>

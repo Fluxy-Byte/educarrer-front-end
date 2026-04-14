@@ -25,7 +25,7 @@ export default function DashboardPage() {
 
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-full flex flex-col gap-2 relative">
       <div className="w-full bg-white rounded-lg shadow p-4">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-black text-2xl font-semibold">Habilidades</h1>

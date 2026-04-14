@@ -13,11 +13,11 @@ export default function DashboardLayout({
   return (
     <AuthProvider>
       <SidebarProvider>
-        <div className="flex min-h-screen w-full bg-white">
+        <div className="flex min-h-screen w-full">
           <AppSidebar />
           <main className="flex-1 flex flex-col min-h-screen">
 
-            <div className="sticky top-0! z-10 bg-white border-b border-secondary flex items-center justify-start gap-2">
+            <div className="sticky top-0! z-10 bg-white flex items-center justify-start gap-2">
               <div className="flex py-6 items-center text-black px-4">
                 <SidebarTrigger />
               </div>
@@ -27,7 +27,7 @@ export default function DashboardLayout({
               </div>
             </div>
 
-            <div className="p-6 bg-zinc-200">{children}</div>
+            <div className="p-6 h-full w-full bg-zinc-200 rounded-ss-lg">{children}</div>
           </main>
         </div>
       </SidebarProvider>

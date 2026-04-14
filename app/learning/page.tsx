@@ -21,7 +21,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-full min-h-full flex flex-col gap-2 relative">
       
     </div>
   )

@@ -35,7 +35,7 @@ export function DialogVaga({ vaga }: DialogVagasProps) {
     return (
         <Dialog key={vaga.id}>
             <DialogTrigger asChild>
-                <Button className="flex flex-col h-auto items-start justify-start gap-2 w-full bg-zinc-200 border border-zinc-300 rounded-md p-4 hover:bg-blue-700/20 hover:border-blue-700">
+                <Button className="flex flex-col h-auto items-start justify-start gap-2 w-full bg-zinc-200 border-3 border-zinc-200 rounded-md p-4 hover:bg-blue-700/20 hover:border-blue-700">
                     <span className="hover:underline text-black text-lg font-semibold">
                         {vaga.titulo}
                     </span>

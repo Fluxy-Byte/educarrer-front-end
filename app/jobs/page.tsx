@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { toast } from "sonner";
 import { useState } from "react";
@@ -7,6 +7,15 @@ import { useSession } from "@/lib/auth/auth-client";
 import { authClient } from "@/lib/auth/auth-client";
 import { DialogVaga } from "@/components/dialog/dialog-vaga";
 import { Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export interface Vaga {
   id: number;
@@ -28,8 +37,8 @@ export default function DashboardPage() {
 
   // 🔎 Estados de filtro
   const [nomeFiltro, setNomeFiltro] = useState("");
-  const [nivelFiltro, setNivelFiltro] = useState("");
-  const [modalidadeFiltro, setModalidadeFiltro] = useState("");
+  const [nivelFiltro, setNivelFiltro] = useState("todos");
+  const [modalidadeFiltro, setModalidadeFiltro] = useState("todos");
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -41,57 +50,69 @@ export default function DashboardPage() {
       vaga.titulo.toLowerCase().includes(nomeFiltro.toLowerCase());
 
     const matchNivel =
-      nivelFiltro === "" || vaga.nivel === nivelFiltro;
+      nivelFiltro === "todos" || vaga.nivel === nivelFiltro;
 
     const matchModalidade =
-      modalidadeFiltro === "" || vaga.modalidade === modalidadeFiltro;
+      modalidadeFiltro === "todos" || vaga.modalidade === modalidadeFiltro;
 
     return matchNome && matchNivel && matchModalidade;
   });
 
   return (
-    <div className="w-full min-h-full flex flex-col gap-2 relative">
-      
+    <div className="w-full min-h-full flex flex-col gap-4 relative">
+
       {/* 🔍 FILTROS */}
-      <div className="w-full h-auto bg-white rounded-lg shadow p-4 flex flex-col gap-3">
+      <div className="w-full h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col gap-3">
         <h1 className="text-black font-semibold">Filtros</h1>
 
-        <input
+        <Input
           type="text"
           placeholder="Buscar por nome da vaga..."
           value={nomeFiltro}
           onChange={(e) => setNomeFiltro(e.target.value)}
-          className="border text-black placeholder:text-gray-500  rounded p-2"
+          className="border border-zinc-300 text-black placeholder:text-gray-500 rounded-md p-2"
         />
 
         <div className="flex gap-2">
-          <select
+          {/* NÍVEL */}
+          <Select
             value={nivelFiltro}
-            onChange={(e) => setNivelFiltro(e.target.value)}
-            className="border text-black placeholder:text-gray-500 rounded p-2 w-full"
+            onValueChange={(value) => setNivelFiltro(value)}
           >
-            <option value="">Todos os níveis</option>
-            <option value="Júnior">Júnior</option>
-            <option value="Pleno">Pleno</option>
-            <option value="Sênior">Sênior</option>
-          </select>
+            <SelectTrigger className="w-full h-12! bg-white! text-black placeholder:text-gray-500 border-zinc-300 rounded-md">
+              <SelectValue placeholder="Todos os níveis" />
+            </SelectTrigger>
 
-          <select
+            <SelectContent>
+              <SelectItem value="todos">Todos os níveis</SelectItem>
+              <SelectItem value="Júnior">Júnior</SelectItem>
+              <SelectItem value="Pleno">Pleno</SelectItem>
+              <SelectItem value="Sênior">Sênior</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* MODALIDADE */}
+          <Select
             value={modalidadeFiltro}
-            onChange={(e) => setModalidadeFiltro(e.target.value)}
-            className="border rounded text-black placeholder:text-gray-500  p-2 w-full"
+            onValueChange={(value) => setModalidadeFiltro(value)}
           >
-            <option value="">Todas modalidades</option>
-            <option value="Remoto">Remoto</option>
-            <option value="Híbrido">Híbrido</option>
-            <option value="Presencial">Presencial</option>
-          </select>
+            <SelectTrigger className="w-full h-12! bg-white! text-black placeholder:text-gray-500 border-zinc-300 rounded-md">
+              <SelectValue placeholder="Todas modalidades" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="todos">Todas modalidades</SelectItem>
+              <SelectItem value="Remoto">Remoto</SelectItem>
+              <SelectItem value="Híbrido">Híbrido</SelectItem>
+              <SelectItem value="Presencial">Presencial</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       {/* 📋 LISTA DE VAGAS */}
       {vagas ? (
-        <div className="w-full h-auto bg-white rounded-lg shadow p-4 gap-2 flex flex-col">
+        <div className="w-full max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-lg p-4 gap-2 flex flex-col">
           {vagasFiltradas && vagasFiltradas.length > 0 ? (
             vagasFiltradas.map((vaga) => (
               <DialogVaga key={vaga.id} vaga={vaga} />
