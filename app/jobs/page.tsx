@@ -60,8 +60,6 @@ export default function DashboardPage() {
 
   return (
     <div className="w-full min-h-full flex flex-col gap-4 relative">
-
-      {/* 🔍 FILTROS */}
       <div className="w-full h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col gap-3">
         <h1 className="text-black font-semibold">Filtros</h1>
 
@@ -74,7 +72,6 @@ export default function DashboardPage() {
         />
 
         <div className="flex gap-2">
-          {/* NÍVEL */}
           <Select
             value={nivelFiltro}
             onValueChange={(value) => setNivelFiltro(value)}
@@ -91,7 +88,6 @@ export default function DashboardPage() {
             </SelectContent>
           </Select>
 
-          {/* MODALIDADE */}
           <Select
             value={modalidadeFiltro}
             onValueChange={(value) => setModalidadeFiltro(value)}
@@ -110,7 +106,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 📋 LISTA DE VAGAS */}
       {vagas ? (
         <div className="w-full max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-lg p-4 gap-2 flex flex-col">
           {vagasFiltradas && vagasFiltradas.length > 0 ? (

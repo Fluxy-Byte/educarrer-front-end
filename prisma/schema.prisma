@@ -24,6 +24,7 @@ model User {
   sessions      Session[]
   skills        Skill[]
   experiences   Experience[]
+  study         Study[]
 }
 
 model Session {
@@ -97,3 +98,14 @@ model Experience {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Study {
+  id         String   @id @default(cuid())
+  title      String
+  study      String
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  userId     String
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

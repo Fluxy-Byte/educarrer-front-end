@@ -22,6 +22,7 @@ const buttonVariants = cva(
           "cursor-pointer w-full h-auto bg-trasnparent hover:bg-blue-700/20! text-black font-semibold  rounded-lg transition-all duration-300",
         link: "cursor-pointer w-full bg-trasnparent hover:bg-gray-100 text-gray-700 font-semibold py-6 rounded-lg transition-all duration-300 border border-gray-300",
         close: "cursor-pointer w-auto bg-olive-900 text-black border hover:bg-olive-900",
+        btn_yellow: "cursor-pointer w-auto bg-blue-300 text-black border hover:bg-blue-500",
       },
       size: {
         default: "h-12 px-4 py-2 has-[>svg]:px-3",

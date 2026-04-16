@@ -22,28 +22,40 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-import { Skill, updateSkill } from "@/app/services/skills.swr";
+import { CloudUpload } from "lucide-react";
+import { updateExperience } from "@/app/services/experiences.swr";
+import { toast } from "sonner";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "sonner";
 
+// Schema
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-    nivel: z.number().min(0).max(10),
-    descricao: z.string().min(5),
+    senioridade: z.string().min(2, "Senioridade deve ter pelo menos 2 caracteres"),
+    descricao: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
 });
 
 type SkillFormData = z.infer<typeof skillSchema>;
 
 interface DialogSkillUpdateProps {
-    skill: Skill;
+    experience: Experience,
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export function DialogSkillUpdate({
-    skill,
+export interface Experience {
+    id: string;
+    name: string;
+    seniority: string;
+    about: string;
+    startDate?: Date | null;
+    endDate?: Date | null;
+    userId: string;
+}
+
+export function DialogExperienceUpdate({
+    experience,
     open,
     onOpenChange,
 }: DialogSkillUpdateProps) {
@@ -59,23 +71,23 @@ export function DialogSkillUpdate({
     });
 
     useEffect(() => {
-        if (skill) {
+        if (experience) {
             reset({
-                nome: skill.name,
-                nivel: skill.level,
-                descricao: skill.about ?? "",
+                nome: experience.name,
+                senioridade: experience.seniority,
+                descricao: experience.about ?? "",
             });
         }
-    }, [skill, reset]);
+    }, [experience, reset]);
 
     const onSubmit = async (data: SkillFormData) => {
         try {
-            const result = await updateSkill(skill.id, data.nome, data.nivel, data.descricao);
-            toast.success(result.message || "Habilidade atualizada com sucesso!");
+            const result = await updateExperience(experience.id, data.nome, data.senioridade, data.descricao);
+            toast.success(result.message || "Experiência atualizada com sucesso!");
             onOpenChange(false);
         } catch (error) {
             console.error(error);
-            toast.error("Erro ao atualizar habilidade");
+            toast.error("Erro ao atualizar experiência. Tente novamente.");
         }
     };
 
@@ -84,11 +96,11 @@ export function DialogSkillUpdate({
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-black text-xl">
-                        Atualizar habilidade
+                        Atualizar experiência
                     </DialogTitle>
 
                     <DialogDescription className="text-zinc-600 mt-2 text-sm">
-                        Edite os dados da habilidade.
+                        Edite os dados da experiência.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -114,38 +126,44 @@ export function DialogSkillUpdate({
                     <div>
                         <Controller
                             control={control}
-                            name="nivel"
+                            name="senioridade"
                             render={({ field }) => (
                                 <Select
                                     onValueChange={(value) =>
-                                        field.onChange(Number(value))
+                                        field.onChange(value)
                                     }
                                     value={
                                         field.value !== undefined
                                             ? String(field.value)
                                             : ""
                                     }
+                                    
                                 >
                                     <SelectTrigger
-                                        className="w-full h-12! border border-zinc-200 bg-white! text-black!"
+                                        className="w-full h-12! border border-zinc-200 bg-white! text-black! placeholder:text-zinc-200!"
                                     >
-                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione o nível" />
+                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione a senioridade" />
                                     </SelectTrigger>
 
                                     <SelectContent>
-                                        {Array.from({ length: 11 }, (_, i) => (
-                                            <SelectItem key={i} value={String(i)}>
-                                                {i}
-                                            </SelectItem>
-                                        ))}
+                                        <SelectItem key="Junior" value="Junior">
+                                            Junior
+                                        </SelectItem>
+                                        <SelectItem key="Pleno" value="Pleno">
+                                            Pleno
+                                        </SelectItem>
+                                        <SelectItem key="Sênior" value="Sênior">
+                                            Sênior
+                                        </SelectItem>
+
                                     </SelectContent>
                                 </Select>
                             )}
                         />
 
-                        {errors.nivel && (
+                        {errors.senioridade && (
                             <p className="text-red-500 text-sm">
-                                {errors.nivel.message}
+                                {errors.senioridade.message}
                             </p>
                         )}
                     </div>
@@ -171,12 +189,12 @@ export function DialogSkillUpdate({
                             </Button>
                         </DialogClose>
 
-                        <Button type="submit" variant={"secondary"}>
-                            Atualizar
+                        <Button type="submit" variant={"btn_yellow"}>
+                            <CloudUpload /> Atualizar
                         </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }

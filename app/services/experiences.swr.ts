@@ -35,3 +35,32 @@ export function useExperiences() {
         refresh: mutate
     }
 }
+
+export async function createExperience(name: string, seniority?: string, about?: string) {
+    const { data } = await axios.post('/api/experience', {
+        name,
+        seniority,
+        about
+    }, {
+        withCredentials: true
+    })
+    return data
+}
+
+export async function updateExperience(id: string, name: string, seniority?: string, about?: string) {
+    const { data } = await axios.put(`/api/experience/${id}`, {
+        name,
+        seniority,
+        about
+    }, {
+        withCredentials: true
+    })
+    return data
+}
+
+export async function deleteExperience(id: string) {
+    const { data } = await axios.delete(`/api/experience/${id}`, {
+        withCredentials: true
+    })
+    return data
+}

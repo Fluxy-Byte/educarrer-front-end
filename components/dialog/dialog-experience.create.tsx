@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSkills } from "@/app/services/skills.swr";
 import { Input } from "../ui/input";
-
+import { ToastPersonalizado } from "@/components/toast";
 import {
     Select,
     SelectContent,
@@ -26,19 +26,19 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodError } from "zod";
-import { createSkill } from "@/app/services/skills.swr";
+import { createExperience } from "@/app/services/experiences.swr";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-    nivel: z.number().min(1).max(10),
+    senioridade: z.string().min(2, "Senioridade deve ter pelo menos 2 caracteres"),
     descricao: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
 });
 
 type SkillFormData = z.infer<typeof skillSchema>;
 
-export function DialogSkillCreate() {
+export function DialogExperienceCreate() {
     const { refresh } = useSkills();
     const [open, setOpen] = useState(false);
 
@@ -56,8 +56,8 @@ export function DialogSkillCreate() {
 
     const onSubmit = async (data: SkillFormData) => {
         try {
-            const result = await createSkill(data.nome, data.nivel, data.descricao);
-            toast.success(result.message || "Habilidade cadastrada com sucesso!");
+            const result = await createExperience(data.nome, data.senioridade, data.descricao);
+            ToastPersonalizado({ mensagem: result.message || "Experiência cadastrada com sucesso!" });
             reset();
             setOpen(false);
 
@@ -67,7 +67,7 @@ export function DialogSkillCreate() {
                     toast.error(err.message);
                 });
             } else {
-                toast.error("Erro ao cadastrar habilidade");
+                toast.error("Erro ao cadastrar experiência");
                 console.error(error);
             }
         } finally {
@@ -78,19 +78,19 @@ export function DialogSkillCreate() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant={"secondary"}>
-                    <CirclePlus /> Nova habilidade
+                <Button variant={"btn_yellow"}>
+                    <CirclePlus /> Nova Experiência
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-black text-xl">
-                        Nova habilidade
+                        Nova Experiência
                     </DialogTitle>
 
                     <DialogDescription className="text-zinc-600 mt-2 text-sm">
-                        Preencha os dados para adicionar uma nova habilidade ao seu perfil.
+                        Preencha os dados para adicionar uma nova experiência ao seu perfil.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -99,7 +99,7 @@ export function DialogSkillCreate() {
                     {/* Nome */}
                     <div>
                         <Input
-                            placeholder="Nome da habilidade"
+                            placeholder="Nome da experiência"
                             {...register("nome")}
                         />
                         {errors.nome && (
@@ -113,30 +113,43 @@ export function DialogSkillCreate() {
                     <div className="w-full">
                         <Controller
                             control={control}
-                            name="nivel"
+                            name="senioridade"
                             render={({ field }) => (
                                 <Select
-                                    onValueChange={(value) => field.onChange(Number(value))}
-                                    value={field.value !== undefined ? String(field.value) : ""}
+                                    onValueChange={(value) =>
+                                        field.onChange(value)
+                                    }
+                                    value={
+                                        field.value !== undefined
+                                            ? String(field.value)
+                                            : ""
+                                    }
                                 >
-                                    <SelectTrigger className="w-full h-12! border border-zinc-200 bg-white! text-black">
-                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione o nível" />
+                                    <SelectTrigger
+                                        className="w-full h-12! border border-zinc-200 bg-white! text-black! placeholder:text-zinc-200!"
+                                    >
+                                        <SelectValue className="placeholder:text-zinc-200!" placeholder="Selecione a senioridade" />
                                     </SelectTrigger>
 
                                     <SelectContent>
-                                        {Array.from({ length: 10 }, (_, i) => (
-                                            <SelectItem key={i + 1} value={String(i + 1)}>
-                                                {i + 1}
-                                            </SelectItem>
-                                        ))}
+                                        <SelectItem key="Junior" value="Junior">
+                                            Junior
+                                        </SelectItem>
+                                        <SelectItem key="Pleno" value="Pleno">
+                                            Pleno
+                                        </SelectItem>
+                                        <SelectItem key="Sênior" value="Sênior">
+                                            Sênior
+                                        </SelectItem>
+
                                     </SelectContent>
                                 </Select>
                             )}
                         />
 
-                        {errors.nivel && (
+                        {errors.senioridade && (
                             <p className="text-red-500 text-sm mt-1">
-                                {errors.nivel.message}
+                                {errors.senioridade.message}
                             </p>
                         )}
                     </div>
@@ -168,7 +181,7 @@ export function DialogSkillCreate() {
 
                         <Button
                             type="submit"
-                            variant="secondary"
+                            variant="btn_yellow"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? "Cadastrando..." : "Cadastrar"}

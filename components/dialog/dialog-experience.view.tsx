@@ -13,18 +13,28 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DialogSkillUpdate } from "@/components/dialog/dialog-skill.update";
-import { toast } from "sonner";
-import { Skill, deleteSkill } from "@/app/services/skills.swr"
+import { DialogExperienceUpdate } from "@/components/dialog/dialog-experience.update";
+import { deleteExperience } from "@/app/services/experiences.swr"
 import { useState } from "react";
 import { useSkills } from "@/app/services/skills.swr";
+import { toast } from "sonner";
+
+export interface Experience {
+    id: string;
+    name: string;
+    seniority: string;
+    about: string;
+    startDate?: Date | null;
+    endDate?: Date | null;
+    userId: string;
+}
 
 interface DialogSkillProps {
-    skill: Skill,
+    experience: Experience,
     key: string
 }
 
-export function DialogSkillView({ skill }: DialogSkillProps) {
+export function DialogExperienceView({ experience }: DialogSkillProps) {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [openView, setOpenView] = useState(false);
@@ -33,7 +43,7 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
     const handleDelete = async () => {
         try {
             setIsLoading(true)
-            const result = await deleteSkill(skill.id);
+            const result = await deleteExperience(experience.id);
             toast.success(result.message || "Habilidade deletada com sucesso!");
             setOpenView(false);
         } catch (error) {
@@ -46,14 +56,14 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
     }
 
     return (
-        <Dialog key={skill.id} open={openView} onOpenChange={setOpenView}>
+        <Dialog key={experience.id} open={openView} onOpenChange={setOpenView}>
             <DialogTrigger asChild>
                 <Button
                     onClick={() => setOpenView(true)}
                     className="w-auto"
-                    variant={"secondary"}>
+                    variant={"btn_yellow"}>
                     <span>
-                        {skill.name}
+                        {experience.name}
                     </span>
                 </Button>
             </DialogTrigger>
@@ -62,16 +72,24 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
                 <DialogHeader>
                     <div>
                         <DialogTitle className="text-black text-xl">
-                            {skill.name}
+                            {experience.name}
                         </DialogTitle>
 
                         <DialogDescription className="text-zinc-600 mt-2 flex flex-col gap-2 text-sm">
                             <span className="text-black">
-                                Nível de conhecimento: {skill.level}
+                                Nível de senioridade: {experience.seniority}
                             </span>
 
                             <span className="text-black">
-                                Detalhes de conhecimento: {skill.about}
+                                Detalhes da experiência: {experience.about}
+                            </span>
+
+                            <span className="text-black">
+                                Data de início: {experience.startDate ? new Date(experience.startDate).toLocaleDateString() : "Data de início não informada"}
+                            </span>
+
+                            <span className="text-black">
+                                Data de término: {experience.endDate ? new Date(experience.endDate).toLocaleDateString() : "Data de término não informada"}
                             </span>
                         </DialogDescription>
                     </div>
@@ -86,7 +104,7 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
                         </Button>
                     </DialogClose>
                     <div className="flex justify-start gap-2 items-center">
-                        <Button variant={"secondary"} onClick={() => setOpenUpdate(true)}>
+                        <Button variant={"btn_yellow"} onClick={() => setOpenUpdate(true)}>
                             <CloudUpload /> Atualizar
                         </Button>
                         <Button onClick={() => handleDelete()}>
@@ -103,8 +121,8 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
                 </DialogFooter>
 
             </DialogContent>
-            <DialogSkillUpdate
-                skill={skill}
+            <DialogExperienceUpdate
+                experience={experience}
                 open={openUpdate}
                 onOpenChange={setOpenUpdate}
             />
