@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/auth/auth-client"
-import { BookOpenText, Zap, BotMessageSquare, ChartCandlestick, Eye, EyeOff, ArrowRight } from "lucide-react"
+import { BookOpenText, Zap, BotMessageSquare, ChartCandlestick, Eye, EyeOff, ArrowRight, ArrowLeftToLine } from "lucide-react"
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
@@ -202,7 +202,7 @@ export default function SignUpPage() {
                 </div>
 
                 <Link
-                  href="/login"
+                  href="/singin"
                   className="block w-full text-center px-4 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition font-medium"
                 >
                   Fazer login
@@ -280,7 +280,7 @@ export default function SignUpPage() {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="mb-0"
+                    className="w-full bg-[#AE0001] mb-0 hover:bg-red-700 text-white font-semibold py-6 rounded-lg transition-all duration-300"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
@@ -298,7 +298,7 @@ export default function SignUpPage() {
                     variant={"link"}
                     className="mt-5"
                   >
-                    Voltar
+                    <ArrowLeftToLine /> Voltar
                   </Button>
                 </div>
 
@@ -317,6 +317,7 @@ export default function SignUpPage() {
                 <Button
                   onClick={() => router.push("/singin")}
                   variant={"link"}
+                  className="w-full"
                 >
                   Fazer login
                 </Button>

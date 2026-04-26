@@ -36,11 +36,11 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
             const result = await deleteSkill(skill.id);
             toast.success(result.message || "Habilidade deletada com sucesso!");
             setOpenView(false);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             toast.error("Erro ao deletar habilidade tente novamente.");
         } finally {
-            await refresh()
+            await refresh();
             setIsLoading(false);
         }
     }

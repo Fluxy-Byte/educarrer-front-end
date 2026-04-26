@@ -22,7 +22,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-import { Skill, updateSkill } from "@/app/services/skills.swr";
+import { Skill, updateSkill, useSkills } from "@/app/services/skills.swr";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -47,7 +47,7 @@ export function DialogSkillUpdate({
     open,
     onOpenChange,
 }: DialogSkillUpdateProps) {
-
+    const { refresh } = useSkills();
     const {
         register,
         handleSubmit,
@@ -73,9 +73,11 @@ export function DialogSkillUpdate({
             const result = await updateSkill(skill.id, data.nome, data.nivel, data.descricao);
             toast.success(result.message || "Habilidade atualizada com sucesso!");
             onOpenChange(false);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             toast.error("Erro ao atualizar habilidade");
+        } finally {
+            await refresh();
         }
     };
 

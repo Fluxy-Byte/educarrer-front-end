@@ -46,7 +46,7 @@ export function DialogExperienceView({ experience }: DialogSkillProps) {
             const result = await deleteExperience(experience.id);
             toast.success(result.message || "Habilidade deletada com sucesso!");
             setOpenView(false);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             toast.error("Erro ao deletar habilidade tente novamente.");
         } finally {

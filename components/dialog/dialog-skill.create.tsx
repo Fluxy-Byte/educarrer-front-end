@@ -12,7 +12,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useSkills } from "@/app/services/skills.swr";
 import { Input } from "../ui/input";
 
 import {
@@ -26,7 +25,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodError } from "zod";
-import { createSkill } from "@/app/services/skills.swr";
+import { createSkill, useSkills } from "@/app/services/skills.swr";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -58,7 +57,6 @@ export function DialogSkillCreate() {
         try {
             const result = await createSkill(data.nome, data.nivel, data.descricao);
             toast.success(result.message || "Habilidade cadastrada com sucesso!");
-            reset();
             setOpen(false);
 
         } catch (error: any) {
@@ -68,7 +66,6 @@ export function DialogSkillCreate() {
                 });
             } else {
                 toast.error("Erro ao cadastrar habilidade");
-                console.error(error);
             }
         } finally {
             await refresh();

@@ -99,17 +99,25 @@ export function DialogVaga({ vaga }: DialogVagasProps) {
 
                 {/* Footer */}
                 <DialogFooter className="flex justify-between mt-4">
-                    <DialogClose asChild>
-                        <Button type="button" variant="close">
-                            Fechar
+                    <div className="w-auto h-auto flex justify-start items-center">
+                        <Button variant={"link"}>
+                            Criar estudo
                         </Button>
-                    </DialogClose>
+                    </div>
+                    <div className="w-full h-auto flex justify-end items-center gap-3">
+                        <DialogClose asChild>
+                            <Button type="button" variant="close">
+                                Fechar
+                            </Button>
+                        </DialogClose>
 
-                    <a href={vaga.link} target="_blank">
-                        <Button variant={"secondary"}>
-                            🚀 Candidatar-se
-                        </Button>
-                    </a>
+                        <a href={vaga.link} target="_blank">
+                            <Button variant={"secondary"}>
+                                🚀 Candidatar-se
+                            </Button>
+                        </a>
+                    </div>
+
                 </DialogFooter>
             </DialogContent>
         </Dialog>

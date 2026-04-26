@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/select";
 
 import { CloudUpload } from "lucide-react";
-import { updateExperience } from "@/app/services/experiences.swr";
+import { updateExperience, useExperiences } from "@/app/services/experiences.swr";
 import { toast } from "sonner";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,7 +59,7 @@ export function DialogExperienceUpdate({
     open,
     onOpenChange,
 }: DialogSkillUpdateProps) {
-
+    const { refresh } = useExperiences();
     const {
         register,
         handleSubmit,
@@ -85,9 +85,11 @@ export function DialogExperienceUpdate({
             const result = await updateExperience(experience.id, data.nome, data.senioridade, data.descricao);
             toast.success(result.message || "Experiência atualizada com sucesso!");
             onOpenChange(false);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             toast.error("Erro ao atualizar experiência. Tente novamente.");
+        } finally {
+            await refresh();
         }
     };
 
@@ -137,7 +139,7 @@ export function DialogExperienceUpdate({
                                             ? String(field.value)
                                             : ""
                                     }
-                                    
+
                                 >
                                     <SelectTrigger
                                         className="w-full h-12! border border-zinc-200 bg-white! text-black! placeholder:text-zinc-200!"

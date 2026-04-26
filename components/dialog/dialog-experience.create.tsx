@@ -58,17 +58,16 @@ export function DialogExperienceCreate() {
         try {
             const result = await createExperience(data.nome, data.senioridade, data.descricao);
             ToastPersonalizado({ mensagem: result.message || "Experiência cadastrada com sucesso!" });
-            reset();
             setOpen(false);
 
         } catch (error: any) {
             if (error instanceof ZodError) {
                 error.issues.forEach((err) => {
                     toast.error(err.message);
+                    console.log(error)
                 });
             } else {
                 toast.error("Erro ao cadastrar experiência");
-                console.error(error);
             }
         } finally {
             await refresh();
