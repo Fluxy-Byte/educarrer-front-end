@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { getStudyByUserId, createStudy } from "@/lib/database/study";
+import { auth } from "@/lib/utils/auth";
+import { getStudyByUserId, createStudy } from "@/lib/services/study";
 import { CreateStudyDTO } from "@/lib/interfaces/study.interface";
 
 export async function GET(req: Request) {
@@ -11,7 +11,7 @@ export async function GET(req: Request) {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { status: false, experiences: [], message: "Não encontramos a sessão do usuario" },
+        { status: false, studies: [], message: "Não encontramos a sessão do usuario" },
         { status: 401 }
       );
     }
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { status: false, experience: null, message: "Não encontramos a sessão do usuário" },
+        { status: false, studies: null, message: "Não encontramos a sessão do usuário" },
         { status: 401 }
       );
     }
@@ -57,11 +57,11 @@ export async function POST(req: Request) {
       userId: user.id
     }
 
-    const study = await createStudy(data);
+    const studies = await createStudy(data);
 
     return NextResponse.json({
       status: true,
-      study,
+      studies,
       message: "Sucesso na criação da study"
     });
   } catch (e: any) {
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         status: false,
-        study: null,
+        studies: null,
         message: "Erro interno no servidor"
       },
       { status: 500 }

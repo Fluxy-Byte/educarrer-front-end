@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { deleteStudy, updateStudy } from "@/lib/database/study";
+import { auth } from "@/lib/utils/auth";
+import { deleteStudy, updateStudy } from "@/lib/services/study";
 import { UpdateStudyDTO } from "@/lib/interfaces/study.interface";
 
 export async function DELETE(

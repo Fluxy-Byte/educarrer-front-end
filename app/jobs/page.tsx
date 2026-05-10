@@ -2,9 +2,9 @@
 
 import { toast } from "sonner";
 import { useState } from "react";
-import { useVagas } from "@/app/services/vagas.swr";
-import { useSession } from "@/lib/auth/auth-client";
-import { authClient } from "@/lib/auth/auth-client";
+import { useVacancys } from "@/app/services/vacancys.swr";
+import { useSession } from "@/lib/utils/auth-client";
+import { authClient } from "@/lib/utils/auth-client";
 import { DialogVaga } from "@/components/dialog/dialog-vaga";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export interface Vaga {
+export interface Vacancys {
   id: number;
   titulo: string;
   empresa: string;
@@ -33,7 +33,7 @@ export interface Vaga {
 
 export default function DashboardPage() {
   const { data: session } = useSession();
-  const { vagas } = useVagas();
+  const { vacancys } = useVacancys();
 
   // 🔎 Estados de filtro
   const [nomeFiltro, setNomeFiltro] = useState("");
@@ -45,7 +45,7 @@ export default function DashboardPage() {
   };
 
   // 🧠 Lógica de filtro
-  const vagasFiltradas = vagas?.filter((vaga) => {
+  const vagasFiltradas = vacancys?.filter((vaga) => {
     const matchNome =
       vaga.titulo.toLowerCase().includes(nomeFiltro.toLowerCase());
 
@@ -106,7 +106,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {vagas ? (
+      {vacancys ? (
         <div className="w-full max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-lg p-4 gap-2 flex flex-col">
           {vagasFiltradas && vagasFiltradas.length > 0 ? (
             vagasFiltradas.map((vaga) => (

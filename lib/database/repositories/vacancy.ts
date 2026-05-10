@@ -1,6 +1,7 @@
 import { link } from "fs";
+import { VacancyDTO } from "@/lib/interfaces/vacancy.interface";
 
-export async function getVagas() {
+export async function getVacancys() {
     return [
         {
             id: 1,
@@ -263,4 +264,12 @@ export async function getVagas() {
             nome: "LinkedIn"
         }
     ];
+}
+
+export class VagasRepository {
+
+    async getVacancys(): Promise<VacancyDTO[]> {
+        return await getVacancys();
+    }
+    
 }

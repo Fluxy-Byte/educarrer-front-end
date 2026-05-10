@@ -2,8 +2,8 @@
 
 
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { updateUser } from "@/lib/database/user";
+import { auth } from "@/lib/utils/auth";
+import { updateUser } from "@/lib/services/user";
 import { UpdateUserDTO } from "@/lib/interfaces/user.interface";
 
 export async function PUT(req: Request) {
@@ -19,15 +19,13 @@ export async function PUT(req: Request) {
         { status: false, message: "Não encontramos a sessão do usuário" },
         { status: 401 }
       );
-    }
-
-    const user = session.user;
+    };
 
     const data: UpdateUserDTO = {
       name,
       email,
       image
-    }
+    };
 
     const skill = await updateUser(
       data

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { deleteSkill, updateSkill } from "@/lib/database/skill";
+import { auth } from "@/lib/utils/auth";
+import { deleteSkill, updateSkill } from "@/lib/services/skill";
 import { UpdateSkillDTO } from "@/lib/interfaces/skill.interface";
 
 export async function DELETE(

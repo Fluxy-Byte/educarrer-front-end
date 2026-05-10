@@ -1,11 +1,8 @@
 
-
-
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { createSkill, getSkillByUserId } from "@/lib/database/skill";
+import { auth } from "@/lib/utils/auth";
+import { createSkill, getSkillByUserId } from "@/lib/services/skill";
 import { CreateSkillDTO } from "@/lib/interfaces/skill.interface";
-
 export async function GET(req: Request) {
   try {
     const session = await auth.api.getSession({

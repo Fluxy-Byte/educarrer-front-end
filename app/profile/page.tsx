@@ -3,8 +3,8 @@
 import { toast } from "sonner";
 
 import { useState, useEffect } from "react"
-import { useSession } from "@/lib/auth/auth-client"
-import { authClient } from "@/lib/auth/auth-client"
+import { useSession } from "@/lib/utils/auth-client"
+import { authClient } from "@/lib/utils/auth-client"
 import { useSkills } from "@/app/services/skills.swr";
 import { useExperiences } from "@/app/services/experiences.swr";
 

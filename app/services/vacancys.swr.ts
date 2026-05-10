@@ -1,13 +1,13 @@
 import useSWR from 'swr';
 import axios from 'axios';
 
-export interface ResultGetVagas {
+export interface ResultGetVacancys {
     status: boolean
-    vagas: Vaga[]
+    vacancys: Vacancys[]
     message: string
 }
 
-export interface Vaga {
+export interface Vacancys {
     id: number;
     titulo: string;
     empresa: string;
@@ -21,18 +21,18 @@ export interface Vaga {
     nome: string;
 }
 
-const fetcher = async (url: string): Promise<ResultGetVagas> => {
+const fetcher = async (url: string): Promise<ResultGetVacancys> => {
     const { data } = await axios.get(url, {
         withCredentials: true
     })
     return data
 }
 
-export function useVagas() {
-    const { data, error, isLoading, mutate } = useSWR('/api/vagas', fetcher);
+export function useVacancys() {
+    const { data, error, isLoading, mutate } = useSWR('/api/vacancy', fetcher);
 
     return {
-        vagas: data?.vagas || [],
+        vacancys: data?.vacancys || [],
         isLoading,
         isError: error,
         message: data?.message,

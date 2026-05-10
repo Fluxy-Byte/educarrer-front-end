@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth/auth";
-import { getVagas } from "@/lib/database/vagas.mock";
+import { auth } from "@/lib/utils/auth";
+import { getVacancys } from "@/lib/database/repositories/vacancy";
 
 export async function GET(req: Request) {
   try {
@@ -15,7 +15,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const vagas = await getVagas();
+    const vagas = await getVacancys();
 
     return NextResponse.json({
       status: true,
