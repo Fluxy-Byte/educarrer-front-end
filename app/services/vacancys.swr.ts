@@ -3,22 +3,24 @@ import axios from 'axios';
 
 export interface ResultGetVacancys {
     status: boolean
-    vacancys: Vacancys[]
+    vacancys: VacancyDTO[]
     message: string
 }
 
-export interface Vacancys {
+export interface VacancyDTO {
     id: number;
-    titulo: string;
-    empresa: string;
-    localizacao: string;
-    modalidade: string;
-    nivel: string;
-    salario: string;
-    tecnologias: string[];
-    descricao: string;
+    title: string;
+    description: string;
+    company: string;
+    modality: string;
+    level: string;
+    technologies: string[];
     link: string;
-    nome: string;
+    origin: string;
+    location: string;
+    salary: string | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const fetcher = async (url: string): Promise<ResultGetVacancys> => {

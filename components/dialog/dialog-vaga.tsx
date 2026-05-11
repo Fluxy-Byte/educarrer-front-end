@@ -12,38 +12,40 @@ import {
 
 import { Badge } from "@/components/ui/badge"
 
-export interface Vaga {
+export interface VacancyDTO {
     id: number;
-    titulo: string;
-    empresa: string;
-    localizacao: string;
-    modalidade: string;
-    nivel: string;
-    salario: string;
-    tecnologias: string[];
-    descricao: string;
+    title: string;
+    description: string;
+    company: string;
+    modality: string;
+    level: string;
+    technologies: string[];
     link: string;
-    nome: string;
+    origin: string;
+    location: string;
+    salary: string | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface DialogVagasProps {
-    vaga: Vaga
+    vacancy: VacancyDTO
 }
 
 
-export function DialogVaga({ vaga }: DialogVagasProps) {
+export function DialogVaga({ vacancy }: DialogVagasProps) {
     return (
-        <Dialog key={vaga.id}>
+        <Dialog key={vacancy.id}>
             <DialogTrigger asChild>
                 <Button className="flex flex-col h-auto items-start justify-start gap-2 w-full bg-zinc-200 border-3 border-zinc-200 rounded-md p-4 hover:bg-blue-700/20 hover:border-blue-700">
                     <span className="hover:underline text-black text-lg font-semibold">
-                        {vaga.titulo}
+                        {vacancy.title}
                     </span>
                     <span className="text-zinc-700 font-medium text-sm">
-                        • {vaga.empresa} ( {vaga.modalidade} )
+                        • {vacancy.company} ( {vacancy.modality} )
                     </span>
                     <span className="text-sm mt-2">
-                        {vaga.tecnologias.map((tech) => (
+                        {vacancy.technologies.map((tech) => (
                             <Badge
                                 key={tech}
                                 className={`mb-2 mr-2 text-white ${getTechColor(tech)}`}
@@ -57,20 +59,20 @@ export function DialogVaga({ vaga }: DialogVagasProps) {
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-black text-xl">
-                        {vaga.titulo}
+                        {vacancy.title}
                     </DialogTitle>
 
                     <DialogDescription className="flex text-zinc-600 flex-wrap gap-2 mt-2 text-sm">
-                        <span>{vaga.empresa}</span>
-                        <span>• {vaga.localizacao}</span>
-                        <span>• {vaga.modalidade}</span>
-                        <span>• {vaga.nivel}</span>
+                        <span>{vacancy.company}</span>
+                        <span>• {vacancy.location}</span>
+                        <span>• {vacancy.modality}</span>
+                        <span>• {vacancy.level}</span>
                     </DialogDescription>
                 </DialogHeader>
 
                 {/* Salário destaque */}
                 <div className="bg-blue-700/20 border border-blue-700 rounded-lg p-3 text-black font-semibold">
-                    💰 {vaga.salario}
+                    💰 {vacancy.salary}
                 </div>
 
                 {/* Tecnologias */}
@@ -79,7 +81,7 @@ export function DialogVaga({ vaga }: DialogVagasProps) {
                         Tecnologias esperadas
                     </p>
                     <div className="flex flex-wrap">
-                        {vaga.tecnologias.map((tech) => (
+                        {vacancy.technologies.map((tech) => (
                             <Badge
                                 key={tech}
                                 className={`mr-2 mb-2 text-white ${getTechColor(tech)}`}
@@ -93,7 +95,7 @@ export function DialogVaga({ vaga }: DialogVagasProps) {
                 {/* Descrição */}
                 <div className="max-h-[200px] overflow-y-auto pr-2">
                     <p className="text-md text-zinc-700 leading-relaxed whitespace-pre-line">
-                        {vaga.descricao}
+                        {vacancy.description}
                     </p>
                 </div>
 
@@ -111,7 +113,7 @@ export function DialogVaga({ vaga }: DialogVagasProps) {
                             </Button>
                         </DialogClose>
 
-                        <a href={vaga.link} target="_blank">
+                        <a href={vacancy.link} target="_blank">
                             <Button variant={"secondary"}>
                                 🚀 Candidatar-se
                             </Button>

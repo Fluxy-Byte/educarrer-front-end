@@ -1,4 +1,4 @@
-import { ExperienceRepository } from "@/lib/database/repositories/experience";
+import { ExperienceRepository } from "@/lib/repositories/experience";
 import { CreateExperienceDTO, UpdateExperienceDTO } from "@/lib/interfaces/experience.interface";
 
 const experienceRepository = new ExperienceRepository();

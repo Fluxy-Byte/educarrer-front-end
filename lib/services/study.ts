@@ -1,4 +1,4 @@
-import { StudyRepository } from "@/lib/database/repositories/study";
+import { StudyRepository } from "@/lib/repositories/study";
 import { CreateStudyDTO, UpdateStudyDTO } from "@/lib/interfaces/study.interface";
 
 const studyRepository = new StudyRepository();

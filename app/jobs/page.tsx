@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVacancys } from "@/app/services/vacancys.swr";
 import { useSession } from "@/lib/utils/auth-client";
 import { authClient } from "@/lib/utils/auth-client";
@@ -17,22 +17,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export interface Vacancys {
-  id: number;
-  titulo: string;
-  empresa: string;
-  localizacao: string;
-  modalidade: string;
-  nivel: string;
-  salario: string;
-  tecnologias: string[];
-  descricao: string;
-  link: string;
-  nome: string;
+export interface VacancyDTO {
+    id: number;
+    title: string;
+    description: string;
+    company: string;
+    modality: string;
+    level: string;
+    technologies: string[];
+    link: string;
+    origin: string;
+    location: string;
+    salary: string | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
   const { vacancys } = useVacancys();
 
   // 🔎 Estados de filtro
@@ -40,20 +41,16 @@ export default function DashboardPage() {
   const [nivelFiltro, setNivelFiltro] = useState("todos");
   const [modalidadeFiltro, setModalidadeFiltro] = useState("todos");
 
-  const handleLogout = async () => {
-    await authClient.signOut();
-  };
-
   // 🧠 Lógica de filtro
   const vagasFiltradas = vacancys?.filter((vaga) => {
     const matchNome =
-      vaga.titulo.toLowerCase().includes(nomeFiltro.toLowerCase());
+      vaga.title.toLowerCase().includes(nomeFiltro.toLowerCase());
 
     const matchNivel =
-      nivelFiltro === "todos" || vaga.nivel === nivelFiltro;
+      nivelFiltro === "todos" || vaga.level === nivelFiltro;
 
     const matchModalidade =
-      modalidadeFiltro === "todos" || vaga.modalidade === modalidadeFiltro;
+      modalidadeFiltro === "todos" || vaga.modality === modalidadeFiltro;
 
     return matchNome && matchNivel && matchModalidade;
   });
@@ -110,7 +107,7 @@ export default function DashboardPage() {
         <div className="w-full max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-lg p-4 gap-2 flex flex-col">
           {vagasFiltradas && vagasFiltradas.length > 0 ? (
             vagasFiltradas.map((vaga) => (
-              <DialogVaga key={vaga.id} vaga={vaga} />
+              <DialogVaga key={vaga.id} vacancy={vaga} />
             ))
           ) : (
             <p className="text-center text-gray-500">

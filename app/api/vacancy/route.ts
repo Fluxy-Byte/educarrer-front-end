@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/utils/auth";
-import { getVacancys } from "@/lib/database/repositories/vacancy";
+import { getVacancys } from "@/lib/services/vacancy";
 
 export async function GET(req: Request) {
   try {
@@ -10,22 +10,22 @@ export async function GET(req: Request) {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { status: false, skills: [], message: "Não encontramos a sessão do usuario" },
+        { status: false, vacancys: [], message: "Não encontramos a sessão do usuario" },
         { status: 401 }
       );
     }
 
-    const vagas = await getVacancys();
+    const vacancys = await getVacancys();
 
     return NextResponse.json({
       status: true,
-      vagas,
+      vacancys,
       message: "Sucesso na consulta"
     });
   } catch (e: any) {
     return NextResponse.json({
       status: false,
-      vagas: [],
+      vacancys: [],
       message: "Erro interno no servidor"
     })
   }

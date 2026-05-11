@@ -1,4 +1,4 @@
-import { SkillRepository } from "@/lib/database/repositories/skill";
+import { SkillRepository } from "@/lib/repositories/skill";
 import { CreateSkillDTO, UpdateSkillDTO } from "@/lib/interfaces/skill.interface";
 
 const userRepository = new SkillRepository();

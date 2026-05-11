@@ -1,4 +1,4 @@
-import { UserRepository } from "@/lib/database/repositories/user";
+import { UserRepository } from "@/lib/repositories/user";
 import { CreateUserDTO, UpdateUserDTO } from "@/lib/interfaces/user.interface";
 
 const userRepository = new UserRepository();
