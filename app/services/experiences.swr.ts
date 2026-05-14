@@ -24,8 +24,10 @@ const fetcher = async (url: string): Promise<ResultGetExperience> => {
     return data
 }
 
+const URL = "https://protec-edu-carrer-ai.egnehl.easypanel.host"
+
 export function useExperiences() {
-    const { data, error, isLoading, mutate } = useSWR('/api/experience', fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/experience`, fetcher);
 
     return {
         experiences: data?.experiences || [],
@@ -37,7 +39,7 @@ export function useExperiences() {
 }
 
 export async function createExperience(name: string, seniority?: string, about?: string) {
-    const { data } = await axios.post('/api/experience', {
+    const { data } = await axios.post(`${URL}/api/experience`, {
         name,
         seniority,
         about
@@ -48,7 +50,7 @@ export async function createExperience(name: string, seniority?: string, about?:
 }
 
 export async function updateExperience(id: string, name: string, seniority?: string, about?: string) {
-    const { data } = await axios.put(`/api/experience/${id}`, {
+    const { data } = await axios.put(`${URL}/api/experience/${id}`, {
         name,
         seniority,
         about
@@ -59,7 +61,7 @@ export async function updateExperience(id: string, name: string, seniority?: str
 }
 
 export async function deleteExperience(id: string) {
-    const { data } = await axios.delete(`/api/experience/${id}`, {
+    const { data } = await axios.delete(`${URL}/api/experience/${id}`, {
         withCredentials: true
     })
     return data

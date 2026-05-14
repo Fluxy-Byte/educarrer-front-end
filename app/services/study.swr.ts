@@ -16,6 +16,8 @@ export interface StudyDTO {
   userId: string;
 }
 
+const URL = "https://protec-edu-carrer-ai.egnehl.easypanel.host"
+
 const fetcher = async (url: string): Promise<ResultGetStudy> => {
     const { data } = await axios.get(url, {
         withCredentials: true
@@ -24,7 +26,7 @@ const fetcher = async (url: string): Promise<ResultGetStudy> => {
 }
 
 export function useStudies() {
-    const { data, error, isLoading, mutate } = useSWR('/api/study', fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/study`, fetcher);
 
     return {
         studies: data?.studies || [],
@@ -36,7 +38,7 @@ export function useStudies() {
 }
 
 export async function createStudy(name: string, about?: string) {
-    const { data } = await axios.post('/api/study', {
+    const { data } = await axios.post(`${URL}/api/study`, {
         name,
         about
     }, {
@@ -46,7 +48,7 @@ export async function createStudy(name: string, about?: string) {
 }
 
 export async function updateStudy(id: string, name: string, about?: string) {
-    const { data } = await axios.put(`/api/study/${id}`, {
+    const { data } = await axios.put(`${URL}/api/study/${id}`, {
         name,
         about
     }, {
@@ -56,7 +58,7 @@ export async function updateStudy(id: string, name: string, about?: string) {
 }
 
 export async function deleteStudy(id: string) {
-    const { data } = await axios.delete(`/api/study/${id}`, {
+    const { data } = await axios.delete(`${URL}/api/study/${id}`, {
         withCredentials: true
     })
     return data

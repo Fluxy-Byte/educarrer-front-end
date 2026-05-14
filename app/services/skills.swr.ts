@@ -15,6 +15,8 @@ export interface Skill {
     userId: string;
 }
 
+const URL = "https://protec-edu-carrer-ai.egnehl.easypanel.host"
+
 const fetcher = async (url: string): Promise<ResultGetVagas> => {
     const { data } = await axios.get(url, {
         withCredentials: true
@@ -23,7 +25,7 @@ const fetcher = async (url: string): Promise<ResultGetVagas> => {
 }
 
 export function useSkills() {
-    const { data, error, isLoading, mutate } = useSWR('/api/skill', fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/skill`, fetcher);
 
     return {
         skills: data?.skills || [],
@@ -35,7 +37,7 @@ export function useSkills() {
 }
 
 export async function createSkill(name: string, level?: number, about?: string) {
-    const { data } = await axios.post('/api/skill', {
+    const { data } = await axios.post(`${URL}/api/skill`, {
         name,
         level,
         about
@@ -46,7 +48,7 @@ export async function createSkill(name: string, level?: number, about?: string) 
 }
 
 export async function updateSkill(id: string, name: string, level?: number, about?: string) {
-    const { data } = await axios.put(`/api/skill/${id}`, {
+    const { data } = await axios.put(`${URL}/api/skill/${id}`, {
         name,
         level,
         about
@@ -57,7 +59,7 @@ export async function updateSkill(id: string, name: string, level?: number, abou
 }
 
 export async function deleteSkill(id: string) {
-    const { data } = await axios.delete(`/api/skill/${id}`, {
+    const { data } = await axios.delete(`${URL}/api/skill/${id}`, {
         withCredentials: true
     })
     return data
