@@ -8,13 +8,13 @@ export interface ResultGetExperience {
 }
 
 export interface Experience {
-  id: string;
-  name: string;
-  seniority: string;
-  about: string;
-  startDate?: Date | null;
-  endDate?: Date | null;
-  userId: string;
+    id: string;
+    name: string;
+    seniority: string;
+    about: string;
+    startDate?: Date | null;
+    endDate?: Date | null;
+    userId: string;
 }
 
 const fetcher = async (url: string): Promise<ResultGetExperience> => {
@@ -24,7 +24,7 @@ const fetcher = async (url: string): Promise<ResultGetExperience> => {
     return data
 }
 
-const URL = "https://protec-edu-carrer-ai.egnehl.easypanel.host"
+const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://protec-edu-carrer-ai.egnehl.easypanel.host"
 
 export function useExperiences() {
     const { data, error, isLoading, mutate } = useSWR(`${URL}/api/experience`, fetcher);
@@ -38,22 +38,26 @@ export function useExperiences() {
     }
 }
 
-export async function createExperience(name: string, seniority?: string, about?: string) {
+export async function createExperience(name: string, seniority?: string, about?: string, startDate?: Date, endDate?: Date) {
     const { data } = await axios.post(`${URL}/api/experience`, {
         name,
         seniority,
-        about
+        about,
+        startDate,
+        endDate
     }, {
         withCredentials: true
     })
     return data
 }
 
-export async function updateExperience(id: string, name: string, seniority?: string, about?: string) {
+export async function updateExperience(id: string, name: string, seniority?: string, about?: string, startDate?: Date, endDate?: Date) {
     const { data } = await axios.put(`${URL}/api/experience/${id}`, {
         name,
         seniority,
-        about
+        about,
+        startDate,
+        endDate
     }, {
         withCredentials: true
     })

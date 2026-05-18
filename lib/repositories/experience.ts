@@ -14,8 +14,8 @@ export class ExperienceRepository {
         return experiences.map(experience => new Experience(
             experience.id,
             experience.name,
-            experience.about,
             experience.seniority,
+            experience.about,
             experience.startDate,
             experience.endDate,
             experience.userId
@@ -30,8 +30,8 @@ export class ExperienceRepository {
         return new Experience(
             experience.id,
             experience.name,
-            experience.about,
             experience.seniority,
+            experience.about,
             experience.startDate,
             experience.endDate,
             experience.userId
@@ -57,8 +57,8 @@ export class ExperienceRepository {
         return new Experience(
             experience.id,
             experience.name,
-            experience.about,
             experience.seniority,
+            experience.about,
             experience.startDate,
             experience.endDate,
             experience.userId

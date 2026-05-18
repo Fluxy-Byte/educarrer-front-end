@@ -27,7 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodError } from "zod";
 import { createSkill, useSkills } from "@/app/services/skills.swr";
 import { useState } from "react";
-import { toast } from "sonner";
+import { ToastPersonalizado } from "@/components/toast";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -56,16 +56,16 @@ export function DialogSkillCreate() {
     const onSubmit = async (data: SkillFormData) => {
         try {
             const result = await createSkill(data.nome, data.nivel, data.descricao);
-            toast.success(result.message || "Habilidade cadastrada com sucesso!");
+            ToastPersonalizado({ mensagem: result.message || "Habilidade cadastrada com sucesso!" });
             setOpen(false);
 
         } catch (error: any) {
             if (error instanceof ZodError) {
                 error.issues.forEach((err) => {
-                    toast.error(err.message);
+                    ToastPersonalizado({ mensagem: err.message });
                 });
             } else {
-                toast.error("Erro ao cadastrar habilidade");
+                ToastPersonalizado({ mensagem: "Erro ao cadastrar habilidade" });
             }
         } finally {
             await refresh();

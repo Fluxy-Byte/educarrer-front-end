@@ -9,6 +9,6 @@ interface ToastProps {
 export function ToastPersonalizado({ mensagem }: ToastProps) {
     toast(mensagem, { 
         position: "bottom-right",
-        className: "bg-blue-20 text-white rounded-md shadow-lg p-4",
+        className: "bg-blue-500! text-white rounded-md shadow-lg p-4",
      })
 }

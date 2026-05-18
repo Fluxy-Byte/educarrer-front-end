@@ -28,7 +28,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodError } from "zod";
 import { createExperience } from "@/app/services/experiences.swr";
 import { useState } from "react";
-import { toast } from "sonner";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -64,10 +63,10 @@ export function DialogExperienceCreate() {
         } catch (error: any) {
             if (error instanceof ZodError) {
                 error.issues.forEach((err) => {
-                    toast.error(err.message);
+                    ToastPersonalizado({ mensagem: err.message });
                 });
             } else {
-                toast.error("Erro ao cadastrar experiência");
+                ToastPersonalizado({ mensagem: "Erro ao cadastrar experiência" });
                 console.error(error);
             }
         } finally {

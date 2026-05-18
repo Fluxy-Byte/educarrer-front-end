@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label"; 
 import {
     Dialog,
     DialogClose,
@@ -24,7 +25,7 @@ import {
 
 import { CloudUpload } from "lucide-react";
 import { updateExperience, useExperiences } from "@/app/services/experiences.swr";
-import { toast } from "sonner";
+import { ToastPersonalizado } from "@/components/toast";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -34,6 +35,8 @@ const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
     senioridade: z.string().min(2, "Senioridade deve ter pelo menos 2 caracteres"),
     descricao: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
+    startDate: z.date().optional(),
+    endDate: z.date().optional(),
 });
 
 type SkillFormData = z.infer<typeof skillSchema>;
@@ -71,23 +74,29 @@ export function DialogExperienceUpdate({
     });
 
     useEffect(() => {
-        if (experience) {
-            reset({
-                nome: experience.name,
-                senioridade: experience.seniority,
-                descricao: experience.about ?? "",
-            });
-        }
-    }, [experience, reset]);
+    if (experience) {
+        reset({
+            nome: experience.name,
+            senioridade: experience.seniority,
+            descricao: experience.about ?? "",
+            startDate: experience.startDate
+                ? new Date(experience.startDate).toISOString().split("T")[0] as any
+                : undefined,
+            endDate: experience.endDate
+                ? new Date(experience.endDate).toISOString().split("T")[0] as any
+                : undefined,
+        });
+    }
+}, [experience, reset]);
 
     const onSubmit = async (data: SkillFormData) => {
         try {
-            const result = await updateExperience(experience.id, data.nome, data.senioridade, data.descricao);
-            toast.success(result.message || "Experiência atualizada com sucesso!");
+            const result = await updateExperience(experience.id, data.nome, data.senioridade, data.descricao, data.startDate, data.endDate);
+            ToastPersonalizado({ mensagem: result.message || "Experiência atualizada com sucesso!" });
             onOpenChange(false);
         } catch (error: any) {
             console.error(error);
-            toast.error("Erro ao atualizar experiência. Tente novamente.");
+            ToastPersonalizado({ mensagem: "Erro ao atualizar experiência. Tente novamente." });
         } finally {
             await refresh();
         }
@@ -181,6 +190,26 @@ export function DialogExperienceUpdate({
                                 {errors.descricao.message}
                             </p>
                         )}
+                    </div>
+
+                    { /* Datas */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label htmlFor="startDate">Data de Início</Label>
+                            <Input
+                                type="date"
+                                id="startDate"
+                                {...register("startDate", { valueAsDate: true })}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="endDate">Data de Término</Label>
+                            <Input
+                                type="date"
+                                id="endDate"
+                                {...register("endDate", { valueAsDate: true })}
+                            />
+                        </div>
                     </div>
 
                     {/* Footer */}

@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { name, about, } = await req.json();
+    const { idVacancy } = await req.json();
 
     const session = await auth.api.getSession({
       headers: req.headers,
@@ -51,13 +51,7 @@ export async function POST(req: Request) {
 
     const user = session.user;
 
-    const data: CreateStudyDTO = {
-      title: name,
-      study: about,
-      userId: user.id
-    }
-
-    const studies = await createStudy(data);
+    const studies = await createStudy(idVacancy, user.id);
 
     return NextResponse.json({
       status: true,

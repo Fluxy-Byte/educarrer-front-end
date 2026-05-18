@@ -203,4 +203,8 @@ export class VacancyRepository {
             v.updatedAt
         ));
     }
+
+    async getVacancysById(id: number): Promise<Vacancy | null> {
+        return (await getVacancys()).find(v => v.id === id) || null;
+    }
 }

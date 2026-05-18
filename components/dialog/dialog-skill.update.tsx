@@ -26,7 +26,7 @@ import { Skill, updateSkill, useSkills } from "@/app/services/skills.swr";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "sonner";
+import { ToastPersonalizado } from "@/components/toast";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -71,11 +71,11 @@ export function DialogSkillUpdate({
     const onSubmit = async (data: SkillFormData) => {
         try {
             const result = await updateSkill(skill.id, data.nome, data.nivel, data.descricao);
-            toast.success(result.message || "Habilidade atualizada com sucesso!");
+            ToastPersonalizado({ mensagem: result.message || "Habilidade atualizada com sucesso!" });
             onOpenChange(false);
         } catch (error: any) {
             console.error(error);
-            toast.error("Erro ao atualizar habilidade");
+            ToastPersonalizado({ mensagem: "Erro ao atualizar habilidade" });
         } finally {
             await refresh();
         }

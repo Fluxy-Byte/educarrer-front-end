@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
+import { Label } from "@/components/ui/label"; 
 import {
     Dialog,
     DialogClose,
@@ -34,6 +35,8 @@ const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
     senioridade: z.string().min(2, "Senioridade deve ter pelo menos 2 caracteres"),
     descricao: z.string().min(5, "Descrição deve ter pelo menos 5 caracteres"),
+    startDate: z.date().optional(),
+    endDate: z.date().optional(),
 });
 
 type SkillFormData = z.infer<typeof skillSchema>;
@@ -56,7 +59,7 @@ export function DialogExperienceCreate() {
 
     const onSubmit = async (data: SkillFormData) => {
         try {
-            const result = await createExperience(data.nome, data.senioridade, data.descricao);
+            const result = await createExperience(data.nome, data.senioridade, data.descricao, data.startDate, data.endDate);
             ToastPersonalizado({ mensagem: result.message || "Experiência cadastrada com sucesso!" });
             setOpen(false);
 
@@ -164,6 +167,26 @@ export function DialogExperienceCreate() {
                                 {errors.descricao.message}
                             </p>
                         )}
+                    </div>
+
+                    {/* Datas */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label htmlFor="startDate">Data de Início</Label>
+                            <Input
+                                type="date"
+                                id="startDate"
+                                {...register("startDate", { valueAsDate: true })}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="endDate">Data de Término</Label>
+                            <Input
+                                type="date"
+                                id="endDate"
+                                {...register("endDate", { valueAsDate: true })}
+                            />
+                        </div>
                     </div>
 
                     {/* Footer */}

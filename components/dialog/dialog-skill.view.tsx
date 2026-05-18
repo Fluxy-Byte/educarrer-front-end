@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { DialogSkillUpdate } from "@/components/dialog/dialog-skill.update";
-import { toast } from "sonner";
+import { ToastPersonalizado } from "@/components/toast";
 import { Skill, deleteSkill } from "@/app/services/skills.swr"
 import { useState } from "react";
 import { useSkills } from "@/app/services/skills.swr";
@@ -34,11 +34,11 @@ export function DialogSkillView({ skill }: DialogSkillProps) {
         try {
             setIsLoading(true)
             const result = await deleteSkill(skill.id);
-            toast.success(result.message || "Habilidade deletada com sucesso!");
+            ToastPersonalizado({ mensagem: result.message || "Habilidade deletada com sucesso!" });
             setOpenView(false);
         } catch (error: any) {
             console.error(error);
-            toast.error("Erro ao deletar habilidade tente novamente.");
+            ToastPersonalizado({ mensagem: "Erro ao deletar habilidade tente novamente." });
         } finally {
             await refresh();
             setIsLoading(false);

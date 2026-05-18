@@ -13,11 +13,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DialogExperienceUpdate } from "@/components/dialog/dialog-study.update";
+import { DialogExperienceUpdate } from "@/components/dialog/dialog-experience.update";
 import { deleteExperience } from "@/app/services/experiences.swr"
 import { useState } from "react";
 import { useSkills } from "@/app/services/skills.swr";
-import { toast } from "sonner";
+import { ToastPersonalizado } from "@/components/toast";
 
 export interface Experience {
     id: string;
@@ -44,11 +44,11 @@ export function DialogExperienceView({ experience }: DialogSkillProps) {
         try {
             setIsLoading(true)
             const result = await deleteExperience(experience.id);
-            toast.success(result.message || "Habilidade deletada com sucesso!");
+            ToastPersonalizado({ mensagem: result.message || "Habilidade deletada com sucesso!" });
             setOpenView(false);
         } catch (error) {
             console.error(error);
-            toast.error("Erro ao deletar habilidade tente novamente.");
+            ToastPersonalizado({ mensagem: "Erro ao deletar habilidade tente novamente." });
         } finally {
             await refresh()
             setIsLoading(false);

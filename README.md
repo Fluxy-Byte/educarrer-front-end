@@ -12,7 +12,7 @@ Aplicação de gerenciamento de campanhas construída com Next.js 16, Better Aut
 - **shadcn/ui** - Componentes de UI
 
 ## Configuração
-
+v
 ### 1. Variáveis de Ambiente
 
 As seguintes variáveis já foram configuradas no v0:
@@ -111,3 +111,13 @@ Acesse http://localhost:3000
 - `pnpm db:push` - Sincroniza o schema com o banco de dados
 - `pnpm db:migrate` - Cria uma nova migração
 - `pnpm db:studio` - Abre o Prisma Studio
+
+
+docker build -t educarrer .
+
+docker run -d -p 5401:5401 --name educarrer-container educarrer
+
+docker compose up -d ( "Para rodar compose pela primeira vez" )
+
+docker compose up -d --build ( "Para rebuildar projeto apos a primeira vez" )
+
