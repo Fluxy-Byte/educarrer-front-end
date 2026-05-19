@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/utils/auth";
 import { getStudyByUserId, createStudy } from "@/lib/services/study";
-import { CreateStudyDTO } from "@/lib/interfaces/study.interface";
 
 export async function GET(req: Request) {
   try {
@@ -44,7 +43,7 @@ export async function POST(req: Request) {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { status: false, studies: null, message: "Não encontramos a sessão do usuário" },
+        { status: false, message: "Não encontramos a sessão do usuário" },
         { status: 401 }
       );
     }
@@ -53,18 +52,16 @@ export async function POST(req: Request) {
 
     const studies = await createStudy(idVacancy, user.id);
 
-    return NextResponse.json({
-      status: true,
+    return NextResponse.json(
       studies,
-      message: "Sucesso na criação da study"
-    });
+      { status: 200 }
+    );
   } catch (e: any) {
     console.error(e);
 
     return NextResponse.json(
       {
         status: false,
-        studies: null,
         message: "Erro interno no servidor"
       },
       { status: 500 }

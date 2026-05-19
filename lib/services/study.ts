@@ -27,17 +27,32 @@ export async function createStudy(idVacancy: string, userId: string) {
     const techStackComparison = await hundleStudyWithOpenAi.getImportantSkills(skills, experiences, vacancy);
     const resumeCandidate = await hundleStudyWithOpenAi.createResumeCandidate(skills, experiences);
 
+    const profile = {
+        "missing": techStackComparison?.missing ?? [], // Skills que esta ausente no perfil do usuario 
+        "strong": techStackComparison?.strong ?? [], // Skills fortes no perfil do usuario
+        "matchPercentage": techStackComparison?.matchPercentage ?? 0, // Porcentagem de match com o perfil do usuario
+        "resume": resumeCandidate || ""
+    }
+
+    const roadMapCandidate = await hundleStudyWithOpenAi.createRoadMapCandidate(vacancy, profile);
+
+    await studyRepository.createStudy({
+        title: `Estudo para vaga ${vacancy.title}`,
+        study: roadMapCandidate || "",
+        userId
+    });
+
+
     return {
         status: true,
         message: "Sucesso na criação da study"
     }
-        // return await studyRepository.createStudy(data);
-    }
+}
 
-    export async function deleteStudy(id: string) {
-        return await studyRepository.deleteStudy(id);
-    }
+export async function deleteStudy(id: string) {
+    return await studyRepository.deleteStudy(id);
+}
 
-    export async function updateStudy(id: string, data: Partial<UpdateStudyDTO>) {
-        return await studyRepository.updateStudy(id, data);
-    }
+export async function updateStudy(id: string, data: Partial<UpdateStudyDTO>) {
+    return await studyRepository.updateStudy(id, data);
+}

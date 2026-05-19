@@ -11,8 +11,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_PASSWORD: educarrer2505
-      #DATABASE_URL: "postgresql://postgres:2505@localhost:5432/edu_carrer_web"
-      DATABASE_URL: "postgres://edu:123456789@147.79.110.10:5400/edu?sslmode=disable"
+      DATABASE_URL: "postgresql://postgres:2505@localhost:5432/edu_carrer_web"
+      #DATABASE_URL: "postgres://edu:123456789@147.79.110.10:5400/edu?sslmode=disable"
       NEXT_BETTER_AUTH_SECRET: "OKXBVIAKHUmQ9wOlAm7CTakv5ZmObP589ta5crKFOtBtykcd7SpToRBqBb5HOHbK"
       NEXT_BETTER_AUTH_URL: "http://localhost:5401"
       BETTER_AUTH_SECRET: "OKXBVIAKHUmQ9wOlAm7CTakv5ZmObP589ta5crKFOtBtykcd7SpToRBqBb5HOHbK"
