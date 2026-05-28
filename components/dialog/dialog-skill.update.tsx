@@ -27,6 +27,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ToastPersonalizado } from "@/components/toast";
+import { Label } from "../ui/label";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -101,6 +102,7 @@ export function DialogSkillUpdate({
 
                     {/* Nome */}
                     <div>
+                        <Label className="text-black!" htmlFor="nome">Nome da habilidade</Label>
                         <Input
                             placeholder="Nome da habilidade"
                             {...register("nome")}
@@ -114,6 +116,7 @@ export function DialogSkillUpdate({
 
                     {/* Nivel */}
                     <div>
+                        <Label className="text-black!" htmlFor="nivel">Nível</Label>
                         <Controller
                             control={control}
                             name="nivel"
@@ -154,6 +157,7 @@ export function DialogSkillUpdate({
 
                     {/* Descrição */}
                     <div>
+                        <Label className="text-black!" htmlFor="descricao">Descrição</Label>
                         <Input
                             placeholder="Descrição"
                             {...register("descricao")}

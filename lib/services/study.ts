@@ -25,8 +25,9 @@ export async function createStudy(idVacancy: string, userId: string) {
     }
 
     const techStackComparison = await hundleStudyWithOpenAi.getImportantSkills(skills, experiences, vacancy);
+    console.log("techStackComparison", techStackComparison);
     const resumeCandidate = await hundleStudyWithOpenAi.createResumeCandidate(skills, experiences);
-
+    console.log("resumeCandidate", resumeCandidate);
     const profile = {
         "missing": techStackComparison?.missing ?? [], // Skills que esta ausente no perfil do usuario 
         "strong": techStackComparison?.strong ?? [], // Skills fortes no perfil do usuario

@@ -37,10 +37,9 @@ export function useStudies() {
     }
 }
 
-export async function createStudy(name: string, about?: string) {
+export async function createStudy(idVacancy: string) {
     const { data } = await axios.post(`${URL}/api/study`, {
-        name,
-        about
+        idVacancy
     }, {
         withCredentials: true
     })

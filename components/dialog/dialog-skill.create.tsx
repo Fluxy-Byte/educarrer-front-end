@@ -28,6 +28,7 @@ import { z, ZodError } from "zod";
 import { createSkill, useSkills } from "@/app/services/skills.swr";
 import { useState } from "react";
 import { ToastPersonalizado } from "@/components/toast";
+import { Label } from "../ui/label";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -95,6 +96,7 @@ export function DialogSkillCreate() {
 
                     {/* Nome */}
                     <div>
+                        <Label className="text-black!" htmlFor="nome">Nome da habilidade</Label>
                         <Input
                             placeholder="Nome da habilidade"
                             {...register("nome")}
@@ -108,6 +110,7 @@ export function DialogSkillCreate() {
 
                     {/* Nível */}
                     <div className="w-full">
+                        <Label className="text-black!" htmlFor="nivel">Nível</Label>
                         <Controller
                             control={control}
                             name="nivel"
@@ -140,6 +143,7 @@ export function DialogSkillCreate() {
 
                     {/* Descrição */}
                     <div>
+                        <Label className="text-black!" htmlFor="descricao">Descrição</Label>
                         <Input
                             placeholder="Descrição da habilidade"
                             {...register("descricao")}

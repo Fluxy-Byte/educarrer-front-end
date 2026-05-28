@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
-import { Label } from "@/components/ui/label"; 
+import { Label } from "@/components/ui/label";
 import {
     Dialog,
     DialogClose,
@@ -62,15 +62,17 @@ export function DialogExperienceCreate() {
             const result = await createExperience(data.nome, data.senioridade, data.descricao, data.startDate, data.endDate);
             ToastPersonalizado({ mensagem: result.message || "Experiência cadastrada com sucesso!" });
             setOpen(false);
-
+            return;
         } catch (error: any) {
             if (error instanceof ZodError) {
                 error.issues.forEach((err) => {
                     toast.error(err.message);
                     console.log(error)
                 });
+                return;
             } else {
                 toast.error("Erro ao cadastrar experiência");
+                return;
             }
         } finally {
             await refresh();
@@ -100,6 +102,7 @@ export function DialogExperienceCreate() {
 
                     {/* Nome */}
                     <div>
+                        <Label className="text-black!" htmlFor="nome">Nome da experiência</Label>
                         <Input
                             placeholder="Nome da experiência"
                             {...register("nome")}
@@ -113,6 +116,7 @@ export function DialogExperienceCreate() {
 
                     {/* Nível */}
                     <div className="w-full">
+                        <Label className="text-black!" htmlFor="senioridade">Senioridade</Label>
                         <Controller
                             control={control}
                             name="senioridade"
@@ -158,6 +162,7 @@ export function DialogExperienceCreate() {
 
                     {/* Descrição */}
                     <div>
+                        <Label className="text-black!" htmlFor="descricao">Descrião</Label>
                         <Input
                             placeholder="Descrição da habilidade"
                             {...register("descricao")}
@@ -172,7 +177,7 @@ export function DialogExperienceCreate() {
                     {/* Datas */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="startDate">Data de Início</Label>
+                            <Label className="text-black!" htmlFor="startDate">Data de Início</Label>
                             <Input
                                 type="date"
                                 id="startDate"
@@ -180,7 +185,7 @@ export function DialogExperienceCreate() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="endDate">Data de Término</Label>
+                            <Label className="text-black!" htmlFor="endDate">Data de Término</Label>
                             <Input
                                 type="date"
                                 id="endDate"

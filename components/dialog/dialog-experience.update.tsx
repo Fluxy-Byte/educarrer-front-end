@@ -122,6 +122,7 @@ export function DialogExperienceUpdate({
 
                     {/* Nome */}
                     <div>
+                        <Label className="text-black!" htmlFor="nome">Nome da experiência</Label>
                         <Input
                             placeholder="Nome da habilidade"
                             {...register("nome")}
@@ -135,6 +136,7 @@ export function DialogExperienceUpdate({
 
                     {/* Nivel */}
                     <div>
+                        <Label className="text-black!" htmlFor="senioridade">Senioridade</Label>
                         <Controller
                             control={control}
                             name="senioridade"
@@ -181,6 +183,7 @@ export function DialogExperienceUpdate({
 
                     {/* Descrição */}
                     <div>
+                        <Label className="text-black!" htmlFor="descricao">Descrição</Label>
                         <Input
                             placeholder="Descrição"
                             {...register("descricao")}
@@ -195,7 +198,7 @@ export function DialogExperienceUpdate({
                     { /* Datas */}
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label htmlFor="startDate">Data de Início</Label>
+                            <Label className="text-black!" htmlFor="startDate">Data de Início</Label>
                             <Input
                                 type="date"
                                 id="startDate"
@@ -203,7 +206,7 @@ export function DialogExperienceUpdate({
                             />
                         </div>
                         <div>
-                            <Label htmlFor="endDate">Data de Término</Label>
+                            <Label className="text-black!" htmlFor="endDate">Data de Término</Label>
                             <Input
                                 type="date"
                                 id="endDate"

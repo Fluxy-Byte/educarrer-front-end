@@ -10,7 +10,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isPending && !session) {
-      router.push("/login")
+      router.push("/singin")
     }
   }, [session, isPending, router])
 

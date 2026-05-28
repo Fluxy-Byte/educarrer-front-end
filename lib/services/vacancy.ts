@@ -8,6 +8,7 @@ export async function getVacancys() {
 }
 
 export async function getVacancysById(id: number) {
-    const res = await vacancysRepository.getVacancysByIdFromRedis(id);
+   // const res = await vacancysRepository.getVacancysByIdFromRedis(id);
+    const res = await vacancysRepository.getVacancysByIdFromDataBase(id);
     return res;
 }

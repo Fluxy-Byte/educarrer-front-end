@@ -1,4 +1,8 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { createStudy } from "@/app/services/study.swr";
+import { ToastPersonalizado } from "@/components/toast";
+import { LoaderCircle } from "lucide-react";
 import {
     Dialog,
     DialogClose,
@@ -34,6 +38,16 @@ interface DialogVagasProps {
 
 
 export function DialogVaga({ vacancy }: DialogVagasProps) {
+    const [isLoading, setIsLoading] = useState<Boolean>(false);
+
+    async function handleCreateStudy(id: string) {
+        setIsLoading(true);
+        await createStudy(id);
+        setIsLoading(false);
+        console.log("Criar estudo para a vaga:", vacancy);
+        setIsLoading(false);
+    }
+
     return (
         <Dialog key={vacancy.id}>
             <DialogTrigger asChild>
@@ -102,8 +116,8 @@ export function DialogVaga({ vacancy }: DialogVagasProps) {
                 {/* Footer */}
                 <DialogFooter className="flex justify-between mt-4">
                     <div className="w-auto h-auto flex justify-start items-center">
-                        <Button variant={"link"}>
-                            Criar estudo
+                        <Button onClick={() => handleCreateStudy(String(vacancy.id))} variant={"link"}>
+                            {isLoading ? <LoaderCircle className="animate-spin text-red-500">Criando estudo</LoaderCircle> : "Criar estudo"}
                         </Button>
                     </div>
                     <div className="w-full h-auto flex justify-end items-center gap-3">
