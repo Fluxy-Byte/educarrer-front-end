@@ -25,6 +25,8 @@ model User {
   skills        Skill[]
   experiences   Experience[]
   study         Study[]
+  avaliations   Avaliations[]
+  avaliationsVacancys AvaliationsVacancys[]
 }
 
 model Session {
@@ -114,4 +116,31 @@ model Study {
   userId     String
 
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Avaliations {
+  id         String   @id @default(cuid())
+  satisfied  Boolean
+  comment    String?
+  
+  studyId    String
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime?
+
+  userId     String
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)  
+}
+
+model AvaliationsVacancys {
+  id         String   @id @default(cuid())
+  satisfied  Boolean
+  comment    String?
+
+  createdAt  DateTime @default(now())
+
+  userId     String
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)  
 }
