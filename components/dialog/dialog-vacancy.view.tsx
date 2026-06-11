@@ -16,8 +16,8 @@ import {
 
 import { Badge } from "@/components/ui/badge"
 
-export interface VacancyDTO {
-    id: number;
+export interface Vacancy {
+    id: string;
     title: string;
     description: string;
     company: string;
@@ -28,12 +28,11 @@ export interface VacancyDTO {
     origin: string;
     location: string;
     salary: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+    active: boolean;
 }
 
 interface DialogVagasProps {
-    vacancy: VacancyDTO
+    vacancy: Vacancy
 }
 
 
@@ -85,9 +84,9 @@ export function DialogVaga({ vacancy }: DialogVagasProps) {
                 </DialogHeader>
 
                 {/* Salário destaque */}
-                <div className="bg-blue-700/20 border border-blue-700 rounded-lg p-3 text-black font-semibold">
+                {/* <div className="bg-blue-700/20 border border-blue-700 rounded-lg p-3 text-black font-semibold">
                     💰 {vacancy.salary}
-                </div>
+                </div> */}
 
                 {/* Tecnologias */}
                 <div>
@@ -117,7 +116,16 @@ export function DialogVaga({ vacancy }: DialogVagasProps) {
                 <DialogFooter className="flex justify-between mt-4">
                     <div className="w-auto h-auto flex justify-start items-center">
                         <Button onClick={() => handleCreateStudy(String(vacancy.id))} variant={"link"}>
-                            {isLoading ? <LoaderCircle className="animate-spin text-red-500">Criando estudo</LoaderCircle> : "Criar estudo"}
+                            {
+                                isLoading ? (
+                                    <>
+                                        <LoaderCircle className="animate-spin text-red-500" />
+                                        {" "}Criando estudo
+                                    </>
+                                ) : (
+                                    "Criar estudo"
+                                )
+                            }
                         </Button>
                     </div>
                     <div className="w-full h-auto flex justify-end items-center gap-3">

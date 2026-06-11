@@ -3,12 +3,18 @@ import axios from 'axios';
 
 export interface ResultGetVacancys {
     status: boolean
-    vacancys: VacancyDTO[]
+    vacancys: Vacancy[]
     message: string
 }
 
-export interface VacancyDTO {
-    id: number;
+export interface ResultCreateOrUpdateVacancy {
+    status: boolean,
+    vacancy: Vacancy | null,
+    message: string
+}
+
+export interface Vacancy {
+    id: string;
     title: string;
     description: string;
     company: string;
@@ -19,8 +25,21 @@ export interface VacancyDTO {
     origin: string;
     location: string;
     salary: string | null;
-    createdAt: Date;
-    updatedAt: Date;
+    active: boolean;
+}
+
+export interface CreateOrUpdateVacancy {
+    title: string;
+    description: string;
+    company: string;
+    modality: string;
+    level: string;
+    technologies: string[];
+    link: string;
+    origin: string;
+    location: string;
+    salary: string | null;
+    active: boolean;
 }
 
 const fetcher = async (url: string): Promise<ResultGetVacancys> => {
@@ -31,6 +50,7 @@ const fetcher = async (url: string): Promise<ResultGetVacancys> => {
 }
 
 const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://protec-edu-carrer-ai.egnehl.easypanel.host"
+
 export function useVacancys() {
     const { data, error, isLoading, mutate } = useSWR(`${URL}/api/vacancy`, fetcher);
 
@@ -42,3 +62,19 @@ export function useVacancys() {
         refresh: mutate
     }
 }
+
+export async function createVacancy(data: CreateOrUpdateVacancy): Promise<ResultCreateOrUpdateVacancy> {
+    const { data: response } = await axios.post(`${URL}/api/vacancy`, data, {
+        withCredentials: true
+    });
+    return response;
+}
+
+
+export async function updateVacancy(id: string, data: CreateOrUpdateVacancy): Promise<ResultCreateOrUpdateVacancy> {
+    const { data: response } = await axios.put(`${URL}/api/vacancy/${id}`, data, {
+        withCredentials: true
+    });
+    return response;
+}
+

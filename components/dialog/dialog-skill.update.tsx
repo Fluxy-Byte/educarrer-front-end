@@ -73,6 +73,7 @@ export function DialogSkillUpdate({
         try {
             const result = await updateSkill(skill.id, data.nome, data.nivel, data.descricao);
             ToastPersonalizado({ mensagem: result.message || "Habilidade atualizada com sucesso!" });
+            reset();
             onOpenChange(false);
         } catch (error: any) {
             console.error(error);

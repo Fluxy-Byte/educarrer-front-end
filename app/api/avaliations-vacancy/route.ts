@@ -10,32 +10,24 @@ export async function GET(req: Request) {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { status: false, avaliations: [], message: "Não encontramos a sessão do usuário" },
+        { status: false, solicited: true, message: "Não encontramos a sessão do usuário" },
         { status: 401 }
       );
     }
 
-    if (session.user.role === "admin") {
-      const avaliations = await getAvaliationVacancy();
-      
-      return NextResponse.json({
-        status: true,
-        avaliations,
-        message: "Sucesso na consulta das avaliações  das vagas"
-      });
-    }
+    const avaliation = await getAvaliationVacancyByUserId(session.user.id);
 
-    const avaliations = await getAvaliationVacancyByUserId(session.user.id);
+    console.log("Avaliação da vaga encontrada:", avaliation);
 
     return NextResponse.json({
       status: true,
-      avaliations,
+      solicited: avaliation,
       message: "Sucesso na consulta das avaliações  das vagas"
     });
   } catch (e: any) {
     return NextResponse.json({
       status: false,
-      avaliations: [],
+      solicited: true,
       message: "Erro interno no servidor"
     })
   }

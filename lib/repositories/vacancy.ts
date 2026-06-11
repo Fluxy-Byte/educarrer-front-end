@@ -1,4 +1,6 @@
 import { Vacancy } from "@/lib/entities/vacancy";
+import { CreateVacancyData } from "@/lib/interfaces/vacancy.interface";
+import { prisma } from "@/lib/prisma"
 
 export async function getVacancys() {
     return [
@@ -22,7 +24,8 @@ export async function getVacancys() {
             link: "https://www.linkedin.com/jobs/",
             origin: "LinkedIn",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 2,
@@ -44,7 +47,8 @@ export async function getVacancys() {
             link: "https://github.com/jobs",
             origin: "GitHub Jobs",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 3,
@@ -66,7 +70,8 @@ export async function getVacancys() {
             link: "https://www.linkedin.com/jobs/",
             origin: "LinkedIn",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 4,
@@ -88,7 +93,8 @@ export async function getVacancys() {
             link: "https://www.infojobs.com.br/",
             origin: "InfoJobs",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 5,
@@ -110,7 +116,8 @@ export async function getVacancys() {
             link: "https://www.linkedin.com/jobs/",
             origin: "LinkedIn",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 6,
@@ -132,7 +139,8 @@ export async function getVacancys() {
             link: "https://www.linkedin.com/jobs/",
             origin: "LinkedIn",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 7,
@@ -154,7 +162,8 @@ export async function getVacancys() {
             link: "https://www.glassdoor.com.br/",
             origin: "Glassdoor",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         },
         {
             id: 8,
@@ -176,7 +185,8 @@ export async function getVacancys() {
             link: "https://www.linkedin.com/jobs/",
             origin: "LinkedIn",
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            active: true
         }
     ];
 }
@@ -185,7 +195,7 @@ export class VacancyRepository {
 
     async getVacancys(): Promise<Vacancy[]> {
 
-        const vacancys = await getVacancys();
+        const vacancys = await prisma.vacancy.findMany();
 
         return vacancys.map(v => new Vacancy(
             v.id,
@@ -200,11 +210,27 @@ export class VacancyRepository {
             v.location,
             v.salary,
             v.createdAt,
-            v.updatedAt
+            v.updatedAt,
+            v.active
         ));
     }
 
-    async getVacancysById(id: number): Promise<Vacancy | null> {
-        return (await getVacancys()).find(v => v.id === id) || null;
+    async getVacancysById(id: string): Promise<Vacancy | null> {
+        return await prisma.vacancy.findFirst({
+            where: { id }
+        });
+    }
+
+    async createVacancy(data: CreateVacancyData) {
+        return await prisma.vacancy.create({
+            data
+        })
+    }
+
+    async updateVacancy(id: string, data: CreateVacancyData) {
+        return await prisma.vacancy.update({
+            where: { id },
+            data
+        })
     }
 }

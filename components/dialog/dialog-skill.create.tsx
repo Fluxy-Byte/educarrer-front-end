@@ -58,6 +58,7 @@ export function DialogSkillCreate() {
         try {
             const result = await createSkill(data.nome, data.nivel, data.descricao);
             ToastPersonalizado({ mensagem: result.message || "Habilidade cadastrada com sucesso!" });
+            reset();
             setOpen(false);
 
         } catch (error: any) {

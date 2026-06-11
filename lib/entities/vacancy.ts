@@ -1,17 +1,18 @@
 export class Vacancy {
     constructor(
-        public id: number,
+        public id: string,
         public title: string,
-        public description: string,
-        public company: string,
-        public modality: string,
-        public level: string,
+        public description: string | null,
+        public company: string | null,
+        public modality: string | null,
+        public level: string | null,
         public technologies: string[],
-        public link: string,
-        public origin: string,
-        public location: string,
+        public link: string | null,
+        public origin: string | null,
+        public location: string | null,
         public salary: string | null,
         public createdAt: Date,
-        public updatedAt: Date
-    ) {}
+        public updatedAt: Date,
+        public active: boolean
+    ) { }
 }

@@ -12,9 +12,15 @@ export async function getAvaliationVacancy() {
 export async function getAvaliationVacancyByUserId(userId: string) {
     try {
         const avaliation = new AvaliationVacancysRepository();
-        return await avaliation.getAvaliationsByUserId(userId);
+        const lastAvaliation = await avaliation.getAvaliationsByUserId(userId);
+        console.log("Última avaliação encontrada para o usuário:", lastAvaliation);
+
+        if(lastAvaliation == null) return true;
+
+        return hasPassed2Days(lastAvaliation?.createdAt);
     } catch (e: any) {
-        return null
+        console.error("Erro ao buscar avaliação por ID de usuário:", e);
+        return true
     }
 }
 
@@ -34,4 +40,14 @@ export async function updateAvaliationVacancy(id: string, data: { satisfied?: bo
     } catch (e: any) {
         return null
     }
+}
+
+function hasPassed2Days(createdAt: Date): boolean {
+    const now = new Date();
+
+    const differenceMs = now.getTime() - createdAt.getTime();
+
+    const twoDaysMs = 2 * 24 * 60 * 60 * 1000; // 48 horas
+
+    return differenceMs >= twoDaysMs;
 }

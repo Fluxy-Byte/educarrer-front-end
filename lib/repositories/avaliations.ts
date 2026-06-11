@@ -7,7 +7,7 @@ export class AvaliationRepository {
     }
 
     async getAvaliationsByUserIdAndStudyId(userId: string, studyId: string) {
-        return await prisma.avaliations.findMany({
+        return await prisma.avaliations.findFirst({
             where: {
                 userId,
                 studyId,

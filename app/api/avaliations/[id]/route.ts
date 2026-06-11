@@ -8,6 +8,8 @@ export async function GET(req: Request,
   try {
     const { id } = await params;
 
+    console.log("ID recebido:", id);
+
     if (!id) {
       return NextResponse.json(
         {
@@ -22,6 +24,8 @@ export async function GET(req: Request,
     const session = await auth.api.getSession({
       headers: req.headers,
     });
+
+    console.log("Sessão do usuário:", session);
 
     if (!session || !session.user) {
       return NextResponse.json(

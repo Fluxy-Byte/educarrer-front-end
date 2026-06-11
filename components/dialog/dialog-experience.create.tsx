@@ -61,6 +61,7 @@ export function DialogExperienceCreate() {
         try {
             const result = await createExperience(data.nome, data.senioridade, data.descricao, data.startDate, data.endDate);
             ToastPersonalizado({ mensagem: result.message || "Experiência cadastrada com sucesso!" });
+            reset();
             setOpen(false);
             return;
         } catch (error: any) {

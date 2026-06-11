@@ -53,7 +53,8 @@ export class getVacancysFromRedis {
                 v2.location,
                 v2.salary,
                 v2.createdAt,
-                v2.updatedAt
+                v2.updatedAt,
+                v2.active
             ));
 
         } catch (e: any) {

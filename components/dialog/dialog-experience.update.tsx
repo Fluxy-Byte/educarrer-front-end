@@ -93,6 +93,7 @@ export function DialogExperienceUpdate({
         try {
             const result = await updateExperience(experience.id, data.nome, data.senioridade, data.descricao, data.startDate, data.endDate);
             ToastPersonalizado({ mensagem: result.message || "Experiência atualizada com sucesso!" });
+            reset();
             onOpenChange(false);
         } catch (error: any) {
             console.error(error);

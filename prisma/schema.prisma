@@ -118,6 +118,24 @@ model Study {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Vacancy {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  company       String?
+  level         String?
+  modality      String?
+  technologies  String[]
+  link          String?
+  origin        String?
+  location      String?
+  salary        String? @default("0")
+  active        Boolean @default(true)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Avaliations {
   id         String   @id @default(cuid())
   satisfied  Boolean

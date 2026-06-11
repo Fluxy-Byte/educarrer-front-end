@@ -23,6 +23,12 @@ export interface ResultGeral {
     message: string
 }
 
+export interface ResultAvaliationByUserId {
+    status: boolean
+    solicited: boolean
+    message: string
+}
+
 
 const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://protec-edu-carrer-ai.egnehl.easypanel.host"
 
@@ -34,7 +40,7 @@ const fetcher = async (url: string): Promise<ResultGetVagas> => {
 }
 
 export function useAvaliationsVacancys() {
-    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/avaliations-vacancys`, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/avaliations-vacancy`, fetcher);
 
     return {
         avaliations: data?.avaliations || [],
@@ -45,12 +51,11 @@ export function useAvaliationsVacancys() {
     }
 }
 
-export async function createAvaliationVancancy(userId: string, studyId: string, satisfied: boolean, comment?: string): Promise<ResultGeral> {
-    const { data } = await axios.post(`${URL}/api/avaliations-vacancys`, {
-        userId,
-        studyId,
-        satisfied,
-        comment
+
+export async function createAvaliationVancancy( satisfied: boolean, comment?: string): Promise<ResultGeral> {
+    const { data } = await axios.post(`${URL}/api/avaliations-vacancy`, {
+        comment,
+        satisfied
     }, {
         withCredentials: true
     })
@@ -58,7 +63,7 @@ export async function createAvaliationVancancy(userId: string, studyId: string, 
 }
 
 export async function updateAvaliationVancancy(id: string, satisfied?: boolean, comment?: string): Promise<ResultGeral> {
-    const { data } = await axios.put(`${URL}/api/avaliations-vacancys/${id}`, {
+    const { data } = await axios.put(`${URL}/api/avaliations-vacancy/${id}`, {
         satisfied,
         comment
     }, {
@@ -67,8 +72,8 @@ export async function updateAvaliationVancancy(id: string, satisfied?: boolean, 
     return data
 }
 
-export async function getAvaliationVancancyByUserIdAndStudyId(studyId: string): Promise<ResultGeral> {
-    const { data } = await axios.get(`${URL}/api/avaliations-vacancys?id=${studyId}`, {
+export async function getAvaliationVancancyByUserId(): Promise<ResultAvaliationByUserId> {
+    const { data } = await axios.get(`${URL}/api/avaliations-vacancy`, {
         withCredentials: true
     })
     return data

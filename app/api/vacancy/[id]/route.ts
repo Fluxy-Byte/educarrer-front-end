@@ -1,0 +1,59 @@
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/utils/auth";
+import { updateVacancy } from "@/lib/services/vacancy";
+
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+
+  if (!id) {
+    return NextResponse.json(
+      {
+        status: false,
+        vacancy: null,
+        message: "ID da vaga não fornecido"
+      },
+      { status: 400 }
+    );
+  }
+  
+  const { title, description, company, modality, level, technologies, link, origin, location, salary, active } = await req.json();
+
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+
+  if (!session || !session.user || session.user.role !== "admin") {
+    return NextResponse.json(
+      { status: false, vacancy: null, message: "Não encontramos a sessão do usuário ou usuário não é administrador" },
+      { status: 401 }
+    );
+  }
+
+  try {
+
+    const vacancy = await updateVacancy(
+      id,
+      { title, description, company, modality, level, technologies, link, origin, location, salary, active }
+    );
+
+    return NextResponse.json({
+      status: true,
+      vacancy: vacancy,
+      message: "Sucesso na atualização da vaga"
+    });
+  } catch (e: any) {
+    console.error(e);
+
+    return NextResponse.json(
+      {
+        status: false,
+        vacancy: null,
+        message: "Erro interno no servidor da vaga"
+      },
+      { status: 500 }
+    );
+  }
+}

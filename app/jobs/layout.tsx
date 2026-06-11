@@ -19,7 +19,7 @@ export default function DashboardLayout({
 
             <div className="sticky top-0! z-10 bg-white flex items-center justify-start gap-2">
               <div className="flex py-6 items-center text-black px-4">
-                <SidebarTrigger />
+                <SidebarTrigger size={"sm"} className="text-blue-600"/>
               </div>
               <div className="text-black block items-start hidden md:flex md:flex-col">
                 <h1 className="font-semibold text-md">Lista de empregos atuais</h1>
@@ -27,7 +27,7 @@ export default function DashboardLayout({
               </div>
             </div>
 
-            <div className="p-6 h-full w-full bg-zinc-200 rounded-ss-lg">{children}</div>
+            <div className="p-6 h-full w-full bg-zinc-200 border-t border-zinc-300">{children}</div>
           </main>
         </div>
       </SidebarProvider>

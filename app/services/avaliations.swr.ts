@@ -45,18 +45,18 @@ export function useAvaliations() {
     }
 }
 
-export async function createAvaliation(userId: string, satisfied: boolean, comment?: string): Promise<ResultGeral> {
+export async function createAvaliation(satisfied: boolean, studyId: string, comment?: string): Promise<ResultGeral> {
     const { data } = await axios.post(`${URL}/api/avaliations`, {
-        userId,
         satisfied,
-        comment
+        comment,
+        studyId
     }, {
         withCredentials: true
     })
     return data
 }
 
-export async function updateAvaliation(id: string, satisfied?: boolean, comment?: string): Promise<ResultGeral> {
+export async function updateAvaliation(id: string, satisfied: boolean, comment?: string): Promise<ResultGeral> {
     const { data } = await axios.put(`${URL}/api/avaliations/${id}`, {
         satisfied,
         comment
@@ -66,9 +66,11 @@ export async function updateAvaliation(id: string, satisfied?: boolean, comment?
     return data
 }
 
-export async function getAvaliationsByUserIdAndStudyId(studyId: string): Promise<ResultGeral> {
-    const { data } = await axios.get(`${URL}/api/avaliations?id=${studyId}`, {
+export async function getAvaliationsByUserIdAndStudyId(id: string): Promise<ResultGeral> {
+    const { data } = await axios.get(`${URL}/api/avaliations/${id}`, {
         withCredentials: true
     })
+
+    console.log("Resposta da API:", data);
     return data
 }

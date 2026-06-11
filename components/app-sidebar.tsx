@@ -8,6 +8,7 @@ import {
   UserCog,
   LogOut,
   User,
+  ShieldUser,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
@@ -63,8 +64,22 @@ export function AppSidebar() {
     router.push("/singin")
   }
 
+  const items = React.useMemo(() => {
+    const baseItems = [...menuItems]
+
+    if (session?.user?.role === "admin") {
+      baseItems.push({
+        title: "Admin",
+        url: "/admin",
+        icon: ShieldUser,
+      })
+    }
+
+    return baseItems
+  }, [session?.user?.role])
+
   return (
-    <Sidebar className="h-full">
+    <Sidebar className="h-full border-r border-zinc-300">
       <SidebarHeader className="flex items-start justify-center py-5 px-4">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md text-white bg-blue-900">
@@ -76,21 +91,21 @@ export function AppSidebar() {
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex-1 px-2">
         <SidebarGroup>
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.url}
-                    className={pathname === item.url ? "bg-blue-900! text-white! h-12" : "hover:bg-blue-700/20! hover:text-black! h-12"}
+                    className={pathname === item.url ? "bg-blue-900! text-white! h-auto py-2! px-2!" : "hover:bg-blue-700/20! h-auto hover:text-black! py-2! px-2!"}
                   >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span className="pl-2">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
