@@ -1,11 +1,7 @@
 "use client";
 
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useVacancys } from "@/app/services/vacancys.swr";
-import { useSession } from "@/lib/utils/auth-client";
-import { authClient } from "@/lib/utils/auth-client";
-import { DialogVaga } from "@/components/dialog/dialog-vacancy.view";
 import Image from "next/image";
 import { Loader2, Users, Search, BrainCircuit, MapPinHouse, ChartColumnIncreasing, BriefcaseBusiness, Building2, Heart, Flame } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -14,6 +10,7 @@ import { getAvaliationVancancyByUserId } from "@/app/services/avaliationsVacancy
 import Banner from "@/public/banner.png";
 import IconeAlvo from "@/public/icone-alvo.png";
 import CadsVacancy from "@/components/cards/card-vacancy";
+
 import {
   Card,
   CardContent,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/utils/auth";
-import { createAvaliationVacancy, getAvaliationVacancy, getAvaliationVacancyByUserId } from "@/lib/services/avaliationsVacancys";
+import { createAvaliationVacancy, getAvaliationVacancyByUserId } from "@/lib/services/avaliationsVacancys";
 
 export async function GET(req: Request) {
   try {

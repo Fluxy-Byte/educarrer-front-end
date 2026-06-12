@@ -51,6 +51,18 @@ export function useAvaliationsVacancys() {
     }
 }
 
+export function useAvaliationsVacancysAdmin() {
+    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/avaliations-vacancy/admin`, fetcher);
+
+    return {
+        avaliations: data?.avaliations || [],
+        isLoading,
+        isError: error,
+        message: data?.message,
+        refresh: mutate
+    }
+}
+
 
 export async function createAvaliationVancancy( satisfied: boolean, comment?: string): Promise<ResultGeral> {
     const { data } = await axios.post(`${URL}/api/avaliations-vacancy`, {

@@ -3,15 +3,23 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useVacancys } from "@/app/services/vacancys.swr";
-import { useSession } from "@/lib/utils/auth-client";
-import { authClient } from "@/lib/utils/auth-client";
-import { DialogVagaAdmin } from "@/components/dialog/dialog-vacancy-admin.view";
-import { Loader2, Plus } from "lucide-react";
+import Image from "next/image";
+import { Loader2, Users, Search, BrainCircuit, MapPinHouse, ChartColumnIncreasing, BriefcaseBusiness, Building2, Heart, Flame } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { DialogAvaliationsVacancys } from "@/components/dialog/dialog-avaliations-vacancys";
-import { DialogVacncyCreate } from "@/components/dialog/dialog-vacancy.create";
 import { getAvaliationVancancyByUserId } from "@/app/services/avaliationsVacancy.swr";
-import { DialogVacancyUpdate } from "@/components/dialog/dialog-vacancy.update";
+import IconeAlvo from "@/public/icone-alvo.png";
+import CadsVacancyAdmin from "@/components/cards/card-vacancy-admin";
+import CharRecomedacaoDeVagas from "@/components/chart/acuracia-recomendacoes";
+import CharGeracaoDeEstudo from "@/components/chart/acuracia-geracao-de-estudos";
+import { DialogVacncyCreate } from "@/components/dialog/dialog-vacancy.create";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
 import {
   Select,
   SelectContent,
@@ -20,19 +28,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const bussinesMoreVacancys = [
+  {
+    "id": "1",
+    "name": "Colmeia",
+    "vacancys": 200
+  },
+  {
+    "id": "2",
+    "name": "Telek",
+    "vacancys": 10
+  },
+  {
+    "id": "3",
+    "name": "Fluxe",
+    "vacancys": 1
+  }
+]
+
 export interface Vacancy {
-    id: string;
-    title: string;
-    description: string;
-    company: string;
-    modality: string;
-    level: string;
-    technologies: string[];
-    link: string;
-    origin: string;
-    location: string;
-    salary: string | null;
-    active: boolean;
+  id: string;
+  title: string;
+  description: string;
+  company: string;
+  modality: string;
+  level: string;
+  technologies: string[];
+  link: string;
+  origin: string;
+  location: string;
+  salary: string | null;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default function DashboardPage() {
@@ -41,12 +69,15 @@ export default function DashboardPage() {
   const [nomeFiltro, setNomeFiltro] = useState("");
   const [nivelFiltro, setNivelFiltro] = useState("todos");
   const [modalidadeFiltro, setModalidadeFiltro] = useState("todos");
-
   const [needAvaliation, setNeedAvaliation] = useState<boolean>(false);
 
   const vagasFiltradas = vacancys?.filter((vaga) => {
     const matchNome =
-      vaga.title.toLowerCase().includes(nomeFiltro.toLowerCase());
+      vaga.title.toLowerCase().includes(nomeFiltro.toLowerCase()) ||
+      vaga.company.toLowerCase().includes(nomeFiltro.toLowerCase()) ||
+      vaga.technologies.some((tech) =>
+        tech.toLowerCase().includes(nomeFiltro.toLowerCase())
+      );
 
     const matchNivel =
       nivelFiltro === "todos" || vaga.level === nivelFiltro;
@@ -57,10 +88,6 @@ export default function DashboardPage() {
     return matchNome && matchNivel && matchModalidade;
   });
 
-  useEffect(() => {
-
-  }, [])
-
   const handleGetNeedAvaliation = async () => {
     try {
       const res = await getAvaliationVancancyByUserId();
@@ -70,87 +97,171 @@ export default function DashboardPage() {
     } catch (error) {
       console.error("Erro ao verificar necessidade de avaliação:", error);
     }
-  }
+  };
 
   const handleClosedDialogAvaliation = () => {
     setNeedAvaliation(false);
     handleGetNeedAvaliation();
-  }
+  };
 
   useEffect(() => {
     handleGetNeedAvaliation();
-  }, [])
+  }, []);
 
   return (
-    <div className="w-full min-h-full flex flex-col gap-4 relative">
-      <DialogAvaliationsVacancys active={needAvaliation} closeDialog={handleClosedDialogAvaliation} />
-      <div className="w-full h-auto bg-white rounded-lg shadow-lg p-4 flex flex-col gap-3">
+    <div className="flex-col-reverse lg:flex-row flex justify-center itens-center gap-3">
+      <div className="w-full min-h-full flex flex-col gap-4 relative">
+        {/* Card de filtros */}
+        <div className="w-full bg-white rounded-lg border border-zinc-200 shadow-sm p-4 flex flex-col gap-3">
 
-        <div className="w-full flex items-center justify-between">
-          <h1 className="text-black font-semibold">Filtros</h1>
+          {/* Header */}
+          <div className="flex items-center gap-3">
+            <Users strokeWidth={1} className="h-6 w-6 text-black" />
+            <div>
+              <h1 className="text-md font-semibold text-black">Filtros de busca</h1>
+              <p className="text-xs text-zinc-400">Encontre a vaga que deseja editar ou excluir</p>
+            </div>
+          </div>
+
+          {/* Campo de busca */}
+          <div className="flex items-center w-full border border-zinc-200 rounded-md px-3 py-2 bg-white gap-2">
+            <Search className="h-4 w-4 text-zinc-400 shrink-0" />
+            <Input
+              type="text"
+              placeholder="Buscar por nome da vaga, empresa ou palavra-chave..."
+              value={nomeFiltro}
+              onChange={(e) => setNomeFiltro(e.target.value)}
+              className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-black placeholder:text-zinc-400 p-0 h-8 text-sm"
+            />
+          </div>
+
+          {/* Selects de nível e modalidade */}
+          <div className="flex gap-3">
+            <Select value={nivelFiltro} onValueChange={(value) => setNivelFiltro(value)}>
+              <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-12!">
+                <div className="flex items-center gap-2">
+                  <BrainCircuit className="h-6! w-6! text-emerald-500 shrink-0" />
+                  <SelectValue placeholder="Todos os níveis" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem className="h-10!" value="todos">Todos os níveis</SelectItem>
+                <SelectItem className="h-10!" value="Júnior">Júnior</SelectItem>
+                <SelectItem className="h-10!" value="Pleno">Pleno</SelectItem>
+                <SelectItem className="h-10!" value="Sênior">Sênior</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={modalidadeFiltro} onValueChange={(value) => setModalidadeFiltro(value)}>
+              <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-12!">
+                <div className="flex items-center gap-2">
+                  <MapPinHouse className="h-6! w-6! text-violet-500 shrink-0" />
+                  <SelectValue placeholder="Todas as modalidades" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem className="h-10!" value="todos">Todas as modalidades</SelectItem>
+                <SelectItem className="h-10!" value="Remoto">Remoto</SelectItem>
+                <SelectItem className="h-10!" value="Híbrido">Híbrido</SelectItem>
+                <SelectItem className="h-10!" value="Presencial">Presencial</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="w-full bg-white rounded-xl border border-zinc-200 shadow-sm p-4 flex flex-col gap-3">
+          <div className="w-full flex items-center justify-start h-auto gap-3">
+            <Image src={IconeAlvo} alt="Ícone de alvo" className="h-6 w-6" />
+            <div className="flex flex-col items-start">
+              <h1 className="text-md font-semibold text-black">
+                Vagas cadastradas no sistema
+              </h1>
+              <p className="text-xs text-zinc-400">
+                Todo nossos registros de vagas estão disponíveis pra você acessar
+              </p>
+            </div>
+
+          </div>
+
           <DialogVacncyCreate />
+
+          <div>
+            {/* Lista de vagas */}
+            {vacancys ? (
+              <div className="w-full h-full overflow-y-autorounded-lg flex flex-col gap-4 bg-transparent">
+                {vagasFiltradas && vagasFiltradas.length > 0 ? (
+                  vagasFiltradas.map((vaga) => (
+                    <CadsVacancyAdmin key={vaga.id} vacancy={vaga} />
+                  ))
+                ) : (
+                  <p className="text-center text-gray-500">
+                    Nenhuma vaga cadastrada.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="w-full p-4 flex items-center justify-center">
+                <Loader2 className="animate-spin" />
+              </div>
+            )}
+          </div>
         </div>
 
-        <Input
-          type="text"
-          placeholder="Buscar por nome da vaga..."
-          value={nomeFiltro}
-          onChange={(e) => setNomeFiltro(e.target.value)}
-          className="border border-zinc-300 text-black placeholder:text-gray-500 rounded-md p-2"
-        />
-
-        <div className="flex gap-2">
-          <Select
-            value={nivelFiltro}
-            onValueChange={(value) => setNivelFiltro(value)}
-          >
-            <SelectTrigger className="w-full h-12! bg-white! text-black placeholder:text-gray-500 border-zinc-300 rounded-md">
-              <SelectValue placeholder="Todos os níveis" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="todos">Todos os níveis</SelectItem>
-              <SelectItem value="Júnior">Júnior</SelectItem>
-              <SelectItem value="Pleno">Pleno</SelectItem>
-              <SelectItem value="Sênior">Sênior</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={modalidadeFiltro}
-            onValueChange={(value) => setModalidadeFiltro(value)}
-          >
-            <SelectTrigger className="w-full h-12! bg-white! text-black placeholder:text-gray-500 border-zinc-300 rounded-md">
-              <SelectValue placeholder="Todas modalidades" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="todos">Todas modalidades</SelectItem>
-              <SelectItem value="Remoto">Remoto</SelectItem>
-              <SelectItem value="Híbrido">Híbrido</SelectItem>
-              <SelectItem value="Presencial">Presencial</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
 
-      {vacancys ? (
-        <div className="w-full max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-lg p-4 gap-2 flex flex-col">
-          {vagasFiltradas && vagasFiltradas.length > 0 ? (
-            vagasFiltradas.map((vaga) => (
-              <DialogVagaAdmin key={vaga.id} vacancy={vaga} />
-            ))
-          ) : (
-            <p className="text-center text-gray-500">
-              Nenhuma vaga encontrada com esses filtros.
-            </p>
-          )}
-        </div>
-      ) : (
-        <div className="w-full p-4 flex items-center justify-center">
-          <Loader2 className="animate-spin" />
-        </div>
-      )}
+      <div className="w-full lg:w-1/4 h-fit flex flex-col gap-4">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <ChartColumnIncreasing className="h-6 w-6 text-blue-500" />
+              <h1 className="text-black">Estatísticas rápidas</h1>
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="lg:flex lg:flex-col gap-3 grid grid-cols-2">
+              <Card className="border-blue-400 bg-blue-50">
+                <CardContent className="flex items-center gap-4">
+                  <BriefcaseBusiness className="h-7 w-7 text-blue-600 shrink-0" />
+
+                  <div>
+                    <h2 className="font-semibold text-blue-500">
+                      + 1.250
+                    </h2>
+
+                    <p className="text-xs text-blue-600">
+                      Usuários cadastrados
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-green-400 bg-green-50">
+                <CardContent className="flex items-center gap-4">
+                  <Building2 className="h-7 w-7 text-green-600 shrink-0" />
+
+                  <div>
+                    <h2 className="font-semibold text-green-500">
+                      + 850
+                    </h2>
+
+                    <p className="text-xs text-green-600">
+                      Empresas parceiras
+                    </p>
+                  </div>
+                </CardContent>
+
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+
+        <CharGeracaoDeEstudo />
+
+        <CharRecomedacaoDeVagas />
+      </div>
+
     </div>
+
   );
 }

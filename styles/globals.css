@@ -43,11 +43,11 @@
 --ring: #0a75c7;
 
 /* 📊 Charts */
---chart-1: #AE0001;
---chart-2: #06264D;
---chart-3: #061735;
---chart-4: #1e3a5f;
---chart-5: #9ca3af;
+--chart-1: var(--primary);
+--chart-2: #ffffff;
+--chart-3: #ffffff;
+--chart-4: #ffffff;
+--chart-5: #ffffff;
 
 /* 📐 Radius */
 --radius: 0.625rem;

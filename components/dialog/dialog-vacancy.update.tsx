@@ -22,7 +22,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { CloudUpload, Search, Briefcase, MapPin, Link2, Code2, AlertCircle } from "lucide-react";
+import { CloudUpload, Search, Briefcase, MapPin, Link2, Code2, AlertCircle, Loader2, Rocket } from "lucide-react";
 import { useSkills } from "@/app/services/skills.swr";
 import { ToastPersonalizado } from "@/components/toast";
 import { useForm, Controller } from "react-hook-form";
@@ -188,7 +188,7 @@ export function DialogVacancyUpdate({
 
                 {/* Form com scroll interno apenas na área de campos */}
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
-                    
+
                     <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-6">
 
                         {/* Seção: Informações da vaga */}
@@ -372,15 +372,16 @@ export function DialogVacancyUpdate({
                     </div>
 
                     {/* Footer Fixo e colado no fundo correto */}
-                    <div className="flex justify-between items-center px-6 py-3.5 border-t border-zinc-100! bg-zinc-50! shrink-0">
-                        <DialogClose asChild>
-                            <Button type="button" variant="close" className="h-9 px-4 text-sm font-medium">
-                                Cancelar
-                            </Button>
-                        </DialogClose>
+                    <div className="w-full flex justify-end! items-center px-6 py-3.5 border-t border-zinc-100! bg-zinc-50! shrink-0">
                         <Button type="submit" variant="create" disabled={isSubmitting} className="h-9 px-4 text-sm font-medium flex items-center gap-2">
-                            <CloudUpload size={16} />
-                            {isSubmitting ? "Salvando..." : "Salvar Alterações"}
+                            {isSubmitting ?
+                                <span className="flex items-center justify-center gap-2">
+                                    <Loader2 className="animate-spin" /> Atualizando...
+                                </span> :
+                                <span className="flex items-center justify-center gap-2">
+                                    <Rocket /> Atualizar
+                                </span>
+                            }
                         </Button>
                     </div>
                 </form>

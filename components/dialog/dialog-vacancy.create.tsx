@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Briefcase, MapPin, Link2, Code2, AlertCircle } from "lucide-react";
+import { Plus, Search, Briefcase, MapPin, Link2, Code2, AlertCircle, Loader2, Rocket } from "lucide-react";
 import {
     Dialog,
     DialogClose,
@@ -164,14 +164,14 @@ export function DialogVacncyCreate() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="create">
-                    <Plus size={16} /> Criar nova vaga
+                <Button variant="dashed">
+                    <Plus size={16} /> Adicionar vaga
                 </Button>
             </DialogTrigger>
 
             {/* Configuração de container fixo e sem overflow externo para sumir com o espaço branco */}
             <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 overflow-hidden bg-white!">
-                
+
                 {/* Header Fixo */}
                 <DialogHeader className="px-6 py-4 border-b border-zinc-100! shrink-0">
                     <DialogTitle className="text-zinc-900! text-lg font-semibold">Nova Vaga</DialogTitle>
@@ -182,7 +182,7 @@ export function DialogVacncyCreate() {
 
                 {/* Form com Scroll exclusivo na área dos Inputs */}
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
-                    
+
                     <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-6">
 
                         {/* Seção: Informações da vaga */}
@@ -366,14 +366,16 @@ export function DialogVacncyCreate() {
                     </div>
 
                     {/* Footer Fixo e colado perfeitamente no fundo */}
-                    <div className="flex justify-between items-center px-6 py-3.5 border-t border-zinc-100! bg-zinc-50! shrink-0">
-                        <DialogClose asChild>
-                            <Button type="button" variant="close" className="h-9 px-4 text-sm font-medium" onClick={() => reset()}>
-                                Cancelar
-                            </Button>
-                        </DialogClose>
+                    <div className="w-full flex justify-end! items-center px-6 py-3.5 border-t border-zinc-100! bg-zinc-50! shrink-0">
                         <Button type="submit" variant="create" disabled={isSubmitting} className="h-9 px-4 text-sm font-medium flex items-center gap-2">
-                            {isSubmitting ? "Criando..." : "Criar vaga"}
+                            {isSubmitting ?
+                                <span className="flex items-center justify-center gap-2">
+                                    <Loader2 className="animate-spin" /> Adicionar...
+                                </span> :
+                                <span className="flex items-center justify-center gap-2">
+                                    <Rocket /> Adicionar
+                                </span>
+                            }
                         </Button>
                     </div>
                 </form>
