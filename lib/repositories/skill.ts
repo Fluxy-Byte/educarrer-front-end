@@ -16,6 +16,7 @@ export class SkillRepository {
             skill.name,
             skill.level,
             skill.about,
+            skill.updatedAt,
             skill.userId
         ));
     }
@@ -30,6 +31,7 @@ export class SkillRepository {
             skill.name,
             skill.level,
             skill.about,
+            skill.updatedAt,
             skill.userId
         );
     }
@@ -55,6 +57,7 @@ export class SkillRepository {
             skill.name,
             skill.level,
             skill.about,
+            skill.updatedAt,
             skill.userId
         );
     }

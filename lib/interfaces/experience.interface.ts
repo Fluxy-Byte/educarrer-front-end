@@ -6,6 +6,8 @@ export interface ExperienceDTO {
   about: string;
   startDate?: Date | null;
   endDate?: Date | null;
+  currentJob: boolean;
+  updatedAt?: Date | null;
   userId: string;
 }
 
@@ -16,6 +18,7 @@ export interface CreateExperienceDTO {
   about: string;
   startDate?: Date;
   endDate?: Date;
+  currentJob: boolean;
   userId: string;
 }
 
@@ -26,4 +29,5 @@ export interface UpdateExperienceDTO {
   about?: string;
   startDate?: Date;
   endDate?: Date;
+  currentJob?: boolean;
 }

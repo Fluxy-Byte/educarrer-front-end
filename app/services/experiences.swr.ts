@@ -14,6 +14,8 @@ export interface Experience {
     about: string;
     startDate?: Date | null;
     endDate?: Date | null;
+    currentJob: boolean;
+    updatedAt?: Date | null;
     userId: string;
 }
 
@@ -38,26 +40,28 @@ export function useExperiences() {
     }
 }
 
-export async function createExperience(name: string, seniority?: string, about?: string, startDate?: Date, endDate?: Date) {
+export async function createExperience(name: string, seniority?: string, about?: string, startDate?: Date, endDate?: Date, currentJob?: boolean) {
     const { data } = await axios.post(`${URL}/api/experience`, {
         name,
         seniority,
         about,
         startDate,
-        endDate
+        endDate,
+        currentJob
     }, {
         withCredentials: true
     })
     return data
 }
 
-export async function updateExperience(id: string, name: string, seniority?: string, about?: string, startDate?: Date, endDate?: Date) {
+export async function updateExperience(id: string, name: string, seniority?: string, about?: string, startDate?: Date, endDate?: Date, currentJob?: boolean) {
     const { data } = await axios.put(`${URL}/api/experience/${id}`, {
         name,
         seniority,
         about,
         startDate,
-        endDate
+        endDate,
+        currentJob
     }, {
         withCredentials: true
     })

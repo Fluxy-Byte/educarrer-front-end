@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { name, seniority, about, startDate, endDate } = await req.json();
+    const { name, seniority, about, startDate, endDate, currentJob } = await req.json();
 
     const session = await auth.api.getSession({
       headers: req.headers,
@@ -57,6 +57,7 @@ export async function POST(req: Request) {
       about,
       startDate,
       endDate,
+      currentJob,
       userId: user.id
     }
 

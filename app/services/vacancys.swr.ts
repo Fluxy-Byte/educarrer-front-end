@@ -26,6 +26,8 @@ export interface Vacancy {
     location: string;
     salary: string | null;
     active: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface CreateOrUpdateVacancy {

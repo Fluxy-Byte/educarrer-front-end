@@ -101,7 +101,7 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.url}
-                    className={pathname === item.url ? "bg-blue-900! text-white! h-auto py-2! px-2!" : "hover:bg-blue-700/20! h-auto hover:text-black! py-2! px-2!"}
+                    className={pathname === item.url ? "bg-blue-500! text-white! h-12 px-4 py-2" : "hover:bg-orange-200! hover:text-black! h-12 px-4 py-2"}
                   >
                     <Link href={item.url}>
                       <item.icon className="h-4 w-4" />
@@ -132,7 +132,7 @@ export function AppSidebar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-white cursor-pointer h-10" onClick={handleLogout}>
+            <DropdownMenuItem className="text-white cursor-pointer h-10 bg-blue-500 hover:bg-blue-600 transition" onClick={handleLogout}>
               <LogOut className="mr-1 text-white h-4 w-4" />
               <span>Deslogar</span>
             </DropdownMenuItem>

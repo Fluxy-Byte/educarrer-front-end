@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, VariantProps } from 'class-variance-authority'
-import { PanelLeftIcon } from 'lucide-react'
+import { PanelsTopLeft } from 'lucide-react'
 
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
@@ -273,8 +273,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
+      <PanelsTopLeft className="h-8! w-8!" />
     </Button>
   )
 }

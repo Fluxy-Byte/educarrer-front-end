@@ -18,6 +18,8 @@ export class ExperienceRepository {
             experience.about,
             experience.startDate,
             experience.endDate,
+            experience.currentJob,
+            experience.updatedAt,
             experience.userId
         ));
     }
@@ -34,6 +36,8 @@ export class ExperienceRepository {
             experience.about,
             experience.startDate,
             experience.endDate,
+            experience.currentJob,
+            experience.updatedAt,
             experience.userId
         );
     }
@@ -61,6 +65,8 @@ export class ExperienceRepository {
             experience.about,
             experience.startDate,
             experience.endDate,
+            experience.currentJob,
+            experience.updatedAt,
             experience.userId
         );
     }

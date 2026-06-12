@@ -61,7 +61,7 @@ export function DialogExperienceView({ experience }: DialogSkillProps) {
                 <Button
                     onClick={() => setOpenView(true)}
                     className="w-auto"
-                    variant={"btn_yellow"}>
+                    variant={"create"}>
                     <span>
                         {experience.name}
                     </span>
@@ -104,7 +104,7 @@ export function DialogExperienceView({ experience }: DialogSkillProps) {
                         </Button>
                     </DialogClose>
                     <div className="flex justify-start gap-2 items-center">
-                        <Button variant={"btn_yellow"} onClick={() => setOpenUpdate(true)}>
+                        <Button variant={"create"} onClick={() => setOpenUpdate(true)}>
                             <CloudUpload /> Atualizar
                         </Button>
                         <Button onClick={() => handleDelete()}>

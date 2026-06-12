@@ -7,12 +7,20 @@ import { useSession } from "@/lib/utils/auth-client";
 import { authClient } from "@/lib/utils/auth-client";
 import { DialogVaga } from "@/components/dialog/dialog-vacancy.view";
 import Image from "next/image";
-import { Loader2, Users, Search, BrainCircuit, MapPinHouse } from "lucide-react";
+import { Loader2, Users, Search, BrainCircuit, MapPinHouse, ChartColumnIncreasing, BriefcaseBusiness, Building2, Heart, Flame } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { DialogAvaliationsVacancys } from "@/components/dialog/dialog-avaliations-vacancys";
 import { getAvaliationVancancyByUserId } from "@/app/services/avaliationsVacancy.swr";
 import Banner from "@/public/banner.png";
 import IconeAlvo from "@/public/icone-alvo.png";
+import CadsVacancy from "@/components/cards/card-vacancy";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 import {
   Select,
@@ -22,8 +30,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export interface VacancyDTO {
-  id: number;
+const bussinesMoreVacancys = [
+  {
+    "id": "1",
+    "name": "Colmeia",
+    "vacancys": 200
+  },
+  {
+    "id": "2",
+    "name": "Telek",
+    "vacancys": 10
+  },
+  {
+    "id": "3",
+    "name": "Fluxe",
+    "vacancys": 1
+  }
+]
+
+export interface Vacancy {
+  id: string;
   title: string;
   description: string;
   company: string;
@@ -34,9 +60,9 @@ export interface VacancyDTO {
   origin: string;
   location: string;
   salary: string | null;
+  active: boolean;
   createdAt: Date;
   updatedAt: Date;
-  active: boolean;
 }
 
 export default function DashboardPage() {
@@ -85,25 +111,25 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="flex justify-center itens-center gap-3">
+    <div className="flex-col-reverse lg:flex-row flex justify-center itens-center gap-3">
       <div className="w-full min-h-full flex flex-col gap-4 relative">
         <DialogAvaliationsVacancys
           active={needAvaliation}
           closeDialog={handleClosedDialogAvaliation}
         />
 
-        <div className="w-full rounded-lg overflow-hidden">
-          <Image src={Banner} alt="Banner" className="w-full h-full rounded-lg object-cover" />
+        <div className="w-full rounded-lg overflow-hidden shadow-sm">
+          <Image src={Banner} alt="Banner" className="w-full mx h-full rounded-lg object-cover" />
         </div>
 
         {/* Card de filtros */}
-        <div className="w-full bg-white rounded-xl border border-zinc-200 shadow-sm p-4 flex flex-col gap-3">
+        <div className="w-full bg-white rounded-lg border border-zinc-200 shadow-sm p-4 flex flex-col gap-3">
 
           {/* Header */}
           <div className="flex items-center gap-3">
-            <Users className="h-5 w-5 text-zinc-400" />
+            <Users strokeWidth={1} className="h-6 w-6 text-black" />
             <div>
-              <h1 className="text-sm font-semibold text-black">Filtros de busca</h1>
+              <h1 className="text-md font-semibold text-black">Filtros de busca</h1>
               <p className="text-xs text-zinc-400">Encontre a vaga ideal para o seu perfil</p>
             </div>
           </div>
@@ -116,59 +142,65 @@ export default function DashboardPage() {
               placeholder="Buscar por nome da vaga, empresa ou palavra-chave..."
               value={nomeFiltro}
               onChange={(e) => setNomeFiltro(e.target.value)}
-              className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-black placeholder:text-zinc-400 p-0 h-auto text-sm"
+              className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-black placeholder:text-zinc-400 p-0 h-8 text-sm"
             />
           </div>
 
           {/* Selects de nível e modalidade */}
           <div className="flex gap-3">
             <Select value={nivelFiltro} onValueChange={(value) => setNivelFiltro(value)}>
-              <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-10">
+              <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-12!">
                 <div className="flex items-center gap-2">
-                  <BrainCircuit className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <BrainCircuit className="h-6! w-6! text-emerald-500 shrink-0" />
                   <SelectValue placeholder="Todos os níveis" />
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todos">Todos os níveis</SelectItem>
-                <SelectItem value="Júnior">Júnior</SelectItem>
-                <SelectItem value="Pleno">Pleno</SelectItem>
-                <SelectItem value="Sênior">Sênior</SelectItem>
+                <SelectItem className="h-10!" value="todos">Todos os níveis</SelectItem>
+                <SelectItem className="h-10!" value="Júnior">Júnior</SelectItem>
+                <SelectItem className="h-10!" value="Pleno">Pleno</SelectItem>
+                <SelectItem className="h-10!" value="Sênior">Sênior</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={modalidadeFiltro} onValueChange={(value) => setModalidadeFiltro(value)}>
-              <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-10">
+              <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-12!">
                 <div className="flex items-center gap-2">
-                  <MapPinHouse className="h-4 w-4 text-violet-500 shrink-0" />
+                  <MapPinHouse className="h-6! w-6! text-violet-500 shrink-0" />
                   <SelectValue placeholder="Todas as modalidades" />
                 </div>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todos">Todas as modalidades</SelectItem>
-                <SelectItem value="Remoto">Remoto</SelectItem>
-                <SelectItem value="Híbrido">Híbrido</SelectItem>
-                <SelectItem value="Presencial">Presencial</SelectItem>
+                <SelectItem className="h-10!" value="todos">Todas as modalidades</SelectItem>
+                <SelectItem className="h-10!" value="Remoto">Remoto</SelectItem>
+                <SelectItem className="h-10!" value="Híbrido">Híbrido</SelectItem>
+                <SelectItem className="h-10!" value="Presencial">Presencial</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </div>
 
         <div className="w-full bg-white rounded-xl border border-zinc-200 shadow-sm p-4 flex flex-col gap-3">
-          <div className="w-full h-full flex items-center justify-start h-auto gap-3">
-            <Image src={IconeAlvo} alt="Ícone de alvo" className="h-10 w-10" />
-            <h1 className="text-lg font-semibold text-black">
-              Vagas recomendadas para você
-            </h1>
+          <div className="w-full flex items-center justify-start h-auto gap-3">
+            <Image src={IconeAlvo} alt="Ícone de alvo" className="h-6 w-6" />
+            <div className="flex flex-col items-start">
+              <h1 className="text-md font-semibold text-black">
+                Vagas recomendadas para você
+              </h1>
+              <p className="text-xs text-zinc-400">
+                Baseadas no seu perfil e prefêrencias
+              </p>
+            </div>
+
           </div>
 
           <div>
             {/* Lista de vagas */}
             {vacancys ? (
-              <div className="w-full max-h-[500px] overflow-y-auto bg-white rounded-lg shadow-lg p-4 gap-2 flex flex-col">
+              <div className="w-full h-full overflow-y-autorounded-lg flex flex-col gap-4 bg-transparent">
                 {vagasFiltradas && vagasFiltradas.length > 0 ? (
                   vagasFiltradas.map((vaga) => (
-                    <DialogVaga key={vaga.id} vacancy={vaga} />
+                    <CadsVacancy key={vaga.id} vacancy={vaga} />
                   ))
                 ) : (
                   <p className="text-center text-gray-500">
@@ -185,59 +217,124 @@ export default function DashboardPage() {
         </div>
 
       </div>
-      <div className="w-1/2 h-full flex flex-col gap-2">
-        <div className="w-full p-4 bg-white rounded-lg flex flex-col gap-4">
 
-          <div className="flex gap-3 items-ce/nter">
-            <MapPinHouse className="h-6 w-6 text-violet-500 shrink-0" />
-            <h1 className="text-black font-semibold">
-              Estátisticas rápidas
-            </h1>
-          </div>
+      <div className="w-full lg:w-1/4 h-fit flex flex-col gap-4">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <ChartColumnIncreasing className="h-6 w-6 text-blue-500" />
+              <h1 className="text-black">Estatísticas rápidas</h1>
+            </CardTitle>
+          </CardHeader>
 
-          <div className="flex flex-col gap-3">
-            <div className="w-full p-4 bg-blue-50 border border-blue-400 rounded-lg flex items-center gap-4">
-              <MapPinHouse className="h-7 w-7 text-blue-500 shrink-0" />
-              <div className="flex flex-col w-full">
-                <h1 className="text-blue-500 font-semibold">
-                  1.250+
-                </h1>
-                <p className="text-blue-500 text-xs">
-                  Vagas disponivieis
-                </p>
-              </div>
+          <CardContent>
+            <div className="lg:flex lg:flex-col gap-3 grid grid-cols-2">
+              <Card className="border-blue-400 bg-blue-50">
+                <CardContent className="flex items-center gap-4">
+                  <BriefcaseBusiness className="h-7 w-7 text-blue-600 shrink-0" />
+
+                  <div>
+                    <h2 className="font-semibold text-blue-500">
+                      + 1.250
+                    </h2>
+
+                    <p className="text-xs text-blue-600">
+                      Vagas disponíveis
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-green-400 bg-green-50">
+                <CardContent className="flex items-center gap-4">
+                  <Building2 className="h-7 w-7 text-green-600 shrink-0" />
+
+                  <div>
+                    <h2 className="font-semibold text-green-500">
+                      + 850
+                    </h2>
+
+                    <p className="text-xs text-green-600">
+                      Empresas parceiras
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-orange-400 bg-orange-50">
+                <CardContent className="flex items-center gap-4">
+                  <Users className="h-7 w-7 text-orange-600 shrink-0" />
+
+                  <div>
+                    <h2 className="font-semibold text-orange-500">
+                      12 mil
+                    </h2>
+
+                    <p className="text-xs text-orange-600">
+                      Profissionais contratados
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-purple-400 bg-purple-50">
+                <CardContent className="flex items-center gap-4">
+                  <Heart className="h-7 w-7 text-purple-600 shrink-0" />
+
+                  <div>
+                    <h2 className="font-semibold text-purple-500">
+                      98%
+                    </h2>
+
+                    <p className="text-xs text-purple-600">
+                      Satisfação dos usuários
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="w-full p-4 bg-blue-50 border border-blue-400 rounded-lg flex items-center gap-4">
-              <MapPinHouse className="h-7 w-7 text-blue-500 shrink-0" />
-              <div className="flex flex-col w-full">
-                <h1 className="text-blue-500 font-semibold">
-                  1.250+
-                </h1>
-                <p className="text-blue-500 text-xs">
-                  Vagas disponivieis
-                </p>
-              </div>
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <Flame className="h-6 w-6 text-red-500" />
+              <h1 className="text-black">Empresas com mais vagas</h1>
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <div className="lg:flex lg:flex-col gap-3 grid grid-cols-2">
+
+              {
+                bussinesMoreVacancys.length > 0 && bussinesMoreVacancys.map((v, i) => (
+                  <Card key={v.id} className={`${i == 1 ? "bg-zinc-100" : " bg-orange-50"} p-0! py-2! shadow-none border-none`}>
+                    <CardContent className="flex items-center gap-4">
+
+                      <div className={`w-12 h-12 text-white rounded-full flex items-center justify-center font-bold text-2xl ${i == 0 ? "bg-blue-800" : i == 1 ? "bg-orange-700" : "bg-red-700"}`}>
+                        {v.name.slice(0, 1)}
+                      </div>
+
+                      <div>
+                        <h2 className="text-md font-semibold text-black flex items-center justify-start gap-2">
+                          <Building2 size={15} /> {v.name}
+                        </h2>
+
+                        <p className="text-xs text-black">
+                          {v.vacancys == 1 ? `${v.vacancys} vaga disponivel` : `${v.vacancys} vagas disponivel`}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              }
+
             </div>
-
-            <div className="w-full p-4 bg-blue-50 border border-blue-400 rounded-lg flex items-center gap-4">
-              <MapPinHouse className="h-7 w-7 text-blue-500 shrink-0" />
-              <div className="flex flex-col w-full">
-                <h1 className="text-blue-500 font-semibold">
-                  1.250+
-                </h1>
-                <p className="text-blue-500 text-xs">
-                  Vagas disponivieis
-                </p>
-              </div>
-            </div>
-          </div>
-
-
-
-
-        </div>
+          </CardContent>
+        </Card>
       </div>
+
     </div>
 
   );

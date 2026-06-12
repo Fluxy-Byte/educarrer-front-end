@@ -85,7 +85,7 @@ model Skill {
   userId     String
 
   createdAt  DateTime @default(now())
-  updatedAt  DateTime?
+  updatedAt  DateTime @updatedAt
 
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -97,11 +97,11 @@ model Experience {
   about      String
   startDate  DateTime?
   endDate    DateTime?
-
+  currentJob Boolean @default(false)
   userId     String
 
   createdAt  DateTime @default(now())
-  updatedAt  DateTime?
+  updatedAt  DateTime @updatedAt
 
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -111,7 +111,7 @@ model Study {
   title      String
   study      String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime?
+  updatedAt  DateTime @updatedAt
 
   userId     String
 
@@ -144,7 +144,7 @@ model Avaliations {
   studyId    String
 
   createdAt  DateTime @default(now())
-  updatedAt  DateTime?
+  updatedAt  DateTime @updatedAt
 
   userId     String
 

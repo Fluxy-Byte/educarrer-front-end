@@ -7,6 +7,8 @@ export class Experience {
     public about: string,
     public startDate: Date | null,
     public endDate: Date | null,
+    public currentJob: boolean,
+    public updatedAt: Date | null,
     public userId: string
   ) {}
 

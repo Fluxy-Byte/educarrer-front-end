@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${poppins.className} antialiased dark`}>
+      <body className={`${poppins.className} antialiased dark`} cz-shortcut-listen="true">
         {children}
         <Analytics />
         <Toaster />

@@ -12,6 +12,7 @@ export interface Skill {
     name: string;
     level: number;
     about?: string | null;
+    updatedAt?: Date;
     userId: string;
 }
 

@@ -6,13 +6,14 @@
 /* 🎯 Fluxy ERP Theme (SUA PALETA) */
 :root {
 /* 🔥 Paleta principal */
---primary: #AE0001;
---primary-actived: #06264D;
---secondary: #06264D;
+--primary: #2B7FFF;
+--primary-actived: #2B7FFF;
+--secondary: #2B7FFF;
 --tertiary: #061735;
 
 /* 🌍 Base */
 --background: #ffffff;
+--background-black: #00000000;
 --foreground: #ffffff;
 
 /* 🧱 Componentes */
@@ -33,12 +34,12 @@
 --accent: var(--primary);
 --accent-foreground: #ffffff;
 
---destructive: #ff4d4d;
+--destructive: #FF0000;
 --destructive-foreground: #ffffff;
 
 /* 🧩 UI */
 --border: #E4E4E7;
---input: #0b1f3a;
+--input: #ffffff;
 --ring: #0a75c7;
 
 /* 📊 Charts */
@@ -68,6 +69,7 @@
 --font-mono: 'Geist Mono', 'Geist Mono Fallback';
 
 --color-background: var(--background);
+--color-background-black: var(--background-black);
 --color-foreground: var(--foreground);
 
 --color-card: var(--card);

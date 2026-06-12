@@ -7,8 +7,8 @@ interface ToastProps {
 }
 
 export function ToastPersonalizado({ mensagem }: ToastProps) {
-    toast(mensagem, { 
-        position: "bottom-right",
-        className: "bg-blue-500! text-white rounded-md shadow-lg p-4",
-     })
+    toast(mensagem, {
+        position: "top-center",
+        className: "bg-orange-400! border-none! text-white text-base! p-4! text-center! flex! justify-center! items-center!",
+    })
 }

@@ -4,8 +4,9 @@ export class Skill {
     public name: string,
     public level: number,
     public about: string | null,
+    public updatedAt: Date | null,
     public userId: string
-  ) {}
+  ) { }
 
   levelFormatted(): string {
     if (this.level >= 8) return "Avançado";

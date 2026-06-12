@@ -21,13 +21,13 @@ export default function DashboardLayout({
               <div className="flex py-6 items-center text-black px-4">
                 <SidebarTrigger size={"lg"} className="text-blue-600"/>
               </div>
-              <div className="text-black block items-start hidden md:flex md:flex-col">
+              <div className="text-black block items-start md:flex md:flex-col">
                 <h1 className="font-semibold text-md">Aprendizado inteligente</h1>
                 <p className="text-zinc-500 text-sm">Descubra novas habilidades e avance na sua carreira com conteúdos personalizados</p>
               </div>
             </div>
 
-            <div className="p-6 h-full w-full bg-zinc-200 rounded-ss-lg">{children}</div>
+            <div className="p-6 h-full w-full bg-sky-50 border-t border-zinc-300">{children}</div>
           </main>
         </div>
       </SidebarProvider>

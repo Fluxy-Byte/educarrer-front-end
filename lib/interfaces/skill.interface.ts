@@ -4,6 +4,7 @@ export interface SkillDTO {
   name: string;
   level: number;
   about?: string | null;
+  updatedAt?: Date | null;
   userId: string;
 }
 

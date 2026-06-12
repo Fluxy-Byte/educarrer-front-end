@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { CirclePlus } from "lucide-react";
+import { Plus, Rocket, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import {
     Dialog,
     DialogClose,
@@ -17,9 +18,12 @@ import { Input } from "../ui/input";
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
+    SelectSeparator
 } from "@/components/ui/select";
 
 import { useForm, Controller } from "react-hook-form";
@@ -29,6 +33,8 @@ import { createSkill, useSkills } from "@/app/services/skills.swr";
 import { useState } from "react";
 import { ToastPersonalizado } from "@/components/toast";
 import { Label } from "../ui/label";
+
+import skillsTI from "@/components/dialog/skills.json";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -77,31 +83,55 @@ export function DialogSkillCreate() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant={"secondary"}>
-                    <CirclePlus /> Nova habilidade
+                <Button className="w-full" variant={"dashed"}>
+                    <Plus /> Adicionar habilidade
                 </Button>
             </DialogTrigger>
 
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-black text-xl">
-                        Nova habilidade
+                        Adicionar uma nova habilidade
                     </DialogTitle>
 
                     <DialogDescription className="text-zinc-600 mt-2 text-sm">
-                        Preencha os dados para adicionar uma nova habilidade ao seu perfil.
+                        Aqui e necessário que preencha suas habilidades de desenvolvimento ou pessoal para que possamos utilizalas com as recomendações e com a geração de estudos personalizados.
                     </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
                     {/* Nome */}
-                    <div>
-                        <Label className="text-black!" htmlFor="nome">Nome da habilidade</Label>
-                        <Input
-                            placeholder="Nome da habilidade"
-                            {...register("nome")}
+                    <div className="w-full flex flex-col gap-2">
+                        <Label className="text-black!" htmlFor="nome">Qual o nome dessa habilidade?</Label>
+                        <Controller
+                            control={control}
+                            name="nome"
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={(value) => field.onChange(value)}
+                                    value={field.value ?? ""}
+                                >
+                                    <SelectTrigger className="w-full h-12! border border-zinc-200 bg-white! text-black">
+                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione uma habilidade" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {Object.entries(skillsTI).map(([group, items]) => (
+                                            <SelectGroup key={group}>
+                                                <SelectLabel>{group}</SelectLabel>
+                                                {items.map((v, i) => (
+                                                    <SelectItem key={v + i} value={v}>
+                                                        {v}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
                         />
+                        
                         {errors.nome && (
                             <p className="text-red-500 text-sm mt-1">
                                 {errors.nome.message}
@@ -110,8 +140,8 @@ export function DialogSkillCreate() {
                     </div>
 
                     {/* Nível */}
-                    <div className="w-full">
-                        <Label className="text-black!" htmlFor="nivel">Nível</Label>
+                    <div className="w-full flex flex-col gap-2">
+                        <Label className="text-black!" htmlFor="nivel">Considerando 1 como fraco e 10 como forte, qual o seu nível de conhecimento ou experiência?</Label>
                         <Controller
                             control={control}
                             name="nivel"
@@ -143,9 +173,10 @@ export function DialogSkillCreate() {
                     </div>
 
                     {/* Descrição */}
-                    <div>
-                        <Label className="text-black!" htmlFor="descricao">Descrição</Label>
-                        <Input
+                    <div className="w-full flex flex-col gap-2">
+                        <Label className="text-black!" htmlFor="descricao">Descreva um pouco sobre oque você ja fez ou praticou com essa habilidade.</Label>
+                        <Textarea
+
                             placeholder="Descrição da habilidade"
                             {...register("descricao")}
                         />
@@ -158,22 +189,19 @@ export function DialogSkillCreate() {
 
                     {/* Footer */}
                     <DialogFooter className="flex justify-between mt-4">
-                        <DialogClose asChild>
-                            <Button
-                                type="button"
-                                variant="close"
-                                onClick={() => reset()}
-                            >
-                                Fechar
-                            </Button>
-                        </DialogClose>
-
                         <Button
                             type="submit"
-                            variant="secondary"
+                            variant="create"
                             disabled={isSubmitting}
                         >
-                            {isSubmitting ? "Cadastrando..." : "Cadastrar"}
+                            {isSubmitting ?
+                                <span className="flex items-center justify-center gap-2">
+                                    <Loader2 className="animate-spin" /> Adicionando...
+                                </span> :
+                                <span className="flex items-center justify-center gap-2">
+                                    <Rocket /> Adicionar
+                                </span>
+                            }
                         </Button>
                     </DialogFooter>
                 </form>

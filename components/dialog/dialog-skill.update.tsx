@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Rocket, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import {
     Dialog,
     DialogClose,
@@ -17,9 +19,12 @@ import { Input } from "../ui/input";
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
+    SelectLabel,
     SelectTrigger,
     SelectValue,
+    SelectSeparator
 } from "@/components/ui/select";
 
 import { Skill, updateSkill, useSkills } from "@/app/services/skills.swr";
@@ -28,6 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ToastPersonalizado } from "@/components/toast";
 import { Label } from "../ui/label";
+import skillsTI from "@/components/dialog/skills.json";
 
 const skillSchema = z.object({
     nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -53,7 +59,7 @@ export function DialogSkillUpdate({
         register,
         handleSubmit,
         control,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         reset,
     } = useForm<SkillFormData>({
         resolver: zodResolver(skillSchema),
@@ -88,11 +94,11 @@ export function DialogSkillUpdate({
             <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-black text-xl">
-                        Atualizar habilidade
+                        Atualizando uma das minhas habilidades
                     </DialogTitle>
 
                     <DialogDescription className="text-zinc-600 mt-2 text-sm">
-                        Edite os dados da habilidade.
+                        Edite os dados da sua habilidade e clicke em atualizar para salvar.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -102,11 +108,36 @@ export function DialogSkillUpdate({
                 >
 
                     {/* Nome */}
-                    <div>
+                    <div className="w-full flex flex-col gap-2">
                         <Label className="text-black!" htmlFor="nome">Nome da habilidade</Label>
-                        <Input
-                            placeholder="Nome da habilidade"
-                            {...register("nome")}
+                        <Controller
+                            control={control}
+                            name="nome"
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={(value) => field.onChange(value)}
+                                    value={field.value ?? ""}
+                                >
+                                    <SelectTrigger className="w-full h-12! border border-zinc-200 bg-white! text-black">
+                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione uma habilidade" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {Object.entries(skillsTI).map(([group, items]) => (
+
+                                            <SelectGroup key={group}>
+                                                <SelectLabel>{group}</SelectLabel>
+                                                {items.map((v, i) => (
+                                                    <SelectItem key={v} value={v}>
+                                                        {v}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
                         />
                         {errors.nome && (
                             <p className="text-red-500 text-sm">
@@ -116,8 +147,8 @@ export function DialogSkillUpdate({
                     </div>
 
                     {/* Nivel */}
-                    <div>
-                        <Label className="text-black!" htmlFor="nivel">Nível</Label>
+                    <div className="w-full flex flex-col gap-2">
+                        <Label className="text-black!" htmlFor="nivel">Nível de conhecimento ou experiência</Label>
                         <Controller
                             control={control}
                             name="nivel"
@@ -157,9 +188,9 @@ export function DialogSkillUpdate({
                     </div>
 
                     {/* Descrição */}
-                    <div>
-                        <Label className="text-black!" htmlFor="descricao">Descrição</Label>
-                        <Input
+                    <div className="w-full flex flex-col gap-2">
+                        <Label className="text-black!" htmlFor="descricao">Descritiva sobre oque você ja fez ou praticou com essa habilidade</Label>
+                        <Textarea
                             placeholder="Descrição"
                             {...register("descricao")}
                         />
@@ -172,14 +203,15 @@ export function DialogSkillUpdate({
 
                     {/* Footer */}
                     <DialogFooter className="flex justify-between mt-4">
-                        <DialogClose asChild>
-                            <Button type="button" variant="close">
-                                Fechar
-                            </Button>
-                        </DialogClose>
-
-                        <Button type="submit" variant={"secondary"}>
-                            Atualizar
+                        <Button type="submit" variant={"create"}>
+                            {isSubmitting ?
+                                <span className="flex items-center justify-center gap-2">
+                                    <Loader2 className="animate-spin" /> Atualizando...
+                                </span> :
+                                <span className="flex items-center justify-center gap-2">
+                                    <Rocket /> Atualizar
+                                </span>
+                            }
                         </Button>
                     </DialogFooter>
                 </form>

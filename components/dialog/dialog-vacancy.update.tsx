@@ -50,7 +50,7 @@ const vacancySchema = z.object({
     modality: z.string().min(1, "Selecione uma modalidade"),
     level: z.string().min(1, "Selecione um nível"),
     technologies: z.array(z.string()).min(1, "Selecione pelo menos uma tecnologia"),
-    link: z.string().url("Insira uma URL válida").or(z.literal("")),
+    link: z.string("Insira uma URL válida").or(z.literal("")),
     origin: z.string().min(1, "Origem é obrigatória"),
     location: z.string().min(2, "Localização deve ter pelo menos 2 caracteres"),
     salary: z.string().nullable(),
@@ -378,7 +378,7 @@ export function DialogVacancyUpdate({
                                 Cancelar
                             </Button>
                         </DialogClose>
-                        <Button type="submit" variant="btn_yellow" disabled={isSubmitting} className="h-9 px-4 text-sm font-medium flex items-center gap-2">
+                        <Button type="submit" variant="create" disabled={isSubmitting} className="h-9 px-4 text-sm font-medium flex items-center gap-2">
                             <CloudUpload size={16} />
                             {isSubmitting ? "Salvando..." : "Salvar Alterações"}
                         </Button>

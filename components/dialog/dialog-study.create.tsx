@@ -77,7 +77,7 @@ export function DialogExperienceCreate() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant={"btn_yellow"}>
+                <Button variant={"create"}>
                     <CirclePlus /> Nova Experiência
                 </Button>
             </DialogTrigger>
@@ -180,7 +180,7 @@ export function DialogExperienceCreate() {
 
                         <Button
                             type="submit"
-                            variant="btn_yellow"
+                            variant="create"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? "Cadastrando..." : "Cadastrar"}
