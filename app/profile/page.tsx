@@ -17,7 +17,7 @@ export default function DashboardPage() {
 
   return (
     <div className="w-full min-h-full flex flex-col gap-4 relative">
-      <div className="w-full bg-white rounded-lg shadow p-4">
+      <div className="w-full bg-white rounded-lg shadow-lg p-4">
         <div className="flex items-center justify-start gap-4">
           <span className="p-4 bg-blue-100 rounded-lg">
             <WandSparkles className="text-blue-600" />
@@ -44,7 +44,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="w-full bg-white rounded-lg shadow p-4">
+      <div className="w-full bg-white rounded-lg shadow-lg p-4">
 
         <div className="flex items-center justify-start gap-4">
           <span className="p-4 bg-purple-100 rounded-lg">

@@ -4,9 +4,9 @@ import { CreateStudyDTO, UpdateStudyDTO, StudyDTO } from "@/lib/interfaces/study
 
 
 export class StudyRepository {
-    
+
     async getStudyByUserId(userId: string): Promise<StudyDTO[]> {
-        const studys =  await prisma.study.findMany({
+        const studys = await prisma.study.findMany({
             where: {
                 userId,
             },
@@ -39,7 +39,7 @@ export class StudyRepository {
     }
 
     async deleteStudy(id: string) {
-        
+
         return await prisma.study.delete({
             where: {
                 id
@@ -48,7 +48,7 @@ export class StudyRepository {
     }
 
     async updateStudy(id: string, data: Partial<UpdateStudyDTO>): Promise<StudyDTO> {
-        
+
         const study = await prisma.study.update({
             where: {
                 id
@@ -64,5 +64,20 @@ export class StudyRepository {
             study.updatedAt,
             study.userId
         );
+    }
+
+    async getAllStudy() {
+        const all = await prisma.study.findMany();
+
+        return all.map((study) => {
+            return new Study(
+                study.id,
+                study.title,
+                study.study,
+                study.createdAt,
+                study.updatedAt,
+                study.userId
+            )
+        })
     }
 }

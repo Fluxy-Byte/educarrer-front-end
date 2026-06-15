@@ -273,7 +273,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelsTopLeft className="h-8! w-8!" />
+      <PanelsTopLeft className="h-6! w-6!" />
     </Button>
   )
 }

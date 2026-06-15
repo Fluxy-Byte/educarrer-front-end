@@ -57,3 +57,7 @@ export async function deleteStudy(id: string) {
 export async function updateStudy(id: string, data: Partial<UpdateStudyDTO>) {
     return await studyRepository.updateStudy(id, data);
 }
+
+export async function getAllStudies() {
+    return await studyRepository.
+}

@@ -268,7 +268,7 @@ export default function DashboardPage() {
                     </h2>
 
                     <p className="text-xs text-orange-600">
-                      Profissionais contratados
+                      Estudos construidos
                     </p>
                   </div>
                 </CardContent>

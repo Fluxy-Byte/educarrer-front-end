@@ -28,7 +28,7 @@
 
 --secondary-foreground: #ffffff;
 
---muted: ffffff;
+--muted: 00000000;
 --muted-foreground: #9ca3af;
 
 --accent: var(--primary);
@@ -44,8 +44,8 @@
 
 /* 📊 Charts */
 --chart-1: var(--primary);
---chart-2: #ffffff;
---chart-3: #ffffff;
+--chart-2: #ffaf1b;
+--chart-3: #ffaf1b;
 --chart-4: #ffffff;
 --chart-5: #ffffff;
 
