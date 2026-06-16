@@ -1,18 +1,18 @@
 export interface VacancyDTO {
-    id: number;
+    id: string;
     title: string;
-    description: string;
-    company: string;
-    modality: string;
-    level: string;
+    description: string | null;
+    company?: string | null;
+    modality?: string | null;
+    level?: string | null;
     technologies: string[];
-    link: string;
-    origin: string;
-    location: string;
-    salary: string | null;
+    link?: string | null;
+    origin?: string | null;
+    location?: string | null;
+    salary?: string | null;
+    active: boolean;
     createdAt: Date;
     updatedAt: Date;
-    active: boolean;
 }
 
 export interface CreateVacancyData {
@@ -28,4 +28,3 @@ export interface CreateVacancyData {
     salary: string | null;
     active: boolean;
 }
-

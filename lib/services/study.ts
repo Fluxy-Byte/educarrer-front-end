@@ -1,5 +1,6 @@
 import { StudyRepository } from "@/lib/repositories/study";
-import { CreateStudyDTO, UpdateStudyDTO } from "@/lib/interfaces/study.interface";
+import { ResultCreateStudy } from "@/lib/interfaces/openai.interface";
+import { StudyItemCreate } from "@/lib/interfaces/study.interface";
 import { getSkillByUserId } from "@/lib/services/skill";
 import { getExperienceByUserId } from "@/lib/services/experience";
 import { getVacancysById } from "@/lib/services/vacancy";
@@ -37,12 +38,28 @@ export async function createStudy(idVacancy: string, userId: string) {
 
     const roadMapCandidate = await hundleStudyWithOpenAi.createRoadMapCandidate(vacancy, profile);
 
-    await studyRepository.createStudy({
-        title: `Estudo para vaga ${vacancy.title}`,
-        study: roadMapCandidate || "",
-        userId
-    });
+    const listStudies: ResultCreateStudy | null = roadMapCandidate ? JSON.parse(roadMapCandidate) : null
 
+    if (listStudies) {
+        const study = await studyRepository.createStudy({
+            title: `Estudo para vaga ${vacancy.title}`,
+            userId
+        });
+
+        if (study) {
+            for (let i = 0; i < listStudies.study.length; i++) {
+                const item = listStudies.study[i];
+
+                await studyRepository.createStudyItem(
+                    {
+                        title: item.title,
+                        details: item.details,
+                        studyId: study?.id
+                    }
+                )
+            }
+        }
+    }
 
     return {
         status: true,
@@ -54,10 +71,10 @@ export async function deleteStudy(id: string) {
     return await studyRepository.deleteStudy(id);
 }
 
-export async function updateStudy(id: string, data: Partial<UpdateStudyDTO>) {
-    return await studyRepository.updateStudy(id, data);
-}
+// export async function updateStudy(id: string, data: Partial<UpdateStudyDTO>) {
+//     return await studyRepository.updateStudy(id, data);
+// }
 
 export async function getAllStudies() {
-    return await studyRepository.
+    return await studyRepository.getAllStudy();
 }

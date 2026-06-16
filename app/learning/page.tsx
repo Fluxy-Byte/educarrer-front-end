@@ -19,16 +19,6 @@ import { useStudies } from "@/app/services/study.swr";
 import { getAvaliationsByUserIdAndStudyId, createAvaliation, updateAvaliation } from "@/app/services/avaliations.swr";
 import { ToastPersonalizado } from "@/components/toast";
 
-interface Avaliation {
-  id: String
-  satisfied: Boolean
-  comment?: String
-  studyId: String
-  createdAt: Date
-  updatedAt: Date
-  userId: String
-}
-
 export default function DashboardPage() {
   const { data: session } = useSession()
   const { studies } = useStudies();

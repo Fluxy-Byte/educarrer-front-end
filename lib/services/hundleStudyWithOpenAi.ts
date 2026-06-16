@@ -152,7 +152,7 @@ export class HundleStudyWithOpenAi {
             const response = await openai.responses.create({
                 prompt: {
                     "id": "pmpt_6a0ceb3ed4e08196a7b2e1452e0407f800520187412e4817",
-                    "version": "1"
+                    "version": "2"
                 },
                 input: [
                     {

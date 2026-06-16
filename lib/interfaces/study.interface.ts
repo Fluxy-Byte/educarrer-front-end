@@ -2,7 +2,7 @@
 export interface StudyDTO {
   id: string;
   title: string;
-  study: string;
+  study: StudyItem[];
   createdAt?: Date | null;
   updatedAt?: Date | null;
   userId: string;
@@ -11,16 +11,27 @@ export interface StudyDTO {
 // POST
 export interface CreateStudyDTO {
   title: string;
-  study: string;
-  createdAt?: Date | null;
-  updatedAt?: Date | null;
   userId: string;
+}
+
+export interface StudyItemCreate {
+  title: string,
+  details: string,
+  studyId: string
 }
 
 // PUT
 export interface UpdateStudyDTO {
   title?: string;
-  study?: string;
+  study?: StudyItem[];
   createdAt?: Date | null;
   updatedAt?: Date | null;
+}
+
+
+export interface StudyItem {
+  id: string,
+  title: string,
+  details: string,
+  studyId: string
 }

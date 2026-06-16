@@ -10,10 +10,17 @@ export interface ResultGetStudy {
 export interface StudyDTO {
   id: string;
   title: string;
-  study: string;
+  study: StudyItem[];
   createdAt?: Date | null;
   updatedAt?: Date | null;
   userId: string;
+}
+
+export interface StudyItem {
+  id: string,
+  title: string,
+  details: string,
+  studyId: string
 }
 
 const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://protec-edu-carrer-ai.egnehl.easypanel.host"

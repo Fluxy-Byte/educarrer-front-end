@@ -3,3 +3,13 @@ export interface SkillsAndExperienceComparisonResponse {
     strong: string[];
     matchPercentage: number;
 }
+
+export interface ResultCreateStudy {
+    title: string;
+    study: Studys[]
+}
+
+export interface Studys {
+    title: string,
+    details: string,
+}
