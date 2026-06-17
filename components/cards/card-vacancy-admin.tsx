@@ -20,6 +20,7 @@ import { useState } from "react";
 
 import TooltipPerso from "@/components/tooltip";
 import { DialogVacancyUpdate } from "@/components/dialog/dialog-vacancy.update";
+import { useViewPort } from "@/components/viewport";
 
 export interface Vacancy {
     id: string;
@@ -45,7 +46,7 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
     const [open, setOpen] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [isLoading, setIsLoading] = useState<Boolean>(false);
-
+    const { isMobile, isTablet } = useViewPort();
 
     async function handleCreateStudy(id: string) {
         setIsLoading(true);
@@ -128,8 +129,8 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
                         message="Clique para ver a descrição por completo"
                         key={"verdetalhes"}
                     >
-                        <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="mb-6">
-                            {`${vacancy.description.slice(0, 50).split("[QB]")[0]}...`}
+                        <Button onClick={() => setOpen(true)} size="link" variant="link_card" className="mb-6 whitespace-normal wrap-break-word">
+                            {vacancy.description.slice(0, 100).split("[QB]")[0]}...
                         </Button>
 
                     </TooltipPerso>

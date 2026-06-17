@@ -23,7 +23,9 @@ export default function DashboardLayout({
               </div>
               <div className="text-black block items-start md:flex md:flex-col">
                 <h1 className="font-semibold text-md">Aprendizado inteligente</h1>
-                <p className="text-zinc-500 text-sm">Descubra novas habilidades e avance na sua carreira com conteúdos personalizados</p>
+                <p className="text-zinc-500 hidden lg:block text-sm">Descubra novas habilidades e avance na sua carreira com conteúdos personalizados</p>
+
+                <p className="text-zinc-500 block lg:hidden text-sm">Descubra novas habilidades e avance na sua carreira</p>
               </div>
             </div>
 

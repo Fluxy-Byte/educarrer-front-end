@@ -23,7 +23,7 @@ const buttonVariants = cva(
 
         link: "cursor-pointer w-full bg-trasnparent hover:bg-gray-100 text-gray-700 font-semibold py-6 rounded-lg transition-all duration-300 border border-gray-300",
 
-        link_card: "cursor-pointer w-full bg-trasnparent text-gray-700 font-semibold underline transition-all duration-300 p-0",
+        link_card: "cursor-pointer w-full bg-trasnparent text-gray-700 font-semibold underline transition-all duration-300 p-0 text-start",
 
         close: "cursor-pointer w-auto bg-red-400 text-white hover:bg-red-500 transition focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-500/60",
 

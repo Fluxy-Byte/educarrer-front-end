@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { Building2, MapPin, HandCoins, Blocks, Rocket, LoaderCircle, ExternalLink } from "lucide-react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import TooltipPerso from "@/components/tooltip";
 
@@ -49,6 +49,10 @@ export default function CadsVacancy({ vacancy }: DialogVagasProps) {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { isMobile, isTablet } = useViewPort();
+
+    useEffect(() => {
+        console.log(isMobile)
+    }, [isMobile])
 
     async function handleCreateStudy(id: string) {
         try {
@@ -132,8 +136,8 @@ export default function CadsVacancy({ vacancy }: DialogVagasProps) {
             </CardHeader>
             <CardContent className="w-full text-sm flex flex-col items-start">
                 <div className="w-full">
-                    <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="mb-6">
-                        {`${isMobile ? vacancy.description.slice(0, 40).split("[QB]")[0] : vacancy.description.slice(0, 100).split("[QB]")[0]}...`}
+                    <Button onClick={() => setOpen(true)} size="link" variant="link_card" className="mb-6 whitespace-normal wrap-break-word">
+                            {vacancy.description.slice(0, 100).split("[QB]")[0]}...
                     </Button>
                     <CommandDialog open={open} onOpenChange={setOpen}>
                         <Command className="p-4 flex flex-col gap-4 justify-start items-center text-center max-h-[80vh]">

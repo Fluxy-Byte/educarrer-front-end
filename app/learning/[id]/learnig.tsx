@@ -41,25 +41,25 @@ function OverviewStats({ study }: { study: StudyFilterDTO }) {
 
   const stats = [
     {
-      icon: <BookOpen className="w-12 h-12 p-2 rounded-lg text-blue-600 bg-blue-200" />,
+      icon: <BookOpen className="w-8 h-8 lg:w-12 lg:h-12 p-2 rounded-lg text-blue-600 bg-blue-200" />,
       label: "Seções do roteiro",
       value: study.sections.length,
       sub: "áreas de conhecimento",
     },
     {
-      icon: <Star className="w-12 h-12 p-2 rounded-lg text-yellow-600 bg-yellow-100" />,
+      icon: <Star className="w-8 h-8 lg:w-12 lg:h-12 p-2 rounded-lg text-yellow-600 bg-yellow-100" />,
       label: "Pontos fortes",
       value: totalStrengths,
       sub: "habilidades consolidadas",
     },
     {
-      icon: <Target className="w-12 h-12 p-2 rounded-lg text-red-500 bg-red-100" />,
+      icon: <Target className="w-8 h-8 lg:w-12 lg:h-12 p-2 rounded-lg text-red-500 bg-red-100" />,
       label: "Lacunas identificadas",
       value: totalGaps,
       sub: "oportunidades de melhoria",
     },
     {
-      icon: <Calendar className="w-12 h-12 p-2 rounded-lg text-indigo-500 bg-indigo-100" />,
+      icon: <Calendar className="w-8 h-8 lg:w-12 lg:h-12 p-2 rounded-lg text-indigo-500 bg-indigo-100" />,
       label: "Plano de estudo",
       value: totalWeeks > 0 ? `${totalWeeks} semanas` : "—",
       sub: "planejamento sugerido",
@@ -74,9 +74,9 @@ function OverviewStats({ study }: { study: StudyFilterDTO }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stats.map((s) => (
           <Card key={s.label} className="border border-gray-200 shadow-sm">
-            <CardContent className="p-4 flex items-start gap-6">
-              <div className="mt-0.5">{s.icon}</div>
-              <div>
+            <CardContent className=" flex lg:flex-row flex-col items-start gap-2 lg:gap-4">
+              <div className="">{s.icon}</div>
+              <div className="flex flex-col gap-2 lg:gap-1">
                 <p className="text-sm font-semibold text-black">{s.label}</p>
                 <p className="text-md lg:text-2xl font-bold text-black leading-tight">
                   {s.value}
@@ -190,9 +190,9 @@ export default function LearningPage(props: { id: string }) {
     <div className="w-full min-h-full flex flex-col gap-6 pb-10">
       {/* ── Hero card ── */}
       <Card className="border border-gray-200 shadow-sm overflow-hidden">
-        <CardContent className="p-5 flex items-start justify-between gap-4">
-          <div className="flex flex-col gap-4 flex-1">
-            <h2 className="text-gray-900 text-2xl font-bold leading-snug">
+        <CardContent className="py-0 px-6 flex items-center lg:items-start justify-start gap-4">
+          <div className="flex items-center lg:items-start justify-center lg:justify-between flex-col gap-4">
+            <h2 className="text-gray-900 text-xl text-center lg:text-left lg:text-2xl font-bold leading-snug">
               {study.title}
             </h2>
 
@@ -204,7 +204,7 @@ export default function LearningPage(props: { id: string }) {
                 className={
                   evaluationPerformed === true
                     ? "bg-green-500! hover:bg-green-600! text-white border-transparent text-md font-bold"
-                    : "border-gray-300! text-gray-700! hover:bg-gray-300! text-md font-bold"
+                    : "text-black hover:bg-zinc-100! hover:text-black! text-md font-bold border border-zinc-200"
                 }
               >
                 👍 Gostei
@@ -216,28 +216,23 @@ export default function LearningPage(props: { id: string }) {
                 className={
                   evaluationPerformed === false
                     ? "bg-red-500! hover:bg-red-600! text-white border-transparent text-md font-bold"
-                    : "border-gray-300! text-gray-700! hover:bg-gray-300! text-md font-bold"
+                    : "text-black hover:bg-zinc-100! hover:text-black! text-md font-bold border border-zinc-200"
                 }
               >
                 👎 Não gostei
               </Button>
             </div>
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 bg-zinc-50 p-2 rounded-lg border border-zinc-300">
               Avaliação atual:{" "}
-              <span className="font-medium text-gray-700">
+              <span className={`font-medium ${evaluationPerformed ? "text-green-500" : "text-red-500"}`}>
                 {evaluationPerformed === null
                   ? "Não avaliado"
                   : evaluationPerformed
-                    ? "Positiva"
-                    : "Negativa"}
+                    ? "Positiva 😁"
+                    : "Negativa 😓"}
               </span>
             </p>
-          </div>
-
-          {/* Decorative illustration placeholder */}
-          <div className="hidden md:flex items-center justify-center w-36 h-24 rounded-xl bg-linear-to-br from-indigo-50 to-purple-100 shrink-0 text-5xl select-none">
-            🚀
           </div>
         </CardContent>
       </Card>
@@ -256,12 +251,17 @@ export default function LearningPage(props: { id: string }) {
             <CardContent>
               {
                 section.type == "resume" && (
-                  <div className="flex flex-col w-full gap-2">
+                  <div className="flex flex-col w-full gap-4">
                     <span className="flex gap-2">
-                      <SquareUser className="text-blue-600 bg-blue-100 w-12 h-12 p-2 rounded-lg" />
-                      <h1 className="text-black text-xl font-bold">
-                        Resumo do Perfil e da Vaga
-                      </h1>
+                      <SquareUser className="text-blue-600 hidden lg:block bg-blue-100 w-12 h-12 p-2 rounded-lg" />
+                      <span>
+                        <h1 className="text-black text-xl font-bold">
+                          Resumo do Perfil e da Vaga
+                        </h1>
+                        <p className="text-zinc-600">
+                          Separamos um resumo que nosso agente enchergou sobre você e a vaga
+                        </p>
+                      </span>
                     </span>
 
 
@@ -274,36 +274,37 @@ export default function LearningPage(props: { id: string }) {
 
               {
                 section.type == "strengths" && (
-                  <div className="flex flex-col w-full gap-2">
+                  <div className="flex flex-col w-full gap-4">
                     <span className="flex gap-2">
-                      <Route className="text-yellow-600 bg-yellow-100 w-12 h-12 p-2 rounded-lg" />
-                      <h1 className="text-black text-xl font-bold">
-                        Pontos fortes no seu perfil
-                      </h1>
+                      <Route className="text-yellow-800 bg-yellow-100 hidden lg:block w-12 h-12 p-2 rounded-lg" />
+                      <span>
+                        <h1 className="text-black text-xl font-bold">
+                          Pontos fortes no seu perfil
+                        </h1>
+                        <p className="text-zinc-600">
+                          Alguns pontos que encontramos match com seu perfil e a vaga
+                        </p>
+                      </span>
                     </span>
 
                     <div className="flex flex-col gap-6">
                       {
                         section.strengths.map((s) => (
-                          <div key={s.id} className="flex gap-4 justify-start items-center flex-col lg:flex-row bg-neutral-200 p-2 rounded-lg shadow-lg">
-                            <div className="w-full lg:w-auto text-center h-full p-4 bg-amber-800 rounded-lg">
-                              <h1 className="text-yellow-500 font-bold">{s.skill}</h1>
-                            </div>
-                            <div>
-                              <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Habilidade:
-                                </h1>
-                                <p className="text-black">{s.importance}</p>
-                              </span>
-                              <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Conselho:
-                                </h1>
-                                <p className="text-black">{s.advice}</p>
-                              </span>
+                          <div key={s.id} className="flex gap-2 justify-start items-center lg:items-start flex-col border border-zinc-200 p-4 rounded-lg shadow-lg">
+                            <h1 className="text-orange-500 text-xl font-bold">{s.skill}</h1>
+                            <span className="flex flex-col lg:flex-row gap-1">
+                              <h1 className="text-black font-bold">
+                                Habilidade:
+                              </h1>
+                              <p className="text-black">{s.importance}</p>
+                            </span>
+                            <span className="flex flex-col lg:flex-row gap-1">
+                              <h1 className="text-black font-bold">
+                                Conselho:
+                              </h1>
+                              <p className="text-black">{s.advice}</p>
+                            </span>
 
-                            </div>
                           </div>
                         ))
                       }
@@ -315,49 +316,52 @@ export default function LearningPage(props: { id: string }) {
 
               {
                 section.type == "lacunasaDevelop" && (
-                  <div className="flex flex-col w-full gap-2">
+                  <div className="flex flex-col w-full gap-4">
 
                     <span className="flex gap-2">
-                      <Zap className="text-red-500 bg-red-100 w-12 h-12 p-2 rounded-lg" />
-                      <h1 className="text-black text-xl font-bold">
-                        Lacunas a desenvolver
-                      </h1>
+                      <Zap className="text-red-500 bg-red-100 hidden lg:block w-12 h-12 p-2 rounded-lg" />
+                      <span>
+                        <h1 className="text-black text-xl font-bold">
+                          Lacunas a desenvolver
+                        </h1>
+                        <p className="text-zinc-600">
+                          Separamos algumas lacunas importantes para seu perfil desenvolver
+                        </p>
+                      </span>
+
                     </span>
 
                     <div className="flex flex-col gap-6">
                       {
                         section.gaps.map((g) => (
-                          <div key={g.id} className="flex gap-4 justify-start items-center bg-zinc-100 p-2 rounded-lg">
-                            <div className="w-auto h-full p-4 bg-blue-100 rounded-lg">
-                              <h1 className="text-blue-500 font-bold">{g.skill}</h1>
+                          <div key={g.id} className="flex flex-col gap-3 lg:gap-5 justify-start lg:items-start items-center border border-zinc-200 shadow-lg p-4 rounded-lg">
+                            <div className="w-auto">
+                              <h1 className="text-red-500 text-xl font-bold">{g.skill}</h1>
                             </div>
 
-                            <div className="flex flex-col gap-1">
+                            <div className="flex flex-col gap-2">
                               <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Explicação:
+                                <h1 className="text-black">
+                                  <b>Explicação:</b> {g.explanation}
                                 </h1>
-                                <p className="text-black">{g.explanation}</p>
                               </span>
                               <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Tempo estimado:
+                                <h1 className="text-black">
+                                  <b>Tempo estimado:</b> {g.estimatedTime}
                                 </h1>
-                                <p className="text-black">{g.estimatedTime}</p>
                               </span>
 
                               <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Prioridade:
+                                <h1 className="text-black">
+                                  <b>Prioridade:</b> {g.priority}
                                 </h1>
-                                <p className="text-black">{g.priority}</p>
                               </span>
 
                               <h1 className="text-black font-bold">Tópicos:</h1>
                               <span className="w-full grid grid-cols-1 gap-2 lg:flex">
                                 {
                                   g.topics.map((t, itp) => (
-                                    <Badge className="text-sm" key={itp}>
+                                    <Badge className="p-2 text-sm text-purple-800 bg-purple-100 border-purple-400 whitespace-normal wrap-break-word" key={itp}>
                                       {t}
                                     </Badge>
                                   ))
@@ -368,7 +372,7 @@ export default function LearningPage(props: { id: string }) {
                               <span className="w-full grid grid-cols-1 gap-2 lg:flex">
                                 {
                                   g.resources.map((r, idr) => (
-                                    <Badge className="text-sm" key={idr}>
+                                    <Badge className="p-2 text-sm text-green-800 bg-green-100 border-green-400 whitespace-normal wrap-break-word" key={idr}>
                                       {r}
                                     </Badge>
                                   ))
@@ -387,34 +391,35 @@ export default function LearningPage(props: { id: string }) {
 
               {
                 section.type == "studyPlans" && (
-                  <div className="flex flex-col w-full gap-2">
+                  <div className="flex flex-col w-full gap-4">
 
                     <span className="flex gap-2">
-                      <NotepadText className="text-green-500 bg-green-100 w-12 h-12 p-2 rounded-lg" />
-                      <h1 className="text-black text-xl font-bold">
-                        Plano de estudos semanal
-                      </h1>
+                      <NotepadText className="text-green-800 bg-green-100 hidden lg:block w-12 h-12 p-2 rounded-lg" />
+                      <span>
+                        <h1 className="text-black text-xl font-bold">
+                          Plano de estudos semanal
+                        </h1>
+                        <p className="text-zinc-600 whitespace-normal wrap-break-word">
+                          Seu plano de desenvolvimento foi estruturado com base nas competências mais relevantes para sua carreira. Organizamos os estudos em etapas semanais para facilitar o aprendizado e torná-lo compatível com sua rotina.
+                        </p>
+                      </span>
                     </span>
 
                     <div className="flex flex-col gap-6">
                       {
                         section.plans.map((p) => (
-                          <div key={p.id} className="flex gap-4 justify-start items-center bg-zinc-100 p-2 rounded-lg">
-                            <div className="w-auto h-full p-4 bg-blue-100 rounded-lg">
-                              <h1 className="text-blue-500 font-bold">Semana {p.week}</h1>
+                          <div key={p.id} className="flex flex-col gap-2 justify-start items-center lg:items-start border border-zinc-200 shadow-lg p-4 rounded-lg">
+                            <div className="w-auto">
+                              <h1 className="text-blue-500 text-xl font-bold">Semana {p.week}</h1>
                             </div>
-                            <div>
 
-                              <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Foco:
-                                </h1>
+                            <div className="flex flex-col gap-1">
+                              <span className="flex gap-1 flex-col lg:flex-row">
+                                <h1 className="text-black font-bold">Foco: </h1>
                                 <p className="text-black">{p.focus}</p>
                               </span>
-                              <span className="flex gap-1">
-                                <h1 className="text-black font-bold">
-                                  Metas para realizar:
-                                </h1>
+                              <span className="flex gap-1 flex-col lg:flex-row">
+                                <h1 className="text-black font-bold">Oque você precisa entender: </h1>
                                 <p className="text-black">{p.goals}</p>
                               </span>
 
@@ -429,13 +434,18 @@ export default function LearningPage(props: { id: string }) {
 
               {
                 section.type == "finalTip" && (
-                  <div className="flex flex-col w-full gap-2">
+                  <div className="flex flex-col w-full gap-4">
 
                     <span className="flex gap-2">
-                      <BookCheck className="text-orange-600 bg-orange-100 w-12 h-12 p-2 rounded-lg" />
-                      <h1 className="text-black text-xl font-bold">
-                        Dica final para o estudo
-                      </h1>
+                      <BookCheck className="text-orange-600 bg-orange-100 hidden lg:block w-12 h-12 p-2 rounded-lg" />
+                      <span>
+                        <h1 className="text-black text-xl font-bold">
+                          Dica final para o estudo
+                        </h1>
+                        <p className="text-zinc-600 whitespace-normal wrap-break-word">
+                          Pra fechar com chave de ouro deixamos uma dica para concluir seu estudo
+                        </p>
+                      </span>
                     </span>
 
                     <p className="text-black">
@@ -449,6 +459,6 @@ export default function LearningPage(props: { id: string }) {
 
         ))}
       </div>
-    </div>
+    </div >
   );
 }

@@ -24,15 +24,15 @@
 --text-popover: #00000000;
 
 /* 🎯 Ações */
---primary-foreground: #ffffff;
+--primary-foreground: #00000000;
 
---secondary-foreground: #ffffff;
+--secondary-foreground: #00000000;
 
 --muted: 00000000;
---muted-foreground: #9ca3af;
+--muted-foreground: #00000000;
 
 --accent: var(--primary);
---accent-foreground: #ffffff;
+--accent-foreground: #00000000;
 
 --destructive: #FF0000;
 --destructive-foreground: #ffffff;

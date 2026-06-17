@@ -73,8 +73,8 @@ export default function CadsSkill({ skill }: DialogSkillProps) {
                 {/* Descrição */}
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="w-1/4 text-left flex-1 text-sm text-zinc-500">
-                            {skill.about ? `${ isMobile ? skill.about.slice(0, 40) : skill.about.slice(0, 100)}...` : "Sem informações"}
+                        <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="w-1/4 text-center lg:text-left flex-1 text-sm text-zinc-500 whitespace-normal wrap-break-word">
+                            {skill.about ? `${isMobile ? skill.about.slice(0, 40) : skill.about.slice(0, 100)}...` : "Sem informações"}
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -92,8 +92,8 @@ export default function CadsSkill({ skill }: DialogSkillProps) {
                 </CommandDialog>
 
                 {/* Data atualizada */}
-                <span className="w-1/5 flex items-center gap-2 text-sm text-zinc-500 whitespace-nowrap">
-                    <Calendar className="w-4 h-4" />
+                <span className="w-full lg:w-1/5 flex text-center lg:text-left justify-center items-center gap-2 text-sm text-zinc-500! whitespace-nowrap">
+                    <Calendar className="hidden lg:block w-4 h-4 text-zinc-500!" />
                     <span>
                         Atualizado<br />
                         {skill.updatedAt ? formatDateTime(skill.updatedAt) : "Não encontramos uma data no momento"}

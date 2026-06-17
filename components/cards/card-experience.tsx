@@ -45,12 +45,12 @@ export default function CadsExperience({ experience }: DialogSkillProps) {
             <CardContent className="flex flex-col lg:flex-row items-center gap-4 p-0 flex-1">
 
                 {/* Avatar com inicial */}
-                <span className={`w-14 h-14 flex items-center justify-center rounded-xl text-white text-2xl font-bold ${getCompanyColor(experience.name)}`}>
+                <span className={`w-14 h-14 flex items-center text-center lg:text-left justify-center rounded-xl text-white text-2xl font-bold ${getCompanyColor(experience.name)}`}>
                     {experience.name?.charAt(0).toUpperCase()}
                 </span>
 
                 {/* Nome, cargo e período */}
-                <div className="flex flex-col sm:text-center gap-1 min-w-45">
+                <div className="flex flex-col text-center lg:text-left gap-1 min-w-45">
                     <h1 className="text-base font-semibold text-black">
                         {experience.name}
                     </h1>
@@ -71,7 +71,7 @@ export default function CadsExperience({ experience }: DialogSkillProps) {
                 </div>
 
                 {/* Descrição */}
-                <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="text-left flex-1 text-sm text-zinc-500">
+                <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="text-center flex-1 text-sm lg:text-left text-zinc-500 whitespace-normal wrap-break-word">
                     {experience.about ? `${experience.about.slice(0, 100)}...` : "Sem informações"}
                 </Button>
                 <CommandDialog open={open} onOpenChange={setOpen}>
