@@ -358,7 +358,7 @@ export default function LearningPage(props: { id: string }) {
                               </span>
 
                               <h1 className="text-black font-bold">Tópicos:</h1>
-                              <span className="w-full grid grid-cols-1 gap-2 lg:flex">
+                              <span className="w-full flex gap-2 flex-col lg:flex-row">
                                 {
                                   g.topics.map((t, itp) => (
                                     <Badge className="p-2 text-sm text-purple-800 bg-purple-100 border-purple-400 whitespace-normal wrap-break-word" key={itp}>
@@ -369,7 +369,7 @@ export default function LearningPage(props: { id: string }) {
                               </span>
 
                               <h1 className="text-black font-bold">Recursos:</h1>
-                              <span className="w-full grid grid-cols-1 gap-2 lg:flex">
+                              <span className="w-full flex gap-2 flex-col lg:flex-row">
                                 {
                                   g.resources.map((r, idr) => (
                                     <Badge className="p-2 text-sm text-green-800 bg-green-100 border-green-400 whitespace-normal wrap-break-word" key={idr}>
