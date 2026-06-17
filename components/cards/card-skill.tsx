@@ -46,7 +46,7 @@ export default function CadsSkill({ skill }: DialogSkillProps) {
 
     return (
         <Card key={skill.id} className="w-full flex flex-row items-center p-4 gap-4 rounded-2xl">
-            <CardContent className="flex flex-row items-center gap-4 p-0 flex-1">
+            <CardContent className="flex flex-col lg:flex-row sm:text-center items-center gap-4 p-0 flex-1">
 
                 {/* Ícone/Nome da tecnologia */}
                 <span className={`w-auto px-4 py-3 rounded-xl flex items-center justify-center ${getTechColor(skill.name)}`}>

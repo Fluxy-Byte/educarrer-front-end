@@ -9,10 +9,14 @@ export async function getVacancys() {
     return await vacancysRepository.getVacancysFromRedis();
 }
 
-export async function getVacancysById(id: number) {
-    return await vacancysRepository.getVacancysByIdFromRedis(id);
+export async function getVacancysById(id: string) {
+    const vacancy = await vacancysRepository.getVacancysByIdFromRedis(id);
 
-    // return await vacancysRepository.getVacancysByIdFromDataBase(id);
+    if (!vacancy) {
+        return await vacancysRepository.getVacancysByIdFromDataBase(id);
+    }
+
+    return vacancy;
 }
 
 export async function createVacancy(data: CreateVacancyData) {

@@ -136,7 +136,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Selects de nível e modalidade */}
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-col lg:flex-row">
             <Select value={nivelFiltro} onValueChange={(value) => setNivelFiltro(value)}>
               <SelectTrigger className="w-full bg-white! border border-zinc-200 rounded-md px-3 text-sm text-black focus:ring-0 focus:ring-offset-0 h-12!">
                 <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ export default function DashboardPage() {
           </CardHeader>
 
           <CardContent>
-            <div className="lg:flex lg:flex-col gap-3 grid grid-cols-2">
+            <div className="lg:flex lg:flex-col gap-3 grid lg:grid-cols-2">
               <Card className="border-blue-400 bg-blue-50">
                 <CardContent className="flex items-center gap-4">
                   <BriefcaseBusiness className="h-7 w-7 text-blue-600 shrink-0" />

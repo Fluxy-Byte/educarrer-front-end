@@ -64,7 +64,7 @@ export class getVacancysFromRedis {
         }
     }
 
-    async getVacancysByIdFromRedis(id: number): Promise<Vacancy | null> {
+    async getVacancysByIdFromRedis(id: string): Promise<Vacancy | null> {
         try {
 
             const cacheKey = "vacancys:list";
@@ -83,7 +83,7 @@ export class getVacancysFromRedis {
     }
 
 
-    async getVacancysByIdFromDataBase(id: number): Promise<Vacancy | null> {
+    async getVacancysByIdFromDataBase(id: string): Promise<Vacancy | null> {
         try {
             const getVacancysClass = new VacancyRepository();
             const vacancys = await getVacancysClass.getVacancys();

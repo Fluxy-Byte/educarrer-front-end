@@ -59,8 +59,8 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
         <Card key={vacancy.id}>
             <CardHeader className="w-full flex flex-col gap-4">
                 <CardTitle className="w-full">
-                    <span className="flex justify-between">
-                        <div className="flex items-center justify-center gap-4" >
+                    <span className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4" >
                             <h1 className="text-black text-xl">
                                 {vacancy.title}
                             </h1>
@@ -72,47 +72,47 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
                             </Badge>
                         </div>
 
-                        <div className="flex items-center justify-center gap-4">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 shrink-0">
                             <Badge
                                 key={String(vacancy.createdAt)}
                                 className={`text-purple-500 border-pur bg-purple-200`}
                             >
                                 {getVacancyLabel(vacancy.createdAt)}
                             </Badge>
-                            <p className="text-zinc-400 text-sm">
+                            <p className="text-zinc-400 text-sm whitespace-nowrap">
                                 {getTimeAgo(vacancy.createdAt)}
                             </p>
                         </div>
                     </span>
                 </CardTitle>
                 <CardDescription>
-                    <div className="flex gap-6">
-                        <div className="flex flex-col gap-2">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
+                        <div className="flex flex-col gap-2 min-w-0">
                             <div className="flex gap-2 items-center justify-start text-black/60">
-                                <Building2 strokeWidth={1} className="h-6 w-6" />
-                                <h2>
+                                <Building2 strokeWidth={1} className="h-6 w-6 shrink-0" />
+                                <h2 className="break-words">
                                     {vacancy.company ?? "Não identificado"}
                                 </h2>
                             </div>
 
                             <div className="flex gap-2 items-center text-black/60">
-                                <MapPin strokeWidth={1} className="h-6 w-6" />
-                                <h2>
+                                <MapPin strokeWidth={1} className="h-6 w-6 shrink-0" />
+                                <h2 className="break-words">
                                     {vacancy.location ?? "Não identificado"}
                                 </h2>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 min-w-0">
                             <div className="flex gap-2 items-center text-black/60">
-                                <HandCoins strokeWidth={1} className="h-6 w-6" />
-                                <h2>
+                                <HandCoins strokeWidth={1} className="h-6 w-6 shrink-0" />
+                                <h2 className="break-words">
                                     {vacancy.salary ? vacancy.salary : "Não identificado"}
                                 </h2>
                             </div>
 
                             <div className="flex gap-2 items-center text-black/60">
-                                <Blocks strokeWidth={1} className="h-6 w-6" />
-                                <h2>
+                                <Blocks strokeWidth={1} className="h-6 w-6 shrink-0" />
+                                <h2 className="break-words">
                                     {vacancy.level ?? "Não identificado"}
                                 </h2>
                             </div>
@@ -129,7 +129,7 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
                         key={"verdetalhes"}
                     >
                         <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="mb-6">
-                            {`${vacancy.description.slice(0, 100).split("[QB]")[0]}...`}
+                            {`${vacancy.description.slice(0, 50).split("[QB]")[0]}...`}
                         </Button>
 
                     </TooltipPerso>
@@ -149,8 +149,8 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
                         </Command>
                     </CommandDialog>
 
-                    <div className="w-full flex justify-between">
-                        <div className="w-full flex items-center justify-start">
+                    <div className="w-full flex justify-between flex-col lg:flex-row gap-4 lg:gap-0">
+                        <div className="w-full flex flex-wrap items-center justify-start">
                             {vacancy.technologies.map((tech) => (
                                 <Badge
                                     key={tech}
@@ -161,7 +161,7 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
                             ))}
                         </div>
 
-                        <div className="w-auto gap-2 flex">
+                        <div className="w-full sm:w-auto gap-2 flex flex-col sm:flex-row shrink-0">
                             <DialogVacancyUpdate vacancy={vacancy} open={openEdit} onOpenChange={setOpenEdit} />
 
                             <TooltipPerso
@@ -169,7 +169,7 @@ export default function CadsVacancyAdmin({ vacancy }: DialogVagasProps) {
                                 key={"verdetalhes"}
                             >
                                 <Button
-                                    className="bg-blue-500 hover:bg-blue-600"
+                                    className="w-full sm:w-full bg-blue-500 hover:bg-blue-600"
                                     onClick={() => setOpenEdit(true)}
                                 >
                                     <PenBox /> Editar vaga

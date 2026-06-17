@@ -109,27 +109,74 @@ model Experience {
 model Study {
   id         String   @id @default(cuid())
   title      String
-  study      String[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  studyItems StudyItem[]
+  vacancyId  String
+  vacancy    Vacancy  @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
 
   userId     String
-
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  sections   StudySection[]
 }
 
-model StudyItem {
+model StudySection {
   id         String   @id @default(cuid())
-  title      String
-  details    String
 
   studyId    String
+  study      Study    @relation(fields: [studyId], references: [id], onDelete: Cascade)
 
-  study      Study     @relation(fields: [studyId], references: [id], onDelete: Cascade)
+  section    String
+  type       String
+
+  content    String?
+
+  createdAt  DateTime @default(now())
+
+  strengths  StudyStrength[]
+  gaps       StudyGap[]
+  plans      StudyPlan[]
 }
 
+model StudyStrength {
+  id          String @id @default(cuid())
+
+  sectionId   String
+  section     StudySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  skill       String
+  importance  String @db.Text
+  advice      String @db.Text
+}
+
+model StudyGap {
+  id            String @id @default(cuid())
+
+  sectionId     String
+  section       StudySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  skill         String
+  explanation   String @db.Text
+  priority      String
+
+  estimatedTime String
+
+  topics        String[]
+  resources     String[]
+}
+
+
+model StudyPlan {
+  id          String @id @default(cuid())
+
+  sectionId   String
+  section     StudySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  week        Int
+  focus       String
+  goals       String @db.Text
+}
 
 model Vacancy {
   id            String   @id @default(cuid())
@@ -145,8 +192,10 @@ model Vacancy {
   salary        String? @default("0")
   active        Boolean @default(true)
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  study         Study[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 
@@ -154,14 +203,13 @@ model Avaliations {
   id         String   @id @default(cuid())
   satisfied  Boolean
   comment    String?
-  
+
   studyId    String
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
   userId     String
-
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)  
 }
 

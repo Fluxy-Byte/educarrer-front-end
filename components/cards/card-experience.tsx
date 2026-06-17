@@ -41,7 +41,7 @@ export default function CadsExperience({ experience }: DialogSkillProps) {
 
     return (
         <Card key={experience.id} className="w-full flex flex-row items-center p-4 gap-4 rounded-2xl">
-            <CardContent className="flex flex-row items-center gap-4 p-0 flex-1">
+            <CardContent className="flex flex-col lg:flex-row items-center gap-4 p-0 flex-1">
 
                 {/* Avatar com inicial */}
                 <span className={`w-14 h-14 flex items-center justify-center rounded-xl text-white text-2xl font-bold ${getCompanyColor(experience.name)}`}>
@@ -49,7 +49,7 @@ export default function CadsExperience({ experience }: DialogSkillProps) {
                 </span>
 
                 {/* Nome, cargo e período */}
-                <div className="flex flex-col gap-1 min-w-[180px]">
+                <div className="flex flex-col sm:text-center gap-1 min-w-45">
                     <h1 className="text-base font-semibold text-black">
                         {experience.name}
                     </h1>
