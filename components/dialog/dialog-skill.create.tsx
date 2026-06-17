@@ -112,14 +112,14 @@ export function DialogSkillCreate() {
                                     onValueChange={(value) => field.onChange(value)}
                                     value={field.value ?? ""}
                                 >
-                                    <SelectTrigger className="w-full h-12! border border-zinc-200 bg-white! text-black">
+                                    <SelectTrigger className="w-full h-12! border border-zinc-200 bg-white! text-black!">
                                         <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione uma habilidade" />
                                     </SelectTrigger>
 
                                     <SelectContent>
                                         {Object.entries(skillsTI).map(([group, items]) => (
-                                            <SelectGroup key={group}>
-                                                <SelectLabel>{group}</SelectLabel>
+                                            <SelectGroup  key={group}>
+                                                <SelectLabel className="text-gray-400">{group}</SelectLabel>
                                                 {items.map((v, i) => (
                                                     <SelectItem key={v + i} value={v}>
                                                         {v}
