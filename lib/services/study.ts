@@ -14,7 +14,16 @@ export async function getStudyByUserId(userId: string) {
 
 export async function createStudy(idVacancy: string, userId: string) {
     const skills = await getSkillByUserId(userId);
+
+    if (skills.length == 0) {
+        return {
+            status: false,
+            message: "E necessario que cadastre ao menos 1 habilidade no seu perfil para a criação de estudos personalizados!"
+        }
+    }
+
     const experiences = await getExperienceByUserId(userId);
+
     const vacancy = await getVacancysById(idVacancy);
 
     if (!vacancy) {
@@ -133,6 +142,6 @@ export async function getAllStudies() {
     return await studyRepository.getAllStudy();
 }
 
-export async function getStudyById(id:string) {
+export async function getStudyById(id: string) {
     return await studyRepository.getStudyById(id);
 }

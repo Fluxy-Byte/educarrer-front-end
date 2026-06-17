@@ -285,12 +285,11 @@ export default function LearningPage(props: { id: string }) {
                     <div className="flex flex-col gap-6">
                       {
                         section.strengths.map((s) => (
-                          <div key={s.id} className="flex gap-4 justify-start items-center bg-zinc-100 p-2 rounded-lg">
-                            <div className="w-auto h-full p-4 bg-amber-800 rounded-lg">
+                          <div key={s.id} className="flex gap-4 justify-start items-center flex-col lg:flex-row bg-neutral-200 p-2 rounded-lg shadow-lg">
+                            <div className="w-full lg:w-auto text-center h-full p-4 bg-amber-800 rounded-lg">
                               <h1 className="text-yellow-500 font-bold">{s.skill}</h1>
                             </div>
                             <div>
-
                               <span className="flex gap-1">
                                 <h1 className="text-black font-bold">
                                   Habilidade:

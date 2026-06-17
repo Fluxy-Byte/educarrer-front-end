@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import axios from 'axios';
-
+import { Vacancy } from "@/app/services/vacancys.swr";
 
 export interface ResultGetStudy {
     status: boolean
@@ -13,6 +13,7 @@ export interface StudyDTO {
     title: string;
     createdAt?: Date | null;
     userId: string;
+    vacancy: Vacancy;
 }
 
 export interface ResultGetFilterStudy {
@@ -70,6 +71,11 @@ export interface StudyGapDTO {
     resources: string[];
 }
 
+export interface CreateStudyDTO {
+    status: boolean,
+    message: string
+}
+
 const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://educarrerai.egnehl.easypanel.host"
 
 const fetcher = async (url: string): Promise<ResultGetStudy> => {
@@ -91,7 +97,7 @@ export function useStudies() {
     }
 }
 
-export async function createStudy(idVacancy: string) {
+export async function createStudy(idVacancy: string): Promise<CreateStudyDTO> {
     const { data } = await axios.post(`${URL}/api/study`, {
         idVacancy
     }, {

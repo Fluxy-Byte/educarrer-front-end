@@ -12,8 +12,9 @@ import { Loader2, Trash2, SquarePen, Calendar } from "lucide-react";
 import { useState } from "react";
 import { ToastPersonalizado } from "@/components/toast";
 import { DialogExperienceUpdate } from "@/components/dialog/dialog-experience.update";
-import { deleteExperience, Experience, useExperiences } from "@/app/services/experiences.swr"
-
+import { deleteExperience, Experience, useExperiences } from "@/app/services/experiences.swr";
+import TooltipPerso from "@/components/tooltip";
+import { useViewPort } from "@/components/viewport";
 interface DialogSkillProps {
     experience: Experience,
     key: string
@@ -24,7 +25,7 @@ export default function CadsExperience({ experience }: DialogSkillProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const { refresh } = useExperiences();
-
+    const { isMobile, isTablet } = useViewPort();
     const handleDelete = async () => {
         try {
             setIsLoading(true)
@@ -83,24 +84,57 @@ export default function CadsExperience({ experience }: DialogSkillProps) {
                 </CommandDialog>
 
                 {/* Ações */}
-                <div className="w-auto flex gap-2 items-center">
-                    <Button variant={"create"} size="icon" onClick={() => setOpenUpdate(true)}>
-                        <SquarePen className="w-4 h-4" />
-                    </Button>
-                    <Button
-                        variant={"destructive"}
-                        size="icon"
-                        onClick={() => handleDelete()}
-                        disabled={isLoading}
+                <div className={`flex gap-2 ${isMobile ? "flex-col w-full" : "w-auto"} items-center`}>
+                    <TooltipPerso
+                        id="editarexperiencia"
+                        message="Clique para editar"
                     >
-                        {
-                            isLoading ? (
-                                <Loader2 className="animate-spin w-4 h-4" />
-                            ) : (
-                                <Trash2 className="w-4 h-4" />
-                            )
-                        }
-                    </Button>
+                        <Button className={`${isMobile ? "w-full!" : ""}`} variant={"create"} size="icon" onClick={() => setOpenUpdate(true)}>
+                            {isMobile && (
+                                <span className="flex gap-2">
+                                    <SquarePen className="w-4 h-4" />
+                                    Editar experiência
+                                </span>
+                            )}
+
+                            {!isMobile && (
+                                <SquarePen className="w-4 h-4" />
+                            )}
+                        </Button>
+                    </TooltipPerso>
+                    <TooltipPerso
+                        id="excluirexperiencia"
+                        message="Clique para excluir"
+                    >
+                        <Button
+                            className={`${isMobile ? "w-full!" : ""}`}
+                            variant={"destructive"}
+                            size="icon"
+                            onClick={() => handleDelete()}
+                            disabled={isLoading}
+                        >
+                            {
+                                isLoading ? (
+                                    <Loader2 className="animate-spin w-4 h-4" />
+                                ) : (
+                                    <>
+                                        {isMobile && (
+                                            <span className="flex gap-2">
+                                                <Trash2 className="w-4 h-4" />
+                                                Deletar experiência
+                                            </span>
+                                        )}
+
+                                        {!isMobile && (
+                                            <Trash2 className="w-4 h-4" />
+                                        )}
+                                    </>
+
+                                )
+                            }
+                        </Button>
+                    </TooltipPerso>
+
                 </div>
 
                 <DialogExperienceUpdate

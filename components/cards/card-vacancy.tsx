@@ -14,11 +14,16 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 
-import { Building2, MapPin, HandCoins, Blocks, Rocket, LoaderCircle } from "lucide-react";
+import { Building2, MapPin, HandCoins, Blocks, Rocket, LoaderCircle, ExternalLink } from "lucide-react";
 
 import { useState } from "react";
 
 import TooltipPerso from "@/components/tooltip";
+
+import Loading from "@/components/loading";
+
+import { ToastPersonalizado } from "@/components/toast";
+import { useViewPort } from "@/components/viewport";
 
 export interface Vacancy {
     id: string;
@@ -42,19 +47,24 @@ interface DialogVagasProps {
 }
 export default function CadsVacancy({ vacancy }: DialogVagasProps) {
     const [open, setOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState<Boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { isMobile, isTablet } = useViewPort();
 
     async function handleCreateStudy(id: string) {
-        setIsLoading(true);
-        const res = await createStudy(id);
-        console.log(res)
-        setIsLoading(false);
-        console.log("Criar estudo para a vaga:", vacancy);
-        setIsLoading(false);
+        try {
+            setIsLoading(true);
+            const res = await createStudy(id);
+            ToastPersonalizado({ mensagem: res.message });
+        } catch (e) {
+            ToastPersonalizado({ mensagem: "Ocorreu um erro durante a criação do seu estudo, tente novamente mais tarde." });
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
         <Card key={vacancy.id}>
+            <Loading loading={isLoading} message="Aguarde um momento, estamos criando seu estudo..." />
             <CardHeader className="w-full flex flex-col gap-4">
                 <CardTitle className="w-full">
                     <span className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
@@ -123,7 +133,7 @@ export default function CadsVacancy({ vacancy }: DialogVagasProps) {
             <CardContent className="w-full text-sm flex flex-col items-start">
                 <div className="w-full">
                     <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="mb-6">
-                        {`${vacancy.description.slice(0, 50).split("[QB]")[0]}...`}
+                        {`${isMobile ? vacancy.description.slice(0, 40).split("[QB]")[0] : vacancy.description.slice(0, 100).split("[QB]")[0]}...`}
                     </Button>
                     <CommandDialog open={open} onOpenChange={setOpen}>
                         <Command className="p-4 flex flex-col gap-4 justify-start items-center text-center max-h-[80vh]">
@@ -163,10 +173,31 @@ export default function CadsVacancy({ vacancy }: DialogVagasProps) {
                                     {
                                         isLoading ? (
                                             <>
-                                                <LoaderCircle className="animate-spin" />
+                                                {isMobile && (
+                                                    <span className="flex gap-2">
+                                                        <LoaderCircle className="animate-spin" />
+                                                        Criando...
+                                                    </span>
+                                                )}
+
+                                                {!isMobile && (
+                                                    <LoaderCircle className="animate-spin" />
+                                                )}
+
                                             </>
                                         ) : (
-                                            <Rocket />
+                                            <>
+                                                {isMobile && (
+                                                    <span className="flex gap-2">
+                                                        <Rocket />
+                                                        Criar estudo
+                                                    </span>
+                                                )}
+
+                                                {!isMobile && (
+                                                    <Rocket />
+                                                )}
+                                            </>
                                         )
                                     }
                                 </Button>
@@ -180,7 +211,7 @@ export default function CadsVacancy({ vacancy }: DialogVagasProps) {
                                     <Button
                                         className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600"
                                     >
-                                        Ver detalhes
+                                        <ExternalLink /> Ver detalhes
                                     </Button>
                                 </a>
                             </TooltipPerso>

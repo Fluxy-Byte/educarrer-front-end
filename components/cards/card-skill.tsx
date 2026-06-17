@@ -17,7 +17,9 @@ import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
+import { useViewPort } from "@/components/viewport";
+import TooltipPerso from "@/components/tooltip";
 
 interface DialogSkillProps {
     skill: Skill,
@@ -29,6 +31,7 @@ export default function CadsSkill({ skill }: DialogSkillProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [openUpdate, setOpenUpdate] = useState(false);
     const { refresh } = useSkills();
+    const { isMobile, isTablet } = useViewPort();
 
     const handleDelete = async () => {
         try {
@@ -71,7 +74,7 @@ export default function CadsSkill({ skill }: DialogSkillProps) {
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button onClick={() => setOpen(true)} size={"link"} variant="link_card" className="w-1/4 text-left flex-1 text-sm text-zinc-500">
-                            {skill.about ? `${skill.about.slice(0, 50)}...` : "Sem informações"}
+                            {skill.about ? `${ isMobile ? skill.about.slice(0, 40) : skill.about.slice(0, 100)}...` : "Sem informações"}
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -97,24 +100,59 @@ export default function CadsSkill({ skill }: DialogSkillProps) {
                     </span>
                 </span>
 
-                <div className="w-auto flex gap-2 items-center">
-                    <Button variant={"create"} size="icon" onClick={() => setOpenUpdate(true)}>
-                        <SquarePen className="w-4 h-4" />
-                    </Button>
-                    <Button
-                        variant={"destructive"}
-                        size="icon"
-                        onClick={() => handleDelete()}
-                        disabled={isLoading}
+                <div className={` flex gap-2 ${isMobile ? "flex-col w-full" : "w-auto"} items-center`}>
+                    <TooltipPerso
+                        id="editarestudos"
+                        message="Clique para editar"
                     >
-                        {
-                            isLoading ? (
-                                <Loader2 className="animate-spin w-4 h-4" />
-                            ) : (
-                                <Trash2 className="w-4 h-4" />
-                            )
-                        }
-                    </Button>
+                        <Button className={`${isMobile ? "w-full!" : ""}`} variant={"create"} size="icon" onClick={() => setOpenUpdate(true)}>
+                            {isMobile && (
+                                <span className="flex gap-2">
+                                    <SquarePen className="w-4 h-4" />
+                                    Editar habilidade
+                                </span>
+                            )}
+
+                            {!isMobile && (
+                                <SquarePen className="w-4 h-4" />
+                            )}
+
+                        </Button>
+                    </TooltipPerso>
+                    <TooltipPerso
+                        id="excluirrestudos"
+                        message="Clique para excluir"
+                    >
+                        <Button
+                            className={`${isMobile ? "w-full!" : ""}`}
+                            variant={"destructive"}
+                            size="icon"
+                            onClick={() => handleDelete()}
+                            disabled={isLoading}
+                        >
+                            {
+                                isLoading ? (
+                                    <Loader2 className="animate-spin w-4 h-4" />
+                                ) : (
+                                    <>
+                                        {isMobile && (
+                                            <span className="flex gap-2">
+                                                <Trash2 className="w-4 h-4" />
+                                                Deletar habilidade
+                                            </span>
+                                        )}
+
+                                        {!isMobile && (
+                                            <Trash2 className="w-4 h-4" />
+                                        )}
+                                    </>
+
+                                )
+                            }
+                        </Button>
+                    </TooltipPerso>
+
+
                 </div>
 
                 <DialogSkillUpdate

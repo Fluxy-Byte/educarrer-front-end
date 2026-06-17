@@ -4,21 +4,11 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import {
-    Command,
-    CommandDialog
-} from "@/components/ui/command";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, Trash2, Eye, Calendar } from "lucide-react";
-import { DialogSkillUpdate } from "@/components/dialog/dialog-skill.update";
-import { useState } from "react";
-import { ToastPersonalizado } from "@/components/toast";
-import { StudyDTO, useStudies } from "@/app/services/study.swr"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Eye } from "lucide-react";
+import { StudyDTO } from "@/app/services/study.swr"
+
+import TooltipPerso from "@/components/tooltip";
+import { useViewPort } from "@/components/viewport";
 
 interface DialogStudyProps {
     study: StudyDTO,
@@ -26,10 +16,7 @@ interface DialogStudyProps {
 }
 
 export default function CadsStudy({ study }: DialogStudyProps) {
-    const [open, setOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const { refresh } = useStudies();
+    const { isMobile, isTablet } = useViewPort();
 
     const formattedDate = study.createdAt
         ? new Date(study.createdAt).toLocaleDateString("pt-BR", {
@@ -43,21 +30,48 @@ export default function CadsStudy({ study }: DialogStudyProps) {
         <Card key={study.id} className="w-full flex flex-row items-center p-4 gap-4 rounded-2xl">
             <CardContent className="flex flex-col lg:flex-row items-center justify-between gap-4 p-0 flex-1">
 
-                <span className={`w-auto px-4 py-3 rounded-xl flex items-center justify-center`}>
-                    <h1 className="text-black w-auto text-base sm:text-center font-semibold wrap-break-word">
+                <span className={`w-auto px-4 py-3 rounded-xl flex ${isMobile ? "flex-col!" : ""} items-center justify-center gap-1`}>
+                    <p className="text-black font-bold">
+                        Estudo:
+                    </p>
+                    <p className="text-black w-auto text-base sm:text-center wrap-break-word">
                         {study.title}
-                    </h1>
+                    </p>
                 </span>
 
-                <div className="w-auto flex gap-4 items-center">
+                <span className="flex flex-col text-center gap-1">
+                    <p className="text-black font-bold">
+                        Nome da vaga:
+                    </p>
+                    <p className="text-zinc-600">
+                        {study.vacancy.title}
+                    </p>
+                </span>
+
+                <span className="flex flex-col text-center gap-1">
+                    <p className="text-black font-bold">
+                        Data de criação:
+                    </p>
                     <p className="text-zinc-600">
                         {formattedDate}
                     </p>
-                    <Link href={`/learning/${study.id}`}>
-                        <Button variant={"create"} size="icon">
-                            <Eye className="w-4 h-4" />
-                        </Button>
-                    </Link>
+                </span>
+
+
+
+                <div className={`w-auto flex ${isMobile ? "flex-col!" : ""} gap-4 items-center`}>
+
+                    <TooltipPerso
+                        id="verestudo"
+                        message="Clique para ver o estudo"
+                    >
+                        <Link href={`/learning/${study.id}`}>
+                            <Button variant={"create"}>
+                                <Eye className="w-4 h-4" /> Ver estudo
+                            </Button>
+                        </Link>
+                    </TooltipPerso>
+
 
                 </div>
 

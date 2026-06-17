@@ -123,7 +123,8 @@ export class StudyRepository {
                 id: true,
                 title: true,
                 userId: true,
-                createdAt: true
+                createdAt: true,
+                vacancy: true,
             }
         });
 
