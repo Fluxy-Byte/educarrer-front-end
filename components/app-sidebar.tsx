@@ -1,5 +1,6 @@
 "use client"
 
+import logo from "@/public/logoSemFundo.png"
 import * as React from "react"
 import {
   BookOpenText,
@@ -35,6 +36,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Image from "next/image"
 
 const menuItems = [
   {
@@ -82,13 +84,7 @@ export function AppSidebar() {
     <Sidebar className="h-full border-r border-zinc-300">
       <SidebarHeader className="flex items-start justify-center py-5 px-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md text-white bg-blue-900">
-            <BookOpenText className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-lg font-semibold">EduCarrer AI</p>
-            <p className="text-sm text-muted-foreground">Carreira inteligente</p>
-          </div>
+          <Image src={logo.src} width={200} height={200} alt="Logo" />
         </div>
       </SidebarHeader>
       <SidebarContent className="flex-1 px-2">

@@ -7,7 +7,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/utils/auth-client"
-import { BookOpenText, Zap, BotMessageSquare, ChartCandlestick, Eye, EyeOff } from "lucide-react"
+import {
+  BookOpenText,
+  Zap,
+  BotMessageSquare,
+  ChartCandlestick,
+  Eye,
+  EyeOff,
+} from "lucide-react"
+import Image from "next/image"
+import { z } from "zod"
+
+import logo from "@/public/logo.png"
+
+const loginSchema = z.object({
+  email: z.email("Email inválido"),
+  password: z
+    .string()
+    .min(8, "A senha deve conter no mínimo 8 caracteres"),
+})
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -15,6 +33,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+
   const router = useRouter()
 
   const filterErrorMessage = (message: string) => {
@@ -32,7 +51,19 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+
+    const validation = loginSchema.safeParse({
+      email,
+      password,
+    })
+
+    if (!validation.success) {
+      setError(validation.error.issues[0]?.message || "Dados inválidos")
+      return
+    }
+
     setIsLoading(true)
+
     try {
       const result = await authClient.signIn.email({
         email,
@@ -60,16 +91,17 @@ export default function LoginPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl relative z-10">
-
         {/* Left side - Brand */}
         <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-[#002C85] via-[#0B3875] to-[#061735] rounded-2xl p-12 relative overflow-hidden text-white">
-
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <BookOpenText className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold">EduCarrer AI</h1>
+            <div className="flex items-center mb-8">
+              <Image
+                className="rounded-lg w-full"
+                src={logo.src}
+                width={200}
+                height={200}
+                alt="Logo"
+              />
             </div>
 
             <h2 className="text-3xl font-bold mb-4 leading-tight">
@@ -77,7 +109,8 @@ export default function LoginPage() {
             </h2>
 
             <p className="text-white/80 text-lg mb-6">
-              Plataforma personalizada para gestão, análise e crescimento profissional.
+              Plataforma personalizada para gestão, análise e crescimento
+              profissional.
             </p>
 
             <div className="space-y-4">
@@ -85,10 +118,12 @@ export default function LoginPage() {
                 <BotMessageSquare className="w-5 h-5 text-white/80" />
                 <span>Automação com IA</span>
               </div>
+
               <div className="flex items-center gap-3 text-white/80">
                 <ChartCandlestick className="w-5 h-5 text-white/80" />
                 <span>Análises inteligentes</span>
               </div>
+
               <div className="flex items-center gap-3 text-white/80">
                 <Zap className="w-5 h-5 text-white/80" />
                 <span>Escalabilidade profissional</span>
@@ -104,14 +139,15 @@ export default function LoginPage() {
         {/* Right side - Login */}
         <div className="flex flex-col justify-center">
           <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 shadow-xl">
-
             <div className="mb-8">
-              <p className="text-[#AE0001] text-md font-semibold mb-2">
+              <p className="text-orange-500 text-md font-semibold mb-2">
                 Bem-vindo
               </p>
+
               <h3 className="text-3xl font-bold text-gray-900 mb-2">
                 Acesse sua conta
               </h3>
+
               <p className="text-gray-500">
                 Entre para continuar na plataforma
               </p>
@@ -125,7 +161,10 @@ export default function LoginPage() {
               )}
 
               <div className="space-y-2">
-                <Label className="text-zinc-600" htmlFor="email">Email</Label>
+                <Label className="text-zinc-600" htmlFor="email">
+                  Email
+                </Label>
+
                 <Input
                   id="email"
                   type="email"
@@ -139,7 +178,10 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-zinc-600" htmlFor="password">Senha</Label>
+                <Label className="text-zinc-600" htmlFor="password">
+                  Senha
+                </Label>
+
                 <div className="relative w-full rounded-md">
                   <Input
                     id="password"
@@ -151,41 +193,49 @@ export default function LoginPage() {
                     disabled={isLoading}
                     className="relative w-full flex items-center bg-white! border-zinc-300 focus-within:border-zinc-400 rounded-md"
                   />
+
                   {showPassword ? (
-                    <EyeOff className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500" onClick={() => setShowPassword(false)} />
+                    <EyeOff
+                      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500"
+                      onClick={() => setShowPassword(false)}
+                    />
                   ) : (
-                    <Eye className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500" onClick={() => setShowPassword(true)} />
+                    <Eye
+                      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500"
+                      onClick={() => setShowPassword(true)}
+                    />
                   )}
                 </div>
-
               </div>
 
               <Button
                 type="submit"
                 disabled={isLoading}
                 className="mb-0 w-full"
+                variant="create"
               >
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>
+            </form>
 
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
-                    Não tem uma conta?
-                  </span>
-                </div>
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
               </div>
 
-              <Button
-                onClick={() => router.push("/singup")}
-                variant={"link"}
-              >
-                Criar nova conta
-              </Button>
-            </form>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Não tem uma conta?
+                </span>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => router.push("/singup")}
+              variant="link"
+            >
+              Criar nova conta
+            </Button>
           </div>
 
           <p className="text-center text-gray-400 text-xs mt-6">
@@ -193,5 +243,6 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
-    </div >)
+    </div>
+  )
 }

@@ -3,69 +3,95 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/utils/auth-client"
 import { BookOpenText, Zap, BotMessageSquare, ChartCandlestick, Eye, EyeOff, ArrowRight, ArrowLeftToLine } from "lucide-react"
+import Image from "next/image"
+import logo from "@/public/logo.png"
+
+// Validação dos dados do step 1 (nome e email)
+const step1Schema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Nome é obrigatório")
+    .min(3, "O nome deve ter pelo menos 3 caracteres"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email é obrigatório")
+    .email("Email inválido"),
+})
+
+// Validação dos dados do step 2 (senha e confirmação)
+const step2Schema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "A senha deve ter pelo menos 8 caracteres")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>_\-+=~`[\]\\/;']/,
+        "A senha deve conter pelo menos 1 caractere especial"
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não coincidem",
+    path: ["confirmPassword"],
+  })
 
 export default function SignUpPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordSecond, setShowPasswordSecond] = useState(false);
-  const [step, setStep] = useState(1);
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showPasswordSecond, setShowPasswordSecond] = useState(false)
+  const [step, setStep] = useState(1)
 
   const nextStep = async () => {
-    try {
-      if (name && email) {
-        setStep(2);
-        setError("");
-        return;
-      } else {
-        setError("Por favor, preencha nome e email para continuar");
-        return;
-      }
-    } catch (e) {
-      console.log(e)
-      setStep(1)
-      setError("Tivemos um erro previsto começe novamente");
-      return;
+    setError("")
+
+    const result = step1Schema.safeParse({ name, email })
+
+    if (!result.success) {
+      setError(result.error.issues[0].message)
+      return
     }
+
+    setStep(2)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
-    if (password !== confirmPassword) {
-      setError("As senhas não coincidem")
-      return
-    }
+    const result = step2Schema.safeParse({ password, confirmPassword })
 
-    if (password.length < 8) {
-      setError("A senha deve ter pelo menos 8 caracteres")
+    if (!result.success) {
+      setError(result.error.issues[0].message)
       return
     }
 
     setIsLoading(true)
 
     try {
-      const result = await authClient.signUp.email({
+      const signUpResult = await authClient.signUp.email({
         email,
         password,
         name,
       })
 
-      console.log(result)
+      console.log(signUpResult)
 
-      if (result.error) {
-        setError(result.error.message || "Erro ao criar conta")
+      if (signUpResult.error) {
+        setError(signUpResult.error.message || "Erro ao criar conta")
       } else {
         router.push("/jobs")
       }
@@ -91,10 +117,7 @@ export default function SignUpPage() {
 
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <BookOpenText className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold">EduCarrer AI</h1>
+              <Image className="rounded-lg w-full" src={logo.src} width={200} height={200} alt="Logo" />
             </div>
 
             <h2 className="text-3xl font-bold mb-4 leading-tight">
@@ -132,13 +155,13 @@ export default function SignUpPage() {
           {step == 1 && (
             <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 shadow-xl rounded">
               <div className="mb-8">
-                <p className="text-red-400 text-md font-semibold tracking-wide uppercase mb-2">
-                  Nova Conta
+                <p className="text-orange-500 text-md font-semibold tracking-wide mb-2">
+                  Nova conta
                 </p>
                 <h3 className="text-3xl font-bold text-black mb-2">
-                  Criar Conta
+                  Criar conta
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-gray-500">
                   Preencha os dados abaixo para começar
                 </p>
               </div>
@@ -183,19 +206,21 @@ export default function SignUpPage() {
                 </div>
 
                 <Button
+                  type="button"
                   onClick={() => nextStep()}
+                  variant={"create"}
                   disabled={isLoading}
-                  className="w-full bg-[#AE0001] mb-0 hover:bg-red-700 text-white font-semibold py-6 rounded-lg transition-all duration-300"
+                  className="w-full font-semibold py-6 rounded-lg transition-all duration-300"
                 >
                   <ArrowRight /> Proximo
                 </Button>
 
-                <div className="relative my-6">
+                <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-purple-500/20"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-muted-foreground">
+                    <span className="px-2 bg-white text-gray-500!">
                       Já tem uma conta?
                     </span>
                   </div>
@@ -218,7 +243,7 @@ export default function SignUpPage() {
                 <h3 className="text-3xl font-bold text-black mb-2">
                   Ja esta quase lá!
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-gray-400">
                   Preencha sua senha agora para finalizar o cadastro
                 </p>
               </div>
@@ -251,6 +276,9 @@ export default function SignUpPage() {
                       <Eye className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-500" onClick={() => setShowPassword(true)} />
                     )}
                   </div>
+                  <p className="text-xs text-gray-500">
+                    Mínimo de 8 caracteres e 1 caractere especial (ex: ! @ # $ %)
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -259,7 +287,7 @@ export default function SignUpPage() {
                   </Label>
                   <div className="relative w-full rounded-md">
                     <Input
-                      id="password"
+                      id="confirmPassword"
                       type={showPasswordSecond ? "text" : "password"}
                       placeholder="••••••••"
                       value={confirmPassword}
@@ -279,8 +307,9 @@ export default function SignUpPage() {
                 <div className="space-y-2">
                   <Button
                     type="submit"
+                    variant={"create"}
                     disabled={isLoading}
-                    className="w-full bg-[#AE0001] mb-0 hover:bg-red-700 text-white font-semibold py-6 rounded-lg transition-all duration-300"
+                    className="w-full mb-0 text-white font-semibold py-6 rounded-lg transition-all duration-300"
                   >
                     {isLoading ? (
                       <div className="flex items-center gap-2">
@@ -288,12 +317,18 @@ export default function SignUpPage() {
                         Criando conta...
                       </div>
                     ) : (
-                      "Criar Conta"
+                      "Criar conta"
                     )}
                   </Button>
 
                   <Button
-                    onClick={() => (setStep(1), setPassword(""), setConfirmPassword(""))}
+                    type="button"
+                    onClick={() => {
+                      setStep(1)
+                      setPassword("")
+                      setConfirmPassword("")
+                      setError("")
+                    }}
                     disabled={isLoading}
                     variant={"link"}
                     className="mt-5"
@@ -308,13 +343,14 @@ export default function SignUpPage() {
                     <div className="w-full border-t border-purple-500/20"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-muted-foreground">
+                    <span className="px-2 bg-white text-gray-500!">
                       Já tem uma conta?
                     </span>
                   </div>
                 </div>
 
                 <Button
+                  type="button"
                   onClick={() => router.push("/singin")}
                   variant={"link"}
                   className="w-full"
