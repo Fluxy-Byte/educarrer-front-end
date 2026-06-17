@@ -279,7 +279,7 @@ export function DialogExperienceCreate() {
                                     Trabalho Atual
                                 </Label>
 
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-sm text-gray-400">
                                     Marque esta opção se você ainda esta ativo nessa experiência.
                                 </p>
                             </div>
