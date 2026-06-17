@@ -23,8 +23,7 @@ export interface ResultGeral {
     message: string
 }
 
-
-const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://protec-edu-carrer-ai.egnehl.easypanel.host"
+const URL = process.env.NEXT_PUBLIC_AMBIENTE == "dev" ? "http://localhost:5401" : "https://educarrerai.egnehl.easypanel.host"
 
 const fetcher = async (url: string): Promise<ResultGetAvaliations> => {
     const { data } = await axios.get(url, {
