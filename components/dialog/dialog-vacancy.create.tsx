@@ -31,20 +31,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodError } from "zod";
 import { createVacancy } from "@/app/services/vacancys.swr";
 import { useState } from "react";
+import skillsTI from "@/components/dialog/skills.json";
 
-// ─── Tecnologias disponíveis ────────────────────────────────────────────────
-const TECHNOLOGIES = [
-    "React", "Next.js", "Vue", "Angular", "Svelte",
-    "TypeScript", "JavaScript", "Node.js", "Express", "NestJS",
-    "Python", "Django", "FastAPI", "Flask",
-    "Java", "Spring Boot",
-    "Go", "Rust", "C#", ".NET",
-    "PostgreSQL", "MySQL", "MongoDB", "Redis", "SQLite",
-    "Docker", "Kubernetes", "AWS", "GCP", "Azure",
-    "GraphQL", "REST", "tRPC",
-    "Tailwind CSS", "SASS", "Styled Components",
-    "Git", "CI/CD", "Linux",
-];
 
 // ─── Schema ─────────────────────────────────────────────────────────────────
 const vacancySchema = z.object({
@@ -109,8 +97,10 @@ export function DialogVacncyCreate() {
         setValue("technologies", updated, { shouldValidate: true });
     };
 
-    const filteredTechs = TECHNOLOGIES.filter((t) =>
-        t.toLowerCase().includes(techSearch.toLowerCase())
+    const filteredTechs = Object.entries(skillsTI).map(([, skills]: [string, string[]]) =>
+        skills.filter((nameSkill: string) =>
+            nameSkill.toLowerCase().includes(techSearch.toLowerCase())
+        )
     );
 
     const onSubmit = async (data: VacancyFormData) => {
@@ -320,20 +310,27 @@ export function DialogVacncyCreate() {
                                     />
                                 </div>
                                 <div className="max-h-[140px] overflow-y-auto grid grid-cols-2 gap-x-2 p-2 bg-white!">
-                                    {filteredTechs.map((tech) => (
-                                        <label
-                                            key={tech}
-                                            className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-zinc-50! transition-colors select-none"
-                                        >
-                                            <Checkbox
-                                                checked={selectedTechs?.includes(tech) ?? false}
-                                                onCheckedChange={() => toggleTech(tech)}
-                                                className="shrink-0 bg-white! border-zinc-300! data-[state=checked]:bg-blue-600! data-[state=checked]:border-blue-600! focus:ring-0 h-4 w-4 rounded"
-                                            />
-                                            <span className="text-xs text-zinc-700! font-medium">{tech}</span>
-                                        </label>
+                                    {Object.entries(skillsTI).map(([group, items]) => (
+                                        <span>
+                                            <Label>{group}</Label>
+                                            {
+                                                items.map((v, i) => (
+                                                    <label
+                                                        key={v}
+                                                        className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-zinc-50! transition-colors select-none"
+                                                    >
+                                                        <Checkbox
+                                                            checked={selectedTechs?.includes(v) ?? false}
+                                                            onCheckedChange={() => toggleTech(v)}
+                                                            className="shrink-0 bg-white! border-zinc-300! data-[state=checked]:bg-blue-600! data-[state=checked]:border-blue-600! focus:ring-0 h-4 w-4 rounded"
+                                                        />
+                                                        <span className="text-xs text-zinc-700! font-medium">{v}</span>
+                                                    </label>
+                                                ))
+                                            }
+                                        </span>
                                     ))}
-                                    {filteredTechs.length === 0 && (
+                                    {Object.entries(skillsTI).length == 0 && (
                                         <p className="col-span-2 text-center text-xs text-zinc-400! py-4">
                                             Nenhuma tecnologia encontrada.
                                         </p>

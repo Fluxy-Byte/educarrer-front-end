@@ -13,6 +13,8 @@ export class Vacancy {
         public salary: string | null,
         public createdAt: Date,
         public updatedAt: Date,
-        public active: boolean
+        public active: boolean,
+        public matches: number | null,
+        public score: number | null
     ) { }
 }

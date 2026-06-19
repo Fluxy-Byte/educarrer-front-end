@@ -24,7 +24,7 @@ export async function createStudy(idVacancy: string, userId: string) {
 
     const experiences = await getExperienceByUserId(userId);
 
-    const vacancy = await getVacancysById(idVacancy);
+    const vacancy = await getVacancysById(userId, idVacancy);
 
     if (!vacancy) {
         return {

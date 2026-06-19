@@ -15,12 +15,12 @@ export async function GET(req: Request) {
       );
     }
 
-    const vacancys = await getVacancys();
+    const vacancys = await getVacancys(session.user.id);
 
     return NextResponse.json({
-      status: true,
+      status: vacancys.length > 0,
       vacancys,
-      message: "Sucesso na consulta"
+      message: vacancys.length > 0  ? "Sucesso na consulta" : "Não encontramos uma vaga de acordo com seu perfil"
     });
   } catch (e: any) {
     return NextResponse.json({

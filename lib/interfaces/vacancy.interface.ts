@@ -13,6 +13,8 @@ export interface VacancyDTO {
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
+    matches: number | null;
+    score: number | null
 }
 
 export interface CreateVacancyData {

@@ -211,20 +211,62 @@ export class VacancyRepository {
             v.salary,
             v.createdAt,
             v.updatedAt,
-            v.active
+            v.active,
+            null,
+            null
         ));
     }
 
     async getVacancysById(id: string): Promise<Vacancy | null> {
-        return await prisma.vacancy.findFirst({
+        const vacancy = await prisma.vacancy.findFirst({
             where: { id }
         });
+
+        if (!vacancy) return null;
+
+        return new Vacancy(
+            vacancy.id,
+            vacancy.title,
+            vacancy.description,
+            vacancy.company,
+            vacancy.modality,
+            vacancy.level,
+            vacancy.technologies,
+            vacancy.link,
+            vacancy.origin,
+            vacancy.location,
+            vacancy.salary,
+            vacancy.createdAt,
+            vacancy.updatedAt,
+            vacancy.active,
+            null,
+            null
+        );
     }
 
     async createVacancy(data: CreateVacancyData) {
-        return await prisma.vacancy.create({
+        const vacancy = await prisma.vacancy.create({
             data
         })
+
+        return new Vacancy(
+            vacancy.id,
+            vacancy.title,
+            vacancy.description,
+            vacancy.company,
+            vacancy.modality,
+            vacancy.level,
+            vacancy.technologies,
+            vacancy.link,
+            vacancy.origin,
+            vacancy.location,
+            vacancy.salary,
+            vacancy.createdAt,
+            vacancy.updatedAt,
+            vacancy.active,
+            null,
+            null
+        );
     }
 
     async updateVacancy(id: string, data: CreateVacancyData) {

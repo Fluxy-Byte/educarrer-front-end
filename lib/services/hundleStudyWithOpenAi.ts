@@ -344,6 +344,73 @@ export class HundleStudyWithOpenAi {
             return null;
         }
     }
+
+    async filterVacancysToUser(skills: SkillDTO[], experiences: ExperienceDTO[], vacancys: VacancyDTO[]): Promise<string | null> {
+        try {
+
+            const data = {
+                skills,
+                experiences,
+                vacancys
+            }
+
+            const response = await openai.responses.create({
+                prompt: {
+                    "id": "pmpt_6a346cc9efd88194bc2fc7c62f1479cf0c5a0ff0b420e44b",
+                    "version": "1"
+                },
+                input: [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "input_text",
+                                "text": JSON.stringify(data)
+                            }
+                        ]
+                    }
+                ],
+                text: {
+                    "format": {
+                        "type": "json_schema",
+                        "name": "vagas_compativeis",
+                        "strict": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "ids_vagas": {
+                                    "type": "array",
+                                    "description": "Array contendo os ids das vagas compatíveis com o perfil.",
+                                    "items": {
+                                        "type": "number",
+                                        "description": "Id da vaga compatível."
+                                    }
+                                }
+                            },
+                            "required": [
+                                "ids_vagas"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                reasoning: {},
+                max_output_tokens: 2048,
+                store: true,
+                include: ["web_search_call.action.sources"]
+            });
+
+            const raw = ((response.output as any)?.[0]?.content?.[0]?.text) ?? null;
+
+            if (!raw) return null;
+
+            const parsed: string = raw;
+            return parsed;
+
+        } catch (error: any) {
+            return null;
+        }
+    }
 }
 
 

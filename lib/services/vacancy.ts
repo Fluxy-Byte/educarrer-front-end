@@ -5,12 +5,12 @@ import { redis } from "@/lib/redis/redis";
 
 const vacancysRepository = new getVacancysFromRedis();
 
-export async function getVacancys() {
-    return await vacancysRepository.getVacancysFromRedis();
+export async function getVacancys(userId: string) {
+    return await vacancysRepository.getVacancysFromRedis(userId);
 }
 
-export async function getVacancysById(id: string) {
-    const vacancy = await vacancysRepository.getVacancysByIdFromRedis(id);
+export async function getVacancysById(userId: string, id: string) {
+    const vacancy = await vacancysRepository.getVacancysByIdFromRedis(userId, id);
 
     if (!vacancy) {
         return await vacancysRepository.getVacancysByIdFromDataBase(id);
