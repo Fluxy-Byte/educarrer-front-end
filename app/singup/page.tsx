@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/utils/auth-client"
-import { BookOpenText, Zap, BotMessageSquare, ChartCandlestick, Eye, EyeOff, ArrowRight, ArrowLeftToLine } from "lucide-react"
+import { BookOpenText, Zap, BotMessageSquare, ChartCandlestick, Eye, EyeOff, ArrowRight, ArrowLeftToLine, Workflow, Layers } from "lucide-react"
 import Image from "next/image"
-import logo from "@/public/logo.png"
+import logo from "@/public/logoSemFundo.png"
 
 // Validação dos dados do step 1 (nome e email)
 const step1Schema = z.object({
@@ -113,33 +113,47 @@ export default function SignUpPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl relative z-10">
         {/* Left side - Brand */}
-        <div className="hidden md:flex flex-col justify-between bg-gradient-to-br from-[#002C85] via-[#0B3875] to-[#061735] rounded-2xl p-12 relative overflow-hidden text-white">
-
+        <div className="hidden md:flex flex-col justify-between border-gray-200 border bg-white shadow-xl rounded-2xl p-12 relative overflow-hidden">
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-8">
-              <Image className="rounded-lg w-full" src={logo.src} width={200} height={200} alt="Logo" />
+            <div className="flex items-center mb-8">
+              <Image
+                className="rounded-lg w-full"
+                src={logo.src}
+                width={200}
+                height={200}
+                alt="Logo"
+              />
             </div>
 
-            <h2 className="text-3xl font-bold mb-4 leading-tight">
+            <h2 className="text-4xl text-blue-600 font-bold mb-4 leading-tight">
               Inteligência Artificial para impulsionar sua carreira.
             </h2>
 
-            <p className="text-white/80 text-lg mb-6">
-              Plataforma personalizada para gestão, análise e crescimento profissional.
+            <p className="text-blue-600 text-lg font-semibold mb-6">
+              Plataforma personalizada criação de estudos personalizados para seu dia a dia.
             </p>
 
             <div className="space-y-4">
-              <div className="flex items-center gap-3 text-white/80">
-                <BotMessageSquare className="w-5 h-5 text-white/80" />
-                <span>Automação com IA</span>
+              <div className="flex items-center gap-3">
+                <span className="p-2 bg-orange-200 rounded-lg">
+                  <BotMessageSquare className="w-8 h-8 text-orange-600" />
+                </span>
+                <span className="text-md text-orange-600">Agentes de IA para criação de estudos</span>
               </div>
-              <div className="flex items-center gap-3 text-white/80">
-                <ChartCandlestick className="w-5 h-5 text-white/80" />
-                <span>Análises inteligentes</span>
+
+              <div className="flex items-center gap-3">
+                <span className="p-2 bg-purple-200 rounded-lg">
+                  <Workflow className="w-8 h-8 text-purple-600" />
+                </span>
+                <span className="text-md text-purple-600">Recomendações personalizadas</span>
               </div>
-              <div className="flex items-center gap-3 text-white/80">
-                <Zap className="w-5 h-5 text-white/80" />
-                <span>Escalabilidade profissional</span>
+
+              <div className="flex items-center gap-3 text-blue-600">
+                <span className="p-2 bg-green-200 rounded-lg">
+                  <Layers className="w-8 h-8 text-green-600" />
+                </span>
+                <span className="text-md text-green-600">Escalabilidade profissional</span>
+
               </div>
             </div>
           </div>
@@ -153,7 +167,7 @@ export default function SignUpPage() {
         <div className="flex flex-col justify-center">
 
           {step == 1 && (
-            <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 shadow-xl rounded">
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 md:p-12 shadow-xl">
               <div className="mb-8">
                 <p className="text-orange-500 text-md font-semibold tracking-wide mb-2">
                   Nova conta
