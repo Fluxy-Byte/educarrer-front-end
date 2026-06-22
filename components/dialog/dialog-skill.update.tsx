@@ -98,7 +98,7 @@ export function DialogSkillUpdate({
                     </DialogTitle>
 
                     <DialogDescription className="text-zinc-600 mt-2 text-sm">
-                        Edite os dados da sua habilidade e clicke em atualizar para salvar.
+                        É possivel atualizar somente a descrição sobre oque você ja fez e tem de conhecimento com essa habilidade.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -107,91 +107,12 @@ export function DialogSkillUpdate({
                     className="flex flex-col gap-4"
                 >
 
-                    {/* Nome */}
-                    <div className="w-full flex flex-col gap-2">
-                        <Label className="text-black!" htmlFor="nome">Nome da habilidade</Label>
-                        <Controller
-                            control={control}
-                            name="nome"
-                            render={({ field }) => (
-                                <Select
-                                    onValueChange={(value) => field.onChange(value)}
-                                    value={field.value ?? ""}
-                                >
-                                    <SelectTrigger className="w-full h-12! border border-zinc-200 bg-white! text-black">
-                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione uma habilidade" />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        {Object.entries(skillsTI).map(([group, items]) => (
-
-                                            <SelectGroup key={group}>
-                                                <SelectLabel>{group}</SelectLabel>
-                                                {items.map((v, i) => (
-                                                    <SelectItem key={v} value={v}>
-                                                        {v}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        />
-                        {errors.nome && (
-                            <p className="text-red-500 text-sm">
-                                {errors.nome.message}
-                            </p>
-                        )}
-                    </div>
-
-                    {/* Nivel */}
-                    <div className="w-full flex flex-col gap-2">
-                        <Label className="text-black!" htmlFor="nivel">Nível de conhecimento ou experiência</Label>
-                        <Controller
-                            control={control}
-                            name="nivel"
-                            render={({ field }) => (
-                                <Select
-                                    onValueChange={(value) =>
-                                        field.onChange(Number(value))
-                                    }
-                                    value={
-                                        field.value !== undefined
-                                            ? String(field.value)
-                                            : ""
-                                    }
-                                >
-                                    <SelectTrigger
-                                        className="w-full h-12! border border-zinc-200 bg-white! text-black!"
-                                    >
-                                        <SelectValue className="placeholder:text-zinc-200" placeholder="Selecione o nível" />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        {Array.from({ length: 11 }, (_, i) => (
-                                            <SelectItem key={i} value={String(i)}>
-                                                {i}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            )}
-                        />
-
-                        {errors.nivel && (
-                            <p className="text-red-500 text-sm">
-                                {errors.nivel.message}
-                            </p>
-                        )}
-                    </div>
-
                     {/* Descrição */}
                     <div className="w-full flex flex-col gap-2">
-                        <Label className="text-black!" htmlFor="descricao">Descritiva sobre oque você ja fez ou praticou com essa habilidade</Label>
+                        <Label className="text-black!" htmlFor="descricao">Descreva e oque você ja fez ou praticou com essa habilidade</Label>
                         <Textarea
                             placeholder="Descrição"
+                            className="min-h-30! max-h-150!"
                             {...register("descricao")}
                         />
                         {errors.descricao && (

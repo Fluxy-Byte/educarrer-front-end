@@ -17,8 +17,6 @@ export async function GET(req: Request) {
 
     const avaliation = await getAvaliationVacancyByUserId(session.user.id);
 
-    console.log("Avaliação da vaga encontrada:", avaliation);
-
     return NextResponse.json({
       status: true,
       solicited: avaliation,

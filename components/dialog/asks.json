@@ -1,4 +1,46 @@
 {
+  "Mobile": [
+    {
+      "ask": "O que caracteriza uma aplicação nativa mobile?",
+      "options_answers": {
+        "a": "Aplicação executada apenas no navegador",
+        "b": "Aplicação desenvolvida especificamente para um sistema operacional, como Android ou iOS",
+        "c": "Aplicação que roda exclusivamente em servidores",
+        "d": "Aplicação criada apenas com HTML"
+      },
+      "answer_correct": "b"
+    },
+    {
+      "ask": "Qual é o principal objetivo do gerenciamento de estado em aplicações mobile?",
+      "options_answers": {
+        "a": "Controlar e atualizar dados da interface durante a execução do aplicativo",
+        "b": "Melhorar a velocidade da internet do usuário",
+        "c": "Gerar bancos de dados automaticamente",
+        "d": "Criar animações para telas"
+      },
+      "answer_correct": "a"
+    },
+    {
+      "ask": "O que é o ciclo de vida de uma tela (screen/activity)?",
+      "options_answers": {
+        "a": "O conjunto de etapas que uma tela percorre desde sua criação até seu encerramento",
+        "b": "O processo de instalação do aplicativo",
+        "c": "A velocidade de carregamento das imagens",
+        "d": "O método utilizado para autenticação"
+      },
+      "answer_correct": "a"
+    },
+    {
+      "ask": "Qual é a principal vantagem de utilizar armazenamento local em aplicativos mobile?",
+      "options_answers": {
+        "a": "Permitir acesso a dados mesmo sem conexão com a internet",
+        "b": "Aumentar a resolução das imagens",
+        "c": "Melhorar o desempenho do GPS",
+        "d": "Substituir APIs externas"
+      },
+      "answer_correct": "a"
+    }
+  ],
   "JavaScript": [
     {
       "ask": "Qual é o resultado de `typeof null` em JavaScript?",

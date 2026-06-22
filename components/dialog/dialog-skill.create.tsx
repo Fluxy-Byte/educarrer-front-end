@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Plus, Rocket, Loader2, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import { Plus, Rocket, Loader2, ArrowRight, CheckCircle2, XCircle, TriangleAlert } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import {
     Dialog,
@@ -49,9 +49,9 @@ const asksMap = AsksData as AsksMap;
 // ─── Schema ───────────────────────────────────────────────────────────────────
 
 const skillSchema = z.object({
-    nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-    nivel: z.number(),
-    descricao: z.string(),
+    nome: z.string().min(2, "Selecione uma opção de habilidade para continuar"),
+    nivel: z.number().int().min(1).max(10).optional(),
+    descricao: z.string().min(5, "Descreva ao menos um pouco sobre sua experiência"),
 });
 
 type SkillFormData = z.infer<typeof skillSchema>;
@@ -90,6 +90,9 @@ export function DialogSkillCreate() {
         setValue,
         formState: { errors, isSubmitting },
         reset,
+        trigger,
+        setError,
+        clearErrors
     } = useForm<SkillFormData>({
         resolver: zodResolver(skillSchema),
         mode: "onSubmit",
@@ -115,7 +118,19 @@ export function DialogSkillCreate() {
     }
 
     /** Move from step 1 → step 2: load questions for the chosen skill */
-    function handleContinueToQuiz() {
+    async function handleContinueToQuiz() {
+        const descricao = watch("descricao") ?? "";
+
+        if (descricao.length < 5) {
+            setError("descricao", {
+                type: "manual",
+                message: "Descreva ao menos um pouco sobre sua experiência",
+            });
+            return;
+        }
+
+        clearErrors("descricao");
+
         const qs = asksMap[selectedSkill] ?? [];
 
         if (qs.length === 0) {
@@ -142,14 +157,18 @@ export function DialogSkillCreate() {
         if (quizIndex < quizQuestions.length - 1) {
             setQuizIndex((i) => i + 1);
         } else {
-            // calculate score
+            // calculate score (0–100) for display
             const correct = quizQuestions.reduce(
                 (acc, q, i) => acc + (answers[i] === q.answer_correct ? 1 : 0),
                 0
             );
             const score = Math.round((correct / quizQuestions.length) * 100);
             setQuizScore(score);
-            setValue("nivel", score);
+
+            // convert to 1–10 scale (integer), minimum 1
+            const nivel = Math.max(1, Math.round(score / 10));
+            setValue("nivel", nivel);
+
             setPage(3);
         }
     }
@@ -157,7 +176,7 @@ export function DialogSkillCreate() {
     /** Final form submit */
     const onSubmit = async (data: SkillFormData) => {
         try {
-            const result = await createSkill(data.nome, data.nivel ?? 0, data.descricao ?? "");
+            const result = await createSkill(data.nome, data.nivel ?? 1, data.descricao ?? "");
             ToastPersonalizado({ mensagem: result.message || "Habilidade cadastrada com sucesso!" });
             resetAll();
             setOpen(false);
@@ -247,7 +266,10 @@ export function DialogSkillCreate() {
                                     )}
                                 />
                                 {errors.nome && (
-                                    <p className="text-red-500 text-sm">{errors.nome.message}</p>
+                                    <span className="flex gap-2 justify-start items-center">
+                                        <TriangleAlert className="text-red-700 bg-red-200 p-1 w-8 h-8 rounded" />
+                                        <p className="text-red-500 text-sm"> {errors.nome.message}</p>
+                                    </span>
                                 )}
                             </div>
 
@@ -261,9 +283,10 @@ export function DialogSkillCreate() {
                                     {...register("descricao")}
                                 />
                                 {errors.descricao && (
-                                    <p className="text-red-500 text-sm">
-                                        {errors.descricao.message}
-                                    </p>
+                                    <span className="flex gap-2 justify-start items-center">
+                                        <TriangleAlert className="text-red-700 bg-red-200 p-1 w-8 h-8 rounded" />
+                                        <p className="text-red-500 text-sm"> {errors.descricao.message}</p>
+                                    </span>
                                 )}
                             </div>
                         </div>
@@ -333,7 +356,7 @@ export function DialogSkillCreate() {
                                             }`}
                                     >
                                         <span
-                                            className={`flex-shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-bold transition-all
+                                            className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center text-center text-xl font-bold transition-all
                                                 ${selected
                                                     ? "border-zinc-800 bg-zinc-800 text-white"
                                                     : "border-zinc-300 text-zinc-400"
@@ -380,8 +403,8 @@ export function DialogSkillCreate() {
                                 Resumo da habilidade
                             </DialogTitle>
                             <DialogDescription className="text-zinc-600 text-sm mt-1 flex flex-col">
-                                <p>⚠️ Confirme as informações antes de salvar.</p>
-                                <p>{3 - count == 0 ? "☹️ Tente novamente do inicio para refazer o teste" : `😊 Lembrando que você so pode refazer ${3 - count} ${3 - count == 1 ? "vez" : "vezes"} o teste.`} </p>
+                                <span>⚠️ Confirme as informações antes de salvar.</span>
+                                <span>{3 - count == 0 ? "☹️ Tente novamente do inicio para refazer o teste" : `😊 Lembrando que você so pode refazer ${3 - count} ${3 - count == 1 ? "vez" : "vezes"} o teste.`} </span>
                             </DialogDescription>
                         </DialogHeader>
 
@@ -430,7 +453,7 @@ export function DialogSkillCreate() {
                                             0
                                         )}{" "}
                                         de {quizQuestions.length} acertos —{" "}
-                                        <span className="font-medium">nível {quizScore} / 100</span>
+                                        <span className="font-medium">nível {Math.max(1, Math.round(quizScore / 10))} / 10</span>
                                     </p>
 
                                     {/* Per-question result pills */}

@@ -1,4 +1,5 @@
 import { AvaliationVacancysRepository } from "@/lib/repositories/avaliationsVacancys";
+import { getUserById } from "@/lib/services/user";
 
 export async function getAvaliationVacancy() {
     try {
@@ -11,10 +12,17 @@ export async function getAvaliationVacancy() {
 
 export async function getAvaliationVacancyByUserId(userId: string) {
     try {
+        const user = await getUserById(userId);
+        const timeCreatedUser = await hasPassed2HoursCreatedUser(user?.createdAt);
+
+        if (!timeCreatedUser) {
+            return false;
+        }
+
         const avaliation = new AvaliationVacancysRepository();
         const lastAvaliation = await avaliation.getAvaliationsByUserId(userId);
 
-        if(lastAvaliation == null) return true;
+        if (lastAvaliation == null) return true;
 
         return hasPassed2Days(lastAvaliation?.createdAt);
     } catch (e: any) {
@@ -49,4 +57,19 @@ function hasPassed2Days(createdAt: Date): boolean {
     const twoDaysMs = 2 * 24 * 60 * 60 * 1000; // 48 horas
 
     return differenceMs >= twoDaysMs;
+}
+
+function hasPassed2HoursCreatedUser(createdAt: Date | undefined): boolean {
+    
+    if (!createdAt) {
+        return false;
+    }
+
+    const now = new Date();
+
+    const differenceMs = now.getTime() - createdAt.getTime();
+
+    const twoHoursMs = 2 * 60 * 60 * 1000; // 2 horas
+
+    return differenceMs >= twoHoursMs;
 }

@@ -19,64 +19,76 @@ import {
     StudySectionDTO,
     StudyStrengthDTO
 } from "@/lib/interfaces/study.interface";
-import { tr } from "date-fns/locale";
-
 
 export class StudyRepository {
 
     private mapToEntity(study: any): Study {
+        const sectionOrder: Record<string, number> = {
+            resume: 1,
+            strengths: 2,
+            lacunasaDevelop: 3,
+            studyPlans: 4,
+            finalTip: 5,
+        };
+
         return new Study(
             study.id,
             study.title,
 
-            study.sections.map(
-                (section: any) =>
-                    new StudySection(
-                        section.id,
-                        section.studyId,
-                        section.section,
-                        section.type,
-                        section.content,
+            study.sections
+                .sort(
+                    (a: any, b: any) =>
+                        (sectionOrder[a.type] ?? 999) -
+                        (sectionOrder[b.type] ?? 999)
+                )
+                .map(
+                    (section: any) =>
+                        new StudySection(
+                            section.id,
+                            section.studyId,
+                            section.section,
+                            section.type,
+                            section.content,
 
-                        section.strengths.map(
-                            (strength: any) =>
-                                new StudyStrength(
-                                    strength.id,
-                                    strength.sectionId,
-                                    strength.skill,
-                                    strength.importance,
-                                    strength.advice
-                                )
-                        ),
+                            section.strengths.map(
+                                (strength: any) =>
+                                    new StudyStrength(
+                                        strength.id,
+                                        strength.sectionId,
+                                        strength.skill,
+                                        strength.importance,
+                                        strength.advice
+                                    )
+                            ),
 
-                        section.gaps.map(
-                            (gap: any) =>
-                                new StudyGap(
-                                    gap.id,
-                                    gap.sectionId,
-                                    gap.skill,
-                                    gap.explanation,
-                                    gap.priority,
-                                    gap.estimatedTime,
-                                    gap.topics,
-                                    gap.resources
-                                )
-                        ),
+                            section.gaps.map(
+                                (gap: any) =>
+                                    new StudyGap(
+                                        gap.id,
+                                        gap.sectionId,
+                                        gap.skill,
+                                        gap.explanation,
+                                        gap.priority,
+                                        gap.estimatedTime,
+                                        gap.topics,
+                                        gap.resources
+                                    )
+                            ),
 
-                        section.plans.map(
-                            (plan: any) =>
-                                new StudyPlan(
-                                    plan.id,
-                                    plan.sectionId,
-                                    plan.week,
-                                    plan.focus,
-                                    plan.goals
-                                )
-                        ),
+                            section.plans.map(
+                                (plan: any) =>
+                                    new StudyPlan(
+                                        plan.id,
+                                        plan.sectionId,
+                                        plan.week,
+                                        plan.focus,
+                                        plan.goals
+                                    )
+                            ),
 
-                        section.createdAt
-                    )
-            ),
+                            section.createdAt
+                        )
+                ),
 
             study.createdAt,
             study.updatedAt,
@@ -106,7 +118,7 @@ export class StudyRepository {
                         strengths: true,
                         gaps: true,
                         plans: true,
-                    },
+                    }
                 },
             },
         });
@@ -143,10 +155,12 @@ export class StudyRepository {
                         strengths: true,
                         gaps: true,
                         plans: true,
-                    },
+                    }
                 },
             },
         });
+
+        console.log(study)
 
         return study;
     }
@@ -154,7 +168,7 @@ export class StudyRepository {
     async getStudyById(id: string): Promise<StudyDTO | null> {
         const study = await prisma.study.findUnique({
             where: {
-                id,
+                id
             },
             include: {
                 sections: {
@@ -162,9 +176,10 @@ export class StudyRepository {
                         strengths: true,
                         gaps: true,
                         plans: true,
-                    },
-                },
+                    }
+                }
             },
+
         });
 
         if (!study) {
