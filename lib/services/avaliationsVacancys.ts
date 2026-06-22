@@ -13,7 +13,6 @@ export async function getAvaliationVacancyByUserId(userId: string) {
     try {
         const avaliation = new AvaliationVacancysRepository();
         const lastAvaliation = await avaliation.getAvaliationsByUserId(userId);
-        console.log("Última avaliação encontrada para o usuário:", lastAvaliation);
 
         if(lastAvaliation == null) return true;
 

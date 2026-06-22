@@ -127,4 +127,8 @@ export class UserRepository {
             res.updatedAt
         );
     }
+
+    async getAllUser(){
+        return await prisma.user.count()
+    }
 }

@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       userId: user.id
     }
 
-    const experience = await createExperience(data);
+    const experience = await createExperience(data, user.id);
 
     return NextResponse.json({
       status: true,

@@ -8,8 +8,13 @@ import { Input } from "@/components/ui/input";
 import { DialogAvaliationsVacancys } from "@/components/dialog/dialog-avaliations-vacancys";
 import { getAvaliationVancancyByUserId } from "@/app/services/avaliationsVacancy.swr";
 import Banner from "@/public/banner.png";
+import Rocket from "@/public/dakernet-rocket.gif";
 import IconeAlvo from "@/public/icone-alvo.png";
+import Primeiro from "@/public/primeiro.png";
+import Segundo from "@/public/segundo.png";
+import Terceiro from "@/public/terceiro.png";
 import CadsVacancy from "@/components/cards/card-vacancy";
+import { useMetrics } from "@/app/services/metrics.swr";
 
 import {
   Card,
@@ -63,7 +68,8 @@ export interface Vacancy {
 }
 
 export default function DashboardPage() {
-  const { vacancys } = useVacancys();
+  const { vacancys, isLoading } = useVacancys();
+  const { metrics } = useMetrics();
 
   const [nomeFiltro, setNomeFiltro] = useState("");
   const [nivelFiltro, setNivelFiltro] = useState("todos");
@@ -198,23 +204,36 @@ export default function DashboardPage() {
 
           <div>
             {/* Lista de vagas */}
-            {vacancys ? (
-              <div className="w-full h-full overflow-y-autorounded-lg flex flex-col gap-4 bg-transparent">
-                {vagasFiltradas && vagasFiltradas.length > 0 ? (
-                  vagasFiltradas.map((vaga) => (
-                    <CadsVacancy key={vaga.id} vacancy={vaga} />
-                  ))
-                ) : (
-                  <p className="text-center text-gray-500">
-                    Nenhuma vaga encontrada com esses filtros.
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div className="w-full p-4 flex items-center justify-center">
-                <Loader2 className="animate-spin" />
-              </div>
-            )}
+            {
+              isLoading ? (
+                <Card className="w-full">
+                  <CardContent className="text-gray-500 flex items-center justify-center gap-4">
+                    <Image
+                      src={Rocket}
+                      alt="Carregando..."
+                      width={50}
+                      height={50}
+                      unoptimized
+                    />
+                    <p>Estamos analisando seu perfil e encontrando as vagas mais compatíveis com você. Aguarde um instante.</p>
+                  </CardContent>
+                </Card>
+              ) :
+                (
+                  <div className="w-full h-full overflow-y-autorounded-lg flex flex-col gap-4 bg-transparent">
+                    {vagasFiltradas && vagasFiltradas.length > 0 ? (
+                      vagasFiltradas.map((vaga) => (
+                        <CadsVacancy key={vaga.id} vacancy={vaga} />
+                      ))
+                    ) : (
+                      <p className="text-center text-gray-500">
+                        Nenhuma vaga encontrada com esses filtros.
+                      </p>
+                    )}
+                  </div>
+                )
+            }
+
           </div>
         </div>
 
@@ -237,7 +256,7 @@ export default function DashboardPage() {
 
                   <div>
                     <h2 className="font-semibold text-blue-500">
-                      + 1.250
+                      + {metrics?.totalVacancys ?? 0}
                     </h2>
 
                     <p className="text-xs text-blue-600">
@@ -253,7 +272,7 @@ export default function DashboardPage() {
 
                   <div>
                     <h2 className="font-semibold text-green-500">
-                      + 850
+                      + {metrics?.totalBussines ?? 0}
                     </h2>
 
                     <p className="text-xs text-green-600">
@@ -269,7 +288,7 @@ export default function DashboardPage() {
 
                   <div>
                     <h2 className="font-semibold text-orange-500">
-                      12 mil
+                      {metrics?.totalStudiesCreateds ?? 0}
                     </h2>
 
                     <p className="text-xs text-orange-600">
@@ -285,7 +304,7 @@ export default function DashboardPage() {
 
                   <div>
                     <h2 className="font-semibold text-purple-500">
-                      98%
+                      {metrics?.totalSatisfation ?? 0}%
                     </h2>
 
                     <p className="text-xs text-purple-600">
@@ -310,21 +329,21 @@ export default function DashboardPage() {
             <div className="lg:flex lg:flex-col gap-3 grid grid-cols-1 lg:grid-cols-2">
 
               {
-                bussinesMoreVacancys.length > 0 && bussinesMoreVacancys.map((v, i) => (
-                  <Card key={v.id} className={`${i == 1 ? "bg-zinc-100" : " bg-orange-50"} p-0! py-2! shadow-none border-none`}>
+                metrics && metrics.bussinesMoreWithVacancys.length > 0 && metrics.bussinesMoreWithVacancys.map((v, i) => (
+                  <Card key={v.company} className={`${i == 1 ? "bg-zinc-100" : " bg-orange-50"} p-0! py-2! shadow-none border-none`}>
                     <CardContent className="flex items-center gap-4">
 
-                      <div className={`w-12 h-12 text-white rounded-full flex items-center justify-center font-bold text-2xl ${i == 0 ? "bg-blue-800" : i == 1 ? "bg-orange-700" : "bg-red-700"}`}>
-                        {v.name.slice(0, 1)}
+                      <div className={`min-w-12! min-h-12! text-white rounded-full flex items-center justify-center font-bold text-2xl ${i == 0 ? "bg-blue-800" : i == 1 ? "bg-purple-700" : "bg-orange-600"}`}>
+                        {v.company.replace(" ", "").slice(0, 1)}
                       </div>
 
-                      <div>
-                        <h2 className="text-md font-semibold text-black flex items-center justify-start gap-2">
-                          <Building2 size={15} /> {v.name}
+                      <div className="w-full whitespace-normal! wrap-break-word!">
+                        <h2 className="text-md font-semibold text-black flex items-center justify-start gap-2 whitespace-normal! wrap-break-word!">
+                          <Building2 size={15} /> {v.company}
                         </h2>
 
-                        <p className="text-xs text-black">
-                          {v.vacancys == 1 ? `${v.vacancys} vaga disponivel` : `${v.vacancys} vagas disponivel`}
+                        <p className="text-xs text-black whitespace-normal! wrap-break-word!">
+                          {v.countVacancies == 1 ? `${v.countVacancies} vaga disponivel` : `${v.countVacancies} vagas disponivel`}
                         </p>
                       </div>
                     </CardContent>
@@ -337,7 +356,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-    </div>
+    </div >
 
   );
 }

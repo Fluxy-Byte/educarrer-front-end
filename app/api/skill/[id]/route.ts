@@ -24,7 +24,7 @@ export async function DELETE(
       );
     }
 
-    await deleteSkill(id);
+    await deleteSkill(id, session.user.id);
 
     return NextResponse.json({
       status: true,
@@ -68,7 +68,8 @@ export async function PUT(
 
     const skill = await updateSkill(
       id,
-      data
+      data,
+      session.user.id
     );
 
     return NextResponse.json({

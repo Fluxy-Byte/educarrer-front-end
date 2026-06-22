@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { useVacancys } from "@/app/services/vacancys.swr";
+import { useVacancysAdmin } from "@/app/services/vacancys.swr";
 import Image from "next/image";
 import { Loader2, Users, Search, BrainCircuit, MapPinHouse, ChartColumnIncreasing, BriefcaseBusiness, Building2, Heart, Flame } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import CadsVacancyAdmin from "@/components/cards/card-vacancy-admin";
 import CharRecomedacaoDeVagas from "@/components/chart/acuracia-recomendacoes";
 import CharGeracaoDeEstudo from "@/components/chart/acuracia-geracao-de-estudos";
 import { DialogVacncyCreate } from "@/components/dialog/dialog-vacancy.create";
+import { useMetricsAdmin } from "@/app/services/metrics.swr";
 import {
   Card,
   CardContent,
@@ -64,8 +65,8 @@ export interface Vacancy {
 }
 
 export default function DashboardPage() {
-  const { vacancys } = useVacancys();
-
+  const { vacancys } = useVacancysAdmin();
+  const { metrics } = useMetricsAdmin();
   const [nomeFiltro, setNomeFiltro] = useState("");
   const [nivelFiltro, setNivelFiltro] = useState("todos");
   const [modalidadeFiltro, setModalidadeFiltro] = useState("todos");
@@ -226,7 +227,7 @@ export default function DashboardPage() {
 
                   <div>
                     <h2 className="font-semibold text-blue-500">
-                      + 1.250
+                      + {metrics?.totalUsers ?? 0}
                     </h2>
 
                     <p className="text-xs text-blue-600">
@@ -242,7 +243,7 @@ export default function DashboardPage() {
 
                   <div>
                     <h2 className="font-semibold text-green-500">
-                      + 850
+                      + {metrics?.totalBussines ?? 0}
                     </h2>
 
                     <p className="text-xs text-green-600">

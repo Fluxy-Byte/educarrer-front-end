@@ -22,3 +22,7 @@ export async function deleteUser(id: string) {
 export async function updateUser(data: UpdateUserDTO) {
     return await userRepository.updateUser(data);
 }
+
+export async function getNumberTotalUsers(): Promise<number> {
+    return await userRepository.getAllUser()
+}

@@ -145,3 +145,7 @@ export async function getAllStudies() {
 export async function getStudyById(id: string) {
     return await studyRepository.getStudyById(id);
 }
+
+export async function getNumberTotalStudies() {
+    return await studyRepository.getCountStudyes();
+}

@@ -22,7 +22,7 @@ export default function DashboardLayout({
                 <SidebarTrigger size={"lg"} className="text-blue-600"/>
               </div>
               <div className="text-black block items-start md:flex md:flex-col">
-                <h1 className="font-semibold text-md">Pefil</h1>
+                <h1 className="font-semibold text-md">Perfil</h1>
                 <p className="text-zinc-500 text-sm">Gerencie suas informações pessoais</p>
               </div>
             </div>

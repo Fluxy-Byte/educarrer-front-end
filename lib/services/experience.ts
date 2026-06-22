@@ -10,18 +10,18 @@ export async function getExperienceByUserId(userId: string) {
     return await experienceRedis.getExperiencesFromRedis(userId);
 }
 
-export async function createExperience(data: CreateExperienceDTO) {
-    await redis.del("experience:list");
+export async function createExperience(data: CreateExperienceDTO, userId: string) {
+    await redis.del(`experience:${userId}`);
     return await experienceRepository.createExperience(data);
 }
 
-export async function deleteExperience(id: string) {
-    await redis.del("experience:list");
+export async function deleteExperience(id: string, userId: string) {
+    await redis.del(`experience:${userId}`);
     return await experienceRepository.deleteExperience(id);
 }
 
-export async function updateExperience(id: string, data: Partial<UpdateExperienceDTO>) {
-    await redis.del("experience:list");
+export async function updateExperience(id: string, data: Partial<UpdateExperienceDTO>, userId: string) {
+    await redis.del(`experience:${userId}`);
     return await experienceRepository.updateExperience(id, data);
 }
 

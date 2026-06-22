@@ -119,7 +119,7 @@ export class StudyRepository {
             where: {
                 userId
             },
-            select:{
+            select: {
                 id: true,
                 title: true,
                 userId: true,
@@ -292,5 +292,9 @@ export class StudyRepository {
             study.focus,
             study.goals
         );
+    }
+
+    async getCountStudyes(): Promise<number> {
+        return await prisma.study.count();
     }
 }

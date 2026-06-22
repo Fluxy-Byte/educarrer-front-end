@@ -58,7 +58,8 @@ export async function POST(req: Request) {
     }
 
     const skill = await createSkill(
-      data
+      data,
+      user.id
     );
 
     return NextResponse.json({

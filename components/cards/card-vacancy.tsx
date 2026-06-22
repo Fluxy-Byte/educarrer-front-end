@@ -73,7 +73,7 @@ export default function CadsVacancy({ vacancy }: DialogVagasProps) {
                 <CardTitle className="w-full">
                     <span className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                         <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-                            <h1 className="text-black text-lg sm:text-xl break-words">
+                            <h1 className="text-black text-lg sm:text-xl wrap-break-word">
                                 {vacancy.title}
                             </h1>
                             <Badge

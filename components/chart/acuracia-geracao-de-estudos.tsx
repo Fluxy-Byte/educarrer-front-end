@@ -18,7 +18,7 @@ import {
     type ChartConfig,
 } from "@/components/ui/chart";
 import { useAvaliations } from "@/app/services/avaliations.swr";
-
+import { useMetricsAdmin } from "@/app/services/metrics.swr";
 export const description = "A donut chart with text"
 
 const chartConfig = {
@@ -37,20 +37,15 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function CharGeracaoDeEstudo() {
-    const { avaliations } = useAvaliations();
+    const { metrics } = useMetricsAdmin();
 
     const { chartData, totalAvaliations, accuracy, isEmpty } = React.useMemo(() => {
-        const list = avaliations ?? [];
 
-        const satisfiedCount = list.filter((a) => a.satisfied).length;
-        const unsatisfiedCount = list.length - satisfiedCount;
-        const total = list.length;
-
-        const accuracyValue = total > 0
-            ? Math.round((satisfiedCount / total) * 100)
-            : 0;
-
-        const empty = total === 0;
+        const accuracy = metrics?.totalSatisfationStudys ?? 0;
+        const cont = metrics?.countSatisfationStudys ?? 0;
+        const empty = metrics?.totalSatisfationStudys == 0;
+        const satisfiedCount = metrics?.countPositiveSatisfationStudys ?? 0;
+        const unsatisfiedCount = metrics?.countNegativeSatisfationStudys ?? 0;
 
         return {
             chartData: empty
@@ -59,16 +54,16 @@ export default function CharGeracaoDeEstudo() {
                     { status: "satisfied", visitors: satisfiedCount, fill: "var(--color-satisfied)" },
                     { status: "unsatisfied", visitors: unsatisfiedCount, fill: "var(--color-unsatisfied)" },
                 ],
-            totalAvaliations: total,
-            accuracy: accuracyValue,
+            totalAvaliations: cont,
+            accuracy: accuracy,
             isEmpty: empty,
         };
-    }, [avaliations]);
+    }, [metrics]);
 
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-0!">
-                <CardTitle className="text-black">Acuracia das recomendações</CardTitle>
+                <CardTitle className="text-black text-center">Acuracia das criações de estudos</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 pb-0!">
                 <ChartContainer
@@ -102,12 +97,12 @@ export default function CharGeracaoDeEstudo() {
                                                     y={viewBox.cy}
                                                     className="text-3xl text-black! font-bold"
                                                 >
-                                                    {isEmpty ? "0%" : `${accuracy}%`}
+                                                    {isEmpty ? "0%" : `${metrics?.totalSatisfationStudys}%`}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={(viewBox.cy || 0) + 24}
-                                                    className="fill-muted-foreground"
+                                                    className="text-gray-400"
                                                 >
                                                     avaliações
                                                 </tspan>
@@ -122,7 +117,7 @@ export default function CharGeracaoDeEstudo() {
             </CardContent>
             <CardFooter className="flex-col text-sm">
                 <div className="text-black flex items-center leading-none font-medium">
-                    {totalAvaliations} Avaliações
+                    {metrics?.countSatisfationStudys} Avaliações
                 </div>
             </CardFooter>
         </Card>

@@ -1,32 +1,44 @@
 import { getVacancysFromRedis } from "@/lib/redis/vacancy";
 import { VacancyRepository } from "@/lib/repositories/vacancy";
 import { CreateVacancyData } from "@/lib/interfaces/vacancy.interface";
-import { redis } from "@/lib/redis/redis";
+import { clearVacancysCache } from "@/lib/redis/clearCacheVacancys";
 
-const vacancysRepository = new getVacancysFromRedis();
+
+const vacancysRepositoryRedis = new getVacancysFromRedis();
+const vacancysRepositoryDataBase = new VacancyRepository();
 
 export async function getVacancys(userId: string) {
-    return await vacancysRepository.getVacancysFromRedis(userId);
+    return await vacancysRepositoryRedis.getVacancysFromRedis(userId);
 }
 
 export async function getVacancysById(userId: string, id: string) {
-    const vacancy = await vacancysRepository.getVacancysByIdFromRedis(userId, id);
+    const vacancy = await vacancysRepositoryRedis.getVacancysByIdFromRedis(userId, id);
 
     if (!vacancy) {
-        return await vacancysRepository.getVacancysByIdFromDataBase(id);
+        return await vacancysRepositoryRedis.getVacancysByIdFromDataBase(id);
     }
 
     return vacancy;
 }
 
 export async function createVacancy(data: CreateVacancyData) {
-    const vacancyRepository = new VacancyRepository();
-    await redis.del("vacancys:list");
-    return await vacancyRepository.createVacancy(data);
+    await clearVacancysCache();
+    return await vacancysRepositoryDataBase.createVacancy(data);
 }
 
 export async function updateVacancy(id: string, data: CreateVacancyData) {
-    const vacancyRepository = new VacancyRepository();
-    await redis.del("vacancys:list");
-    return await vacancyRepository.updateVacancy(id, data);
+    await clearVacancysCache();
+    return await vacancysRepositoryDataBase.updateVacancy(id, data);
+}
+
+export async function getVacancysFromRedisAdmin() {
+    return await vacancysRepositoryRedis.getVacancysFromRedisAdmin()
+}
+
+export async function getNumberTotalVacancys() {
+    return await vacancysRepositoryDataBase.getCountVacancies();
+}
+
+export async function getNumberTotalCompaniesByVacancys() {
+    return await vacancysRepositoryDataBase.getCountCompaniesByVacancies();
 }

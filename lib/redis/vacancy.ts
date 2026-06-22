@@ -4,7 +4,7 @@ import { VacancyRepository } from "@/lib/repositories/vacancy";
 import { getSkillByUserId } from "@/lib/services/skill";
 import { getExperienceByUserId } from "@/lib/services/experience";
 import { VacancyDTO } from "@/lib/interfaces/vacancy.interface";
-
+import { HundleStudyWithOpenAi } from "@/lib/services/hundleStudyWithOpenAi";
 
 interface UsersVacancysCache {
     userId: string,
@@ -16,15 +16,96 @@ export class getVacancysFromRedis {
     async getVacancysFromRedis(userId: string): Promise<Vacancy[]> {
         try {
             const cacheKey = `vacancys:${userId}`;
-            const cachedVacancysUser = await redis.get(cacheKey) ?? null;
+            const cachedVacancysUser = await redis.get(cacheKey);
 
             if (cachedVacancysUser) {
                 const vacancys: VacancyDTO[] = JSON.parse(cachedVacancysUser);
 
-                console.log("Vacancies fetched from Redis cache.");
+                if (vacancys.length > 0) {
+                    console.log("Vacancies fetched from Redis cache.");
 
-                if (vacancys) {
-                    return vacancys.map((vacancy: VacancyDTO) => new Vacancy(
+                    return vacancys.map(
+                        (vacancy) =>
+                            new Vacancy(
+                                vacancy.id,
+                                vacancy.title,
+                                vacancy.description,
+                                vacancy.company ?? null,
+                                vacancy.modality ?? null,
+                                vacancy.level ?? null,
+                                vacancy.technologies,
+                                vacancy.link ?? null,
+                                vacancy.origin ?? null,
+                                vacancy.location ?? null,
+                                vacancy.salary ?? null,
+                                new Date(vacancy.createdAt),
+                                new Date(vacancy.updatedAt),
+                                vacancy.active,
+                                vacancy.matches ?? 0,
+                                vacancy.score ?? 0
+                            )
+                    );
+                }
+            }
+
+            const vacancyRepository = new VacancyRepository();
+
+            const [vacancys, skills, experiences] = await Promise.all([
+                vacancyRepository.getVacancys(),
+                getSkillByUserId(userId),
+                getExperienceByUserId(userId)
+            ]);
+
+            if (skills.length === 0) {
+                return [];
+            }
+
+            const openAi = new HundleStudyWithOpenAi();
+
+            const response = await openAi.filterVacancysToUser(
+                skills,
+                experiences,
+                vacancys
+            );
+
+            if (!response) {
+                return [];
+            }
+
+            const resAgentFilter = JSON.parse(response);
+
+            if (!resAgentFilter.ids) {
+                return [];
+            }
+
+            const vacancyIds = resAgentFilter.ids;
+
+            if (!Array.isArray(vacancyIds) || vacancyIds.length === 0) {
+                return [];
+            }
+
+            const vacanciesFiltered: VacancyDTO[] = []
+            
+            for (const id of vacancyIds) {
+                const vacancyFindFirst = vacancys.find((v) => v.id == id);
+
+                if (vacancyFindFirst) {
+                    vacanciesFiltered.push(vacancyFindFirst);
+                }
+            }
+
+            await redis.set(
+                cacheKey,
+                JSON.stringify(vacanciesFiltered),
+                "EX",
+                3600
+            );
+
+            console.log("Vacancies fetched from database and cached.");
+
+            return vacanciesFiltered.map(
+                (vacancy) =>
+                    new Vacancy(
                         vacancy.id,
                         vacancy.title,
                         vacancy.description,
@@ -39,86 +120,12 @@ export class getVacancysFromRedis {
                         vacancy.createdAt,
                         vacancy.updatedAt,
                         vacancy.active,
-                        vacancy.matches,
-                        vacancy.score
-                    ));
-                }
-            }
-
-            const classVacancy = new VacancyRepository();
-            const vacancys = await classVacancy.getVacancys();
-
-            const skills = await getSkillByUserId(userId);
-
-            if (skills.length == 0) {
-                return [];
-            }
-
-            const namesSkills = skills.map((s) => s.name);
-
-            const vacancysRanked = vacancys
-                .map((vacancy) => {
-                    const matches = vacancy.technologies.filter((tech) =>
-                        namesSkills.includes(tech)
-                    ).length;
-
-                    const score = matches / vacancy.technologies.length;
-
-                    return new Vacancy(
-                        vacancy.id,
-                        vacancy.title,
-                        vacancy.description,
-                        vacancy.company,
-                        vacancy.modality,
-                        vacancy.level,
-                        vacancy.technologies,
-                        vacancy.link,
-                        vacancy.origin,
-                        vacancy.location,
-                        vacancy.salary,
-                        vacancy.createdAt,
-                        vacancy.updatedAt,
-                        vacancy.active,
-                        matches,
-                        score
+                        vacancy.matches ?? 0,
+                        vacancy.score ?? 0
                     )
-                })
-                .filter((item) => item.score ? item.score >= 0.4 : 0.0) // mínimo de 40%
-                .sort((a, b) => {
-                    const scoreA = a.score ?? 0;
-                    const scoreB = b.score ?? 0;
-                    return scoreB - scoreA;
-                });
-
-            await redis.set(
-                cacheKey,
-                JSON.stringify(vacancys),
-                "EX", 3600
-            ); // Cache por 1 hora
-
-            console.log("Vacancies fetched from database and cached.");
-
-            return vacancysRanked.map((vacancy: VacancyDTO) => new Vacancy(
-                vacancy.id,
-                vacancy.title,
-                vacancy.description,
-                vacancy.company ?? null,
-                vacancy.modality ?? null,
-                vacancy.level ?? null,
-                vacancy.technologies,
-                vacancy.link ?? null,
-                vacancy.origin ?? null,
-                vacancy.location ?? null,
-                vacancy.salary ?? null,
-                vacancy.createdAt,
-                vacancy.updatedAt,
-                vacancy.active,
-                vacancy.matches,
-                vacancy.score
-            ));
-
-        } catch (e: any) {
-            console.error("Error fetching vacancies from Redis:", e);
+            );
+        } catch (error) {
+            console.error("Error fetching vacancies:", error);
             return [];
         }
     }
@@ -230,7 +237,6 @@ export class getVacancysFromRedis {
         }
     }
 
-
     async getVacancysByIdFromDataBase(id: string): Promise<Vacancy | null> {
         try {
             const getVacancysClass = new VacancyRepository();
@@ -242,3 +248,40 @@ export class getVacancysFromRedis {
         }
     }
 }
+
+
+// const namesSkills = skills.map((s) => s.name);
+
+// const vacancysRanked = vacancys
+//     .map((vacancy) => {
+//         const matches = vacancy.technologies.filter((tech) =>
+//             namesSkills.includes(tech)
+//         ).length;
+
+//         const score = matches / vacancy.technologies.length;
+
+//         return new Vacancy(
+//             vacancy.id,
+//             vacancy.title,
+//             vacancy.description,
+//             vacancy.company,
+//             vacancy.modality,
+//             vacancy.level,
+//             vacancy.technologies,
+//             vacancy.link,
+//             vacancy.origin,
+//             vacancy.location,
+//             vacancy.salary,
+//             vacancy.createdAt,
+//             vacancy.updatedAt,
+//             vacancy.active,
+//             matches,
+//             score
+//         )
+//     })
+//     .filter((item) => item.score ? item.score >= 0.4 : 0.0) // mínimo de 40%
+//     .sort((a, b) => {
+//         const scoreA = a.score ?? 0;
+//         const scoreB = b.score ?? 0;
+//         return scoreB - scoreA;
+//     });

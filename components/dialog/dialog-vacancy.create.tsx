@@ -4,15 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Plus, Search, Briefcase, MapPin, Link2, Code2, AlertCircle, Loader2, Rocket } from "lucide-react";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useSkills } from "@/app/services/skills.swr";
 import { Input } from "../ui/input";
 import { ToastPersonalizado } from "@/components/toast";
 import {
@@ -25,11 +22,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z, ZodError } from "zod";
-import { createVacancy } from "@/app/services/vacancys.swr";
+import { createVacancy, useVacancysAdmin } from "@/app/services/vacancys.swr";
 import { useState } from "react";
 import skillsTI from "@/components/dialog/skills.json";
 
@@ -68,7 +64,7 @@ const DEFAULT_VALUES: VacancyFormData = {
 
 // ─── Componente ──────────────────────────────────────────────────────────────
 export function DialogVacncyCreate() {
-    const { refresh } = useSkills();
+    const { refresh } = useVacancysAdmin();
     const [open, setOpen] = useState(false);
     const [techSearch, setTechSearch] = useState("");
 
@@ -97,11 +93,14 @@ export function DialogVacncyCreate() {
         setValue("technologies", updated, { shouldValidate: true });
     };
 
-    const filteredTechs = Object.entries(skillsTI).map(([, skills]: [string, string[]]) =>
-        skills.filter((nameSkill: string) =>
-            nameSkill.toLowerCase().includes(techSearch.toLowerCase())
-        )
-    );
+    const filteredGroups = Object.entries(skillsTI as Record<string, string[]>)
+        .map(([group, skills]) => [
+            group,
+            skills.filter((nameSkill) =>
+                nameSkill.toLowerCase().includes(techSearch.trim().toLowerCase())
+            ),
+        ] as [string, string[]])
+        .filter(([, skills]) => skills.length > 0);
 
     const onSubmit = async (data: VacancyFormData) => {
         try {
@@ -309,12 +308,12 @@ export function DialogVacncyCreate() {
                                         className="w-full text-sm outline-none bg-transparent text-zinc-900! placeholder:text-zinc-400"
                                     />
                                 </div>
-                                <div className="max-h-[140px] overflow-y-auto grid grid-cols-2 gap-x-2 p-2 bg-white!">
-                                    {Object.entries(skillsTI).map(([group, items]) => (
-                                        <span>
-                                            <Label>{group}</Label>
+                                <div className="max-h-100 overflow-y-auto grid grid-cols-2 gap-x-2 p-2 bg-white!">
+                                    {filteredGroups.map(([group, items]) => (
+                                        <span key={group} className="col-span-2 sm:col-span-1">
+                                            <Label className="text-gray-400 my-2">{group}</Label>
                                             {
-                                                items.map((v, i) => (
+                                                items.map((v) => (
                                                     <label
                                                         key={v}
                                                         className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-zinc-50! transition-colors select-none"
@@ -330,7 +329,7 @@ export function DialogVacncyCreate() {
                                             }
                                         </span>
                                     ))}
-                                    {Object.entries(skillsTI).length == 0 && (
+                                    {filteredGroups.length === 0 && (
                                         <p className="col-span-2 text-center text-xs text-zinc-400! py-4">
                                             Nenhuma tecnologia encontrada.
                                         </p>

@@ -10,18 +10,18 @@ export async function getSkillByUserId(userId: string) {
     return await skillsRedis.getSkillsFromRedis(userId);
 }
 
-export async function createSkill(data: CreateSkillDTO) {
-    await redis.del("skill:list");
+export async function createSkill(data: CreateSkillDTO, userId: string) {
+    await redis.del(`skill:${userId}`);
     return await userRepository.createSkill(data);
 }
 
-export async function deleteSkill(id: string) {
-    await redis.del("skill:list");
+export async function deleteSkill(id: string, userId: string) {
+    await redis.del(`skill:${userId}`);
     return await userRepository.deleteSkill(id);
 }
 
-export async function updateSkill(id: string, data: UpdateSkillDTO) {
-    await redis.del("skill:list");
+export async function updateSkill(id: string, data: UpdateSkillDTO, userId: string) {
+    await redis.del(`skill:${userId}`);
     return await userRepository.updateSkill(id, data);
 }
 

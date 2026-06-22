@@ -24,7 +24,8 @@ export async function DELETE(
     }
 
     await deleteExperience(
-      id
+      id,
+      session.user.id
     );
 
     return NextResponse.json({
@@ -83,8 +84,9 @@ export async function PUT(
         startDate,
         endDate,
         currentJob
-      }
-    );
+      },
+      session.user.id
+    )
 
     return NextResponse.json({
       status: true,

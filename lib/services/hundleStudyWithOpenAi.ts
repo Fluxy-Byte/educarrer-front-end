@@ -349,15 +349,15 @@ export class HundleStudyWithOpenAi {
         try {
 
             const data = {
-                skills,
-                experiences,
-                vacancys
+                "Habilidades": skills,
+                "Experiencias_profissionais": experiences,
+                "Vagas": vacancys
             }
 
             const response = await openai.responses.create({
                 prompt: {
-                    "id": "pmpt_6a346cc9efd88194bc2fc7c62f1479cf0c5a0ff0b420e44b",
-                    "version": "1"
+                    "id": "pmpt_6a3866e3b58c81948a6038fea67d93bf0c4d07681b003881",
+                    "version": "2"
                 },
                 input: [
                     {
@@ -373,38 +373,50 @@ export class HundleStudyWithOpenAi {
                 text: {
                     "format": {
                         "type": "json_schema",
-                        "name": "vagas_compativeis",
+                        "name": "array_de_ids",
                         "strict": true,
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "ids_vagas": {
+                                "ids": {
                                     "type": "array",
-                                    "description": "Array contendo os ids das vagas compatíveis com o perfil.",
+                                    "description": "Array de IDs encontrados. Se nenhum for encontrado, retorna array vazio.",
                                     "items": {
-                                        "type": "number",
-                                        "description": "Id da vaga compatível."
+                                        "type": "string",
+                                        "description": "ID único no formato alfanumérico de 24 caracteres minúsculos."
                                     }
                                 }
                             },
                             "required": [
-                                "ids_vagas"
+                                "ids"
                             ],
                             "additionalProperties": false
                         }
-                    }
+                    },
+                    "verbosity": "medium"
                 },
-                reasoning: {},
-                max_output_tokens: 2048,
-                store: true,
-                include: ["web_search_call.action.sources"]
+                reasoning: {
+                    "summary": "auto"
+                },
+                store: false,
+                include: [
+                    "web_search_call.action.sources"
+                ]
             });
 
-            const raw = ((response.output as any)?.[0]?.content?.[0]?.text) ?? null;
+            const output = response.output;
+            let res;
+            for (const out of output) {
+                if (out.type == "message" && out.status == "completed") {
+                    if(out.content?.[0].type == "output_text"){
+                        res = out.content?.[0]?.text;
+                    }
+                }
+            }
 
-            if (!raw) return null;
+            if (!res) return null;
 
-            const parsed: string = raw;
+            const parsed: string = res;
             return parsed;
 
         } catch (error: any) {

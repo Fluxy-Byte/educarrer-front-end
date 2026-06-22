@@ -65,6 +65,18 @@ export function useVacancys() {
     }
 }
 
+export function useVacancysAdmin() {
+    const { data, error, isLoading, mutate } = useSWR(`${URL}/api/vacancy/admin`, fetcher);
+
+    return {
+        vacancys: data?.vacancys || [],
+        isLoading,
+        isError: error,
+        message: data?.message,
+        refresh: mutate
+    }
+}
+
 export async function createVacancy(data: CreateOrUpdateVacancy): Promise<ResultCreateOrUpdateVacancy> {
     const { data: response } = await axios.post(`${URL}/api/vacancy`, data, {
         withCredentials: true

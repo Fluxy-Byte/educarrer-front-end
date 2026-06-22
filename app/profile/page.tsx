@@ -28,7 +28,10 @@ export default function DashboardPage() {
           </span>
 
         </div>
-        <div className="w-full py-4 gap-2 flex flex-col">
+        <div className="w-full py-4">
+          <DialogSkillCreate />
+        </div>
+        <div className="w-full gap-2 flex flex-col">
           {skills ? (
             skills.map((skill) => (
               <CadsSkill key={skill.id} skill={skill} />
@@ -39,9 +42,7 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-        <div className="w-full bg-red-100">
-          <DialogSkillCreate />
-        </div>
+
       </div>
 
       <div className="w-full bg-white rounded-lg shadow-lg p-4">
@@ -55,7 +56,10 @@ export default function DashboardPage() {
             <p className="text-sm text-zinc-600">Gerencie seu histórico profissional</p>
           </span>
         </div>
-        <div className="w-full py-4 gap-2 flex flex-col">
+        <div className="w-full py-4">
+          <DialogExperienceCreate />
+        </div>
+        <div className="w-full gap-2 flex flex-col">
           {skills ? (
             experiences.map((experience) => (
               <CadsExperience key={experience.id} experience={experience} />
@@ -66,9 +70,7 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-        <div>
-          <DialogExperienceCreate />
-        </div>
+
       </div>
 
     </div>
