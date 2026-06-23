@@ -119,7 +119,7 @@ export function AppSidebar() {
                 <span className="text-sm font-medium">
                   {session?.user?.name || "Usuário"}
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-black">
                   {session?.user?.email}
                 </span>
               </div>
@@ -128,7 +128,7 @@ export function AppSidebar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-white cursor-pointer h-10 bg-blue-500 hover:bg-blue-600 transition" onClick={handleLogout}>
+            <DropdownMenuItem className="text-white cursor-pointer h-10 bg-blue-500 hover:bg-blue-600 transition flex items-center just" onClick={handleLogout}>
               <LogOut className="mr-1 text-white h-4 w-4" />
               <span>Deslogar</span>
             </DropdownMenuItem>
