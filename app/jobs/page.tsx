@@ -227,7 +227,7 @@ export default function DashboardPage() {
                       ))
                     ) : (
                       <p className="text-center text-gray-500">
-                        Nenhuma vaga encontrada com esses filtros.
+                        Ainda não encontramos vagas compatíveis com o seu perfil. Atualize suas habilidades e experiências para receber recomendações mais alinhadas às suas qualificações.
                       </p>
                     )}
                   </div>

@@ -102,7 +102,7 @@ export default function CharGeracaoDeEstudo() {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={(viewBox.cy || 0) + 24}
-                                                    className="text-gray-400"
+                                                    className="text-gray-400!"
                                                 >
                                                     avaliações
                                                 </tspan>

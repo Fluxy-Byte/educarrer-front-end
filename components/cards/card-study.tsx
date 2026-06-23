@@ -30,7 +30,7 @@ export default function CadsStudy({ study }: DialogStudyProps) {
         <Card key={study.id} className="w-full flex flex-row items-center p-4 gap-4 rounded-2xl">
             <CardContent className="flex flex-col lg:flex-row items-center justify-between gap-4 p-0 flex-1">
 
-                <span className={`w-auto px-4 py-3 rounded-xl flex ${isMobile ? "flex-col!" : ""} items-center justify-center gap-1`}>
+                <span className={`w-auto px-4 py-3 rounded-xl flex ${isMobile ? "flex-col! items-center justify-center" : ""}`}>
                     <p className="text-black font-bold">
                         Estudo:
                     </p>

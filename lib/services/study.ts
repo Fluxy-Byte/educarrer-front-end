@@ -42,8 +42,6 @@ export async function createStudy(idVacancy: string, userId: string) {
         }
     }
 
-
-
     const techStackComparison = await hundleStudyWithOpenAi.getImportantSkills(skills, experiences, vacancy);
     const resumeCandidate = await hundleStudyWithOpenAi.createResumeCandidate(skills, experiences);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Plus, Rocket, Loader2, ArrowRight, CheckCircle2, XCircle, TriangleAlert } from "lucide-react";
+import { Plus, Rocket, Loader2, ArrowRight, CheckCircle2, XCircle, TriangleAlert, RotateCcw } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import {
     Dialog,
@@ -489,7 +489,7 @@ export function DialogSkillCreate() {
                             {quizQuestions.length > 0 && count < 3 && (
                                 <Button
                                     type="button"
-                                    variant="outline"
+                                    variant="destructive"
                                     onClick={() => {
                                         setPage(1);
                                         setQuizQuestions([]);
@@ -499,7 +499,7 @@ export function DialogSkillCreate() {
                                     }}
                                     disabled={isSubmitting}
                                 >
-                                    Refazer
+                                    <RotateCcw /> Refazer
                                 </Button>
                             )}
                             <Button

@@ -13,9 +13,9 @@ export async function getVacancys(userId: string) {
 
 export async function getVacancysById(userId: string, id: string) {
     const vacancy = await vacancysRepositoryRedis.getVacancysByIdFromRedis(userId, id);
-
+    
     if (!vacancy) {
-        return await vacancysRepositoryRedis.getVacancysByIdFromDataBase(id);
+        return await vacancysRepositoryDataBase.getVacancysById(id);
     }
 
     return vacancy;
