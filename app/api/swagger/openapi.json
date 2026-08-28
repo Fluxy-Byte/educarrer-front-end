@@ -1,0 +1,798 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "EduCarrer AI API",
+    "description": "Documentação das rotas internas do EduCarrer AI (Next.js App Router - `app/api`). A autenticação é feita via cookie de sessão gerado pelo **better-auth** (rota `/api/auth/*`). Todas as rotas protegidas leem a sessão a partir do header `Cookie` da requisição (`auth.api.getSession({ headers: req.headers })`); não é usado Bearer token.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "EduCarrer AI"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5401",
+      "description": "Ambiente de desenvolvimento (localhost)"
+    },
+    {
+      "url": "https://educarrerai.egnehl.easypanel.host",
+      "description": "Ambiente de produção (prod)"
+    }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "Autenticação e sessão (better-auth)" },
+    { "name": "User", "description": "Dados do usuário logado" },
+    { "name": "Vacancy", "description": "Vagas de emprego" },
+    { "name": "Study", "description": "Estudos/trilhas geradas a partir de uma vaga" },
+    { "name": "Skill", "description": "Habilidades do usuário" },
+    { "name": "Experience", "description": "Experiências profissionais do usuário" },
+    { "name": "Avaliations", "description": "Avaliações de estudos" },
+    { "name": "AvaliationsVacancy", "description": "Avaliações de vagas" },
+    { "name": "Metrics", "description": "Métricas do usuário e administrativas" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "sessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "better-auth.session_token",
+        "description": "Cookie de sessão emitido pelo better-auth após login em `/api/auth/sign-in`. Enviado automaticamente pelo navegador; para testar via Swagger/Postman, copie o cookie do navegador autenticado."
+      }
+    },
+    "parameters": {
+      "IdPathParam": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Identificador (cuid) do recurso",
+        "schema": { "type": "string" }
+      }
+    },
+    "headers": {
+      "ContentType": {
+        "description": "Tipo do corpo enviado",
+        "schema": { "type": "string", "example": "application/json" }
+      }
+    },
+    "schemas": {
+      "ErrorResponse400": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "ID não fornecido" }
+        }
+      },
+      "ErrorResponse401": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "Não encontramos a sessão do usuário" }
+        }
+      },
+      "ErrorResponse500": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "Erro interno no servidor" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "nullable": true },
+          "email": { "type": "string", "format": "email" },
+          "emailVerified": { "type": "boolean" },
+          "image": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "role": { "type": "string", "example": "user" },
+          "banned": { "type": "boolean" },
+          "banReason": { "type": "string", "nullable": true },
+          "banExpires": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "UpdateUserDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "image": { "type": "string" }
+        }
+      },
+      "Vacancy": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "company": { "type": "string", "nullable": true },
+          "modality": { "type": "string", "nullable": true },
+          "level": { "type": "string", "nullable": true },
+          "technologies": { "type": "array", "items": { "type": "string" } },
+          "link": { "type": "string", "nullable": true },
+          "origin": { "type": "string", "nullable": true },
+          "location": { "type": "string", "nullable": true },
+          "salary": { "type": "string", "nullable": true, "default": "0" },
+          "active": { "type": "boolean", "default": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "matches": { "type": "integer", "nullable": true },
+          "score": { "type": "number", "nullable": true }
+        }
+      },
+      "CreateVacancyDTO": {
+        "type": "object",
+        "required": ["title", "description", "company", "modality", "level", "technologies", "link", "origin", "location", "active"],
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "company": { "type": "string" },
+          "modality": { "type": "string" },
+          "level": { "type": "string" },
+          "technologies": { "type": "array", "items": { "type": "string" } },
+          "link": { "type": "string" },
+          "origin": { "type": "string" },
+          "location": { "type": "string" },
+          "salary": { "type": "string", "nullable": true },
+          "active": { "type": "boolean" }
+        }
+      },
+      "Skill": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "level": { "type": "integer", "default": 0 },
+          "about": { "type": "string", "nullable": true },
+          "updatedAt": { "type": "string", "format": "date-time", "nullable": true },
+          "userId": { "type": "string" }
+        }
+      },
+      "CreateSkillDTO": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "level": { "type": "integer" },
+          "about": { "type": "string" }
+        }
+      },
+      "UpdateSkillDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "level": { "type": "integer" },
+          "about": { "type": "string" }
+        }
+      },
+      "Experience": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "seniority": { "type": "string" },
+          "about": { "type": "string" },
+          "startDate": { "type": "string", "format": "date-time", "nullable": true },
+          "endDate": { "type": "string", "format": "date-time", "nullable": true },
+          "currentJob": { "type": "boolean" },
+          "updatedAt": { "type": "string", "format": "date-time", "nullable": true },
+          "userId": { "type": "string" }
+        }
+      },
+      "CreateExperienceDTO": {
+        "type": "object",
+        "required": ["name", "seniority", "about", "currentJob"],
+        "properties": {
+          "name": { "type": "string" },
+          "seniority": { "type": "string" },
+          "about": { "type": "string" },
+          "startDate": { "type": "string", "format": "date-time" },
+          "endDate": { "type": "string", "format": "date-time" },
+          "currentJob": { "type": "boolean" }
+        }
+      },
+      "UpdateExperienceDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "seniority": { "type": "string" },
+          "about": { "type": "string" },
+          "startDate": { "type": "string", "format": "date-time" },
+          "endDate": { "type": "string", "format": "date-time" },
+          "currentJob": { "type": "boolean" }
+        }
+      },
+      "StudyStrength": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sectionId": { "type": "string" },
+          "skill": { "type": "string" },
+          "importance": { "type": "string" },
+          "advice": { "type": "string" }
+        }
+      },
+      "StudyGap": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sectionId": { "type": "string" },
+          "skill": { "type": "string" },
+          "explanation": { "type": "string" },
+          "priority": { "type": "string" },
+          "estimatedTime": { "type": "string" },
+          "topics": { "type": "array", "items": { "type": "string" } },
+          "resources": { "type": "array", "items": { "type": "string" } }
+        }
+      },
+      "StudyPlan": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sectionId": { "type": "string" },
+          "week": { "type": "integer" },
+          "focus": { "type": "string" },
+          "goals": { "type": "string" }
+        }
+      },
+      "StudySection": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "studyId": { "type": "string" },
+          "section": { "type": "string" },
+          "type": { "type": "string" },
+          "content": { "type": "string", "nullable": true },
+          "strengths": { "type": "array", "items": { "$ref": "#/components/schemas/StudyStrength" } },
+          "gaps": { "type": "array", "items": { "$ref": "#/components/schemas/StudyGap" } },
+          "plans": { "type": "array", "items": { "$ref": "#/components/schemas/StudyPlan" } },
+          "createdAt": { "type": "string", "format": "date-time", "nullable": true }
+        }
+      },
+      "Study": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "sections": { "type": "array", "items": { "$ref": "#/components/schemas/StudySection" } },
+          "createdAt": { "type": "string", "format": "date-time", "nullable": true },
+          "updatedAt": { "type": "string", "format": "date-time", "nullable": true },
+          "userId": { "type": "string" }
+        }
+      },
+      "CreateStudyDTO": {
+        "type": "object",
+        "required": ["idVacancy"],
+        "properties": {
+          "idVacancy": { "type": "string", "description": "Id da vaga (Vacancy) a partir da qual o estudo será gerado" }
+        }
+      },
+      "Avaliation": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "satisfied": { "type": "boolean" },
+          "comment": { "type": "string", "nullable": true },
+          "studyId": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "userId": { "type": "string" }
+        }
+      },
+      "CreateAvaliationDTO": {
+        "type": "object",
+        "required": ["satisfied", "studyId"],
+        "properties": {
+          "comment": { "type": "string" },
+          "satisfied": { "type": "boolean" },
+          "studyId": { "type": "string" }
+        }
+      },
+      "UpdateAvaliationDTO": {
+        "type": "object",
+        "properties": {
+          "satisfied": { "type": "boolean" },
+          "comment": { "type": "string" }
+        }
+      },
+      "AvaliationVacancy": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "satisfied": { "type": "boolean" },
+          "comment": { "type": "string", "nullable": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "userId": { "type": "string" }
+        }
+      },
+      "CreateAvaliationVacancyDTO": {
+        "type": "object",
+        "required": ["satisfied"],
+        "properties": {
+          "comment": { "type": "string" },
+          "satisfied": { "type": "boolean" }
+        }
+      },
+      "UpdateAvaliationVacancyDTO": {
+        "type": "object",
+        "properties": {
+          "satisfied": { "type": "boolean" },
+          "comment": { "type": "string" }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Requisição inválida — geralmente parâmetro de rota (`id`) não informado ou corpo inválido.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse400" } }
+        }
+      },
+      "Unauthorized": {
+        "description": "Sessão do usuário não encontrada/inválida ou usuário sem permissão (rotas admin) — cookie `better-auth.session_token` ausente, expirado ou papel (`role`) diferente de `admin`.",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } }
+        }
+      },
+      "InternalServerError": {
+        "description": "Erro interno inesperado no servidor (falha de banco de dados, Redis, ou exceção não tratada).",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse500" } }
+        }
+      }
+    }
+  },
+  "security": [{ "sessionCookie": [] }],
+  "paths": {
+    "/api/auth/{path}": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Endpoints do better-auth (GET)",
+        "description": "Catch-all gerenciado pela lib `better-auth` (`toNextJsHandler`). Cobre rotas como `/api/auth/get-session`, `/api/auth/sign-out`, callbacks de OAuth, etc. Consulte a documentação do better-auth para o contrato completo de cada sub-rota.",
+        "security": [],
+        "parameters": [
+          { "name": "path", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Sub-rota do better-auth, ex: get-session, sign-out" }
+        ],
+        "responses": {
+          "200": { "description": "Resposta específica da sub-rota do better-auth (ex: dados da sessão)." },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Endpoints do better-auth (POST)",
+        "description": "Catch-all gerenciado pela lib `better-auth`. Cobre `/api/auth/sign-in/email`, `/api/auth/sign-up/email`, `/api/auth/sign-out`, etc.",
+        "security": [],
+        "parameters": [
+          { "name": "path", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Sub-rota do better-auth, ex: sign-in/email, sign-up/email" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "example": { "email": "user@email.com", "password": "senha123" } }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Autenticação/ação realizada com sucesso. Define o cookie `better-auth.session_token` na resposta (Set-Cookie)."
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/user": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Atualiza os dados do usuário logado",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateUserDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "message": { "type": "string", "example": "Sucesso na atualização do usuário" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/vacancy": {
+      "get": {
+        "tags": ["Vacancy"],
+        "summary": "Lista as vagas compatíveis com o perfil do usuário logado",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada (lista pode vir vazia caso nenhuma vaga seja compatível).",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "vacancys": { "type": "array", "items": { "$ref": "#/components/schemas/Vacancy" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Vacancy"],
+        "summary": "Cria uma nova vaga (somente admin)",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateVacancyDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Vaga criada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "vacancy": { "$ref": "#/components/schemas/Vacancy" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "description": "Sessão ausente ou usuário não é administrador.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/vacancy/{id}": {
+      "put": {
+        "tags": ["Vacancy"],
+        "summary": "Atualiza uma vaga existente (somente admin)",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateVacancyDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Vaga atualizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "vacancy": { "$ref": "#/components/schemas/Vacancy" }, "message": { "type": "string" } } } } }
+          },
+          "400": { "description": "ID da vaga não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse400" } } } },
+          "401": { "description": "Sessão ausente ou usuário não é administrador.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/vacancy/admin": {
+      "get": {
+        "tags": ["Vacancy"],
+        "summary": "Lista todas as vagas (cache Redis) — somente admin",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "vacancys": { "type": "array", "items": { "$ref": "#/components/schemas/Vacancy" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/study": {
+      "get": {
+        "tags": ["Study"],
+        "summary": "Lista os estudos do usuário logado",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "studies": { "type": "array", "items": { "$ref": "#/components/schemas/Study" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Study"],
+        "summary": "Gera um novo estudo a partir de uma vaga",
+        "description": "Cria um estudo (trilha de aprendizado) para o usuário logado com base na vaga informada. Utiliza a OpenAI para gerar o conteúdo.",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateStudyDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Estudo criado com sucesso (retorna o objeto de estudo diretamente, sem envelope `status`).",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Study" } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/study/{id}": {
+      "get": {
+        "tags": ["Study"],
+        "summary": "Consulta um estudo pelo id",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "study": { "$ref": "#/components/schemas/Study" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/skill": {
+      "get": {
+        "tags": ["Skill"],
+        "summary": "Lista as skills do usuário logado",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "skills": { "type": "array", "items": { "$ref": "#/components/schemas/Skill" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Skill"],
+        "summary": "Cria uma nova skill para o usuário logado",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateSkillDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Skill criada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "skill": { "$ref": "#/components/schemas/Skill" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/skill/{id}": {
+      "put": {
+        "tags": ["Skill"],
+        "summary": "Atualiza uma skill do usuário logado",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateSkillDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Skill atualizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "skill": { "$ref": "#/components/schemas/Skill" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "delete": {
+        "tags": ["Skill"],
+        "summary": "Remove uma skill do usuário logado",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "responses": {
+          "200": {
+            "description": "Skill removida com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "message": { "type": "string", "example": "Sucesso ao deletar a skill" } } } } }
+          },
+          "401": { "description": "Sessão ausente ou id não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/experience": {
+      "get": {
+        "tags": ["Experience"],
+        "summary": "Lista as experiências do usuário logado",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "experiences": { "type": "array", "items": { "$ref": "#/components/schemas/Experience" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Experience"],
+        "summary": "Cria uma nova experiência para o usuário logado",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateExperienceDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Experiência criada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "experience": { "$ref": "#/components/schemas/Experience" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/experience/{id}": {
+      "put": {
+        "tags": ["Experience"],
+        "summary": "Atualiza uma experiência do usuário logado",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateExperienceDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Experiência atualizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "experience": { "$ref": "#/components/schemas/Experience" }, "message": { "type": "string" } } } } }
+          },
+          "400": { "description": "ID da experiência não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse400" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "delete": {
+        "tags": ["Experience"],
+        "summary": "Remove uma experiência do usuário logado",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "responses": {
+          "200": {
+            "description": "Experiência removida com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "message": { "type": "string", "example": "Sucesso ao deletar a experiência" } } } } }
+          },
+          "401": { "description": "Sessão ausente ou id não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/avaliations": {
+      "get": {
+        "tags": ["Avaliations"],
+        "summary": "Lista todas as avaliações de estudos (somente admin)",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "avaliations": { "type": "array", "items": { "$ref": "#/components/schemas/Avaliation" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "description": "Sessão ausente ou usuário não é administrador.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Avaliations"],
+        "summary": "Cria uma avaliação para um estudo",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateAvaliationDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Avaliação criada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "avaliation": { "$ref": "#/components/schemas/Avaliation" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/avaliations/{id}": {
+      "get": {
+        "tags": ["Avaliations"],
+        "summary": "Consulta a avaliação do usuário logado para um estudo",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "description": "O parâmetro `id` corresponde ao id do estudo (`studyId`); a avaliação retornada é a do usuário autenticado.",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "avaliation": { "$ref": "#/components/schemas/Avaliation" }, "message": { "type": "string" } } } } }
+          },
+          "400": { "description": "Id do estudo não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse400" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "put": {
+        "tags": ["Avaliations"],
+        "summary": "Atualiza uma avaliação de estudo",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateAvaliationDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Avaliação atualizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "avaliation": { "$ref": "#/components/schemas/Avaliation" }, "message": { "type": "string" } } } } }
+          },
+          "400": { "description": "ID da avaliação não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse400" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/avaliations-vacancy": {
+      "get": {
+        "tags": ["AvaliationsVacancy"],
+        "summary": "Consulta a(s) avaliação(ões) de vaga do usuário logado",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "solicited": { "$ref": "#/components/schemas/AvaliationVacancy" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["AvaliationsVacancy"],
+        "summary": "Cria uma avaliação de vaga para o usuário logado",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateAvaliationVacancyDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Avaliação criada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "avaliation": { "$ref": "#/components/schemas/AvaliationVacancy" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/avaliations-vacancy/{id}": {
+      "put": {
+        "tags": ["AvaliationsVacancy"],
+        "summary": "Atualiza uma avaliação de vaga",
+        "parameters": [{ "$ref": "#/components/parameters/IdPathParam" }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateAvaliationVacancyDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Avaliação atualizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "avaliation": { "$ref": "#/components/schemas/AvaliationVacancy" }, "message": { "type": "string" } } } } }
+          },
+          "400": { "description": "ID da avaliação não fornecido.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse400" } } } },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/avaliations-vacancy/admin": {
+      "get": {
+        "tags": ["AvaliationsVacancy"],
+        "summary": "Lista todas as avaliações de vaga (somente admin)",
+        "description": "Nota: quando o usuário autenticado não é admin, a rota atualmente responde `200` com `status: false` em vez de `401` — comportamento herdado da implementação atual.",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso (ou `status: false` se o usuário não for admin).",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "avaliations": { "type": "array", "items": { "$ref": "#/components/schemas/AvaliationVacancy" } }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/metrics": {
+      "get": {
+        "tags": ["Metrics"],
+        "summary": "Consulta as métricas do usuário logado",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "metrics": { "type": "object" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/metrics/admin": {
+      "get": {
+        "tags": ["Metrics"],
+        "summary": "Consulta métricas administrativas (somente admin)",
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "metrics": { "type": "object" }, "message": { "type": "string" } } } } }
+          },
+          "401": { "description": "Sessão ausente ou usuário não é administrador.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    }
+  }
+}

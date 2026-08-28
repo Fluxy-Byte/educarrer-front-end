@@ -198,7 +198,6 @@ model Vacancy {
   updatedAt     DateTime @updatedAt
 }
 
-
 model Avaliations {
   id         String   @id @default(cuid())
   satisfied  Boolean
