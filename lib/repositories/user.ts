@@ -48,7 +48,7 @@ export class UserRepository {
             },
         });
 
-        if(!res){
+        if (!res) {
             return null;
         }
 
@@ -73,8 +73,8 @@ export class UserRepository {
         const res = await prisma.user.create({
             data,
         });
-        
-        if(!res){
+
+        if (!res) {
             return null;
         }
 
@@ -111,7 +111,7 @@ export class UserRepository {
             data,
         });
 
-        if(!res){
+        if (!res) {
             return null;
         }
 
@@ -128,7 +128,7 @@ export class UserRepository {
         );
     }
 
-    async getAllUser(){
+    async getAllUser() {
         return await prisma.user.count()
     }
 }

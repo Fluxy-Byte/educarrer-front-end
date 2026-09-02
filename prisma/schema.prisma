@@ -26,7 +26,22 @@ model User {
   experiences   Experience[]
   study         Study[]
   avaliations   Avaliations[]
+  resetPassWord ResetPassWord[]
   avaliationsVacancys AvaliationsVacancys[]
+}
+
+model ResetPassWord {
+  id        String   @id @default(cuid())
+  
+  completed Boolean  @default(false)
+  userId    String
+
+  tokenToReset String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Session {

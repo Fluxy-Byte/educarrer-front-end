@@ -1,7 +1,8 @@
-import { betterAuth } from "better-auth"
-import { prismaAdapter } from "better-auth/adapters/prisma"
-import { admin } from "better-auth/plugins"
-import { prisma } from "../prisma"
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { admin } from "better-auth/plugins";
+import { prisma } from "../prisma";
+import nodemailer from "nodemailer";
 
 const PORT = process.env.PORT ?? "5401"
 
@@ -11,6 +12,16 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url, token }) => {
+      sendEmailUser(
+        user.email,
+        url,
+        token
+      );
+    },
+    onPasswordReset: async ({ user }, request) => {
+      console.log(`Senha do usuario alterada com sucesso:${user.email}`);
+    },
     requireEmailVerification: false,
   },
   plugins: [
@@ -20,5 +31,51 @@ export const auth = betterAuth({
   ],
   trustedOrigins: [process.env.BETTER_AUTH_URL ?? `http://localhost:${PORT}`],
   secret: process.env.BETTER_AUTH_SECRET!,
-   baseURL: process.env.BETTER_AUTH_URL ?? `http://localhost:${PORT}`,
+  baseURL: process.env.BETTER_AUTH_URL ?? `http://localhost:${PORT}`,
 })
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.PASSWORD_GOOGLE,
+  },
+});
+
+export async function sendEmailUser(email: string, url: string, token: string) {
+  try {
+    const resetLink = `${url}/${token}`;
+    await transporter.sendMail({
+      from: `"EduCarrer AI" <${process.env.GMAIL_USER}>`,
+      to: email,
+      subject: "Recuperação de senha",
+      html: `
+        <div style="font-family: Arial; padding: 20px;">
+          <h2>Recuperação de senha</h2>
+          <p>Você solicitou a alteração da sua senha.</p>
+          <p>Clique no botão abaixo para redefinir:</p>
+
+          <a href="${resetLink}" 
+             style="display:inline-block;
+                    padding:10px 20px;
+                    background:#007bff;
+                    color:#fff;
+                    text-decoration:none;
+                    border-radius:5px;">
+            Redefinir senha
+          </a>
+
+          <p style="margin-top:20px;">
+            Ou copie o link abaixo:<br/>
+            ${resetLink}
+          </p>
+        </div>
+      `,
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Erro ao enviar email:", error);
+    return false;
+  }
+}

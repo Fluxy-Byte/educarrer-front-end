@@ -1,5 +1,7 @@
 import { UserRepository } from "@/lib/repositories/user";
 import { CreateUserDTO, UpdateUserDTO } from "@/lib/interfaces/user.interface";
+import { auth } from "@/lib/utils/auth";
+import { ur } from "zod/v4/locales";
 
 const userRepository = new UserRepository();
 
@@ -25,4 +27,29 @@ export async function updateUser(data: UpdateUserDTO) {
 
 export async function getNumberTotalUsers(): Promise<number> {
     return await userRepository.getAllUser()
+}
+
+
+// Função para criar token e 
+export async function hundleResetPasswordByEmailUser(email: string, url: string) {
+    try {
+        const result = await auth.api.requestPasswordReset({
+            body: {
+                email,
+                redirectTo: url
+            }
+        })
+
+        return {
+            status: result.status,
+            data: result.message,
+            key: "SucessoNoProcessoDoEnvidoDoEmail"
+        }
+    } catch (e: any) {
+        return {
+            status: false,
+            data: e,
+            key: "ErroInternoNoEnvioDeEmail"
+        }
+    }
 }
