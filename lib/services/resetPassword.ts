@@ -3,6 +3,7 @@ import { ResetPasswordRepository } from "@/lib/repositories/resetPassWord";
 import { ResetPassWordDTO } from "@/lib/interfaces/resetPassWord.interface";
 import { checkIfTheDateTimeHasPassedACertainNumberOfDays } from "@/lib/utils/checkIfTheDateTimeHasPassedACertainNumberOfDays";
 import { hundleResetPasswordByEmailUser } from "@/lib/services/user";
+import { UserRepository } from "@/lib/repositories/user";
 
 interface ResCheck {
     isValid: boolean
@@ -84,7 +85,44 @@ export class ResetPassword {
 
         const resFilterFirstResetPasswordByToken = await resetPasswordRepository.getResetPassWordByTokenToReset(tokenToReset);
 
-        return resFilterFirstResetPasswordByToken?.completed ?? false;
+        if( !resFilterFirstResetPasswordByToken ) {
+            return false;
+        }
+        
+        const completed = resFilterFirstResetPasswordByToken.completed;                   
+        return completed == false ? true : false;
+    }
+
+    async createResetPasswordByTokenAndEmailUser(tokenToReset: string, email: string): Promise<ResetPassWordDTO | null> {
+        const resetPasswordRepository = new ResetPasswordRepository();
+        const userRepository = new UserRepository();
+
+        const user = await userRepository.getUserByEmail(email);
+
+        if (!user) {
+            return null;
+        }
+
+        const resCreateResetPassword = await resetPasswordRepository.createResetPassWord({
+            tokenToReset,
+            userId: user.id
+        });
+
+        return resCreateResetPassword;
+    }
+
+    async updateResetPasswordByTokenAndEmailUser(tokenToReset: string): Promise<boolean> {
+        const resetPasswordRepository = new ResetPasswordRepository();
+
+        const resFilterFirstResetPasswordByToken = await resetPasswordRepository.getResetPassWordByTokenToReset(tokenToReset);
+
+        if (!resFilterFirstResetPasswordByToken) {
+            return false;
+        }
+        
+        const updateResetPassword = await resetPasswordRepository.updateResetPassWord({ completed: true }, resFilterFirstResetPasswordByToken.id);
+
+        return updateResetPassword ? true : false;
     }
 }
 

@@ -1,20 +1,28 @@
 import { NextResponse } from "next/server";
 import { authClient } from "@/lib/utils/auth-client";
+import { auth } from "@/lib/utils/auth";
+import { ResetPassword } from "@/lib/services/resetPassword";
 
 export async function POST(req: Request) {
   try {
     const { password, token } = await req.json();
 
-    const { data, error } = await authClient.resetPassword({
-      newPassword: password,
-      token: token,
+    const { status } = await auth.api.resetPassword({
+      body: {
+        token,
+        newPassword: password
+      }
     });
 
+    const resetPassword = new ResetPassword();
+    await resetPassword.updateResetPasswordByTokenAndEmailUser(token);
+
     return NextResponse.json({
-      status: data?.status ?? false,
-      message: data?.status == true ? "Senha atualizada com sucesso" : error?.message
+      status,
+      message: status == true ? "Senha atualizada com sucesso" : "Erro ao atualizar senha"
     },
-    { status: data?.status ? 204 : 400 });
+    { status: status ? 200 : 400 }
+    );
   } catch (e: any) {
     console.error(e);
 

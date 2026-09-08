@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { authClient } from "@/lib/utils/auth-client";
 import { ResetPassword } from "@/lib/services/resetPassword";
 
 export async function GET(
@@ -21,6 +20,8 @@ export async function GET(
 
     const resetPassword = new ResetPassword();
     const resFilterReset = await resetPassword.getResetPasswordByTokenToReset(id);
+
+    console.log("resFilterReset", resFilterReset);
 
     return NextResponse.json({
       status: resFilterReset,

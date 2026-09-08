@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { admin } from "better-auth/plugins";
 import { prisma } from "../prisma";
 import nodemailer from "nodemailer";
+import { ResetPassword } from "@/lib/services/resetPassword"; 
 
 const PORT = process.env.PORT ?? "5401"
 
@@ -20,7 +21,7 @@ export const auth = betterAuth({
       );
     },
     onPasswordReset: async ({ user }, request) => {
-      console.log(`Senha do usuario alterada com sucesso:${user.email}`);
+      console.log(`Senha do usuario alterada com sucesso: ${user.email}`);
     },
     requireEmailVerification: false,
   },
@@ -43,6 +44,10 @@ const transporter = nodemailer.createTransport({
 });
 
 export async function sendEmailUser(email: string, url: string, token: string) {
+  const resetPassword = new ResetPassword();
+
+  resetPassword.createResetPasswordByTokenAndEmailUser(token, email);
+
   try {
     const resetLink = `${url}/${token}`;
     await transporter.sendMail({

@@ -14,7 +14,7 @@ export class UserRepository {
         email: string
     ): Promise<User | null> {
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
             where: {
                 email,
             },
@@ -42,7 +42,7 @@ export class UserRepository {
         id: string
     ): Promise<User | null> {
 
-        const res = await prisma.user.findUnique({
+        const res = await prisma.user.findFirst({
             where: {
                 id,
             },

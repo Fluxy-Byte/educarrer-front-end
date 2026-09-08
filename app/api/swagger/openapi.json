@@ -27,7 +27,8 @@
     { "name": "Experience", "description": "Experiências profissionais do usuário" },
     { "name": "Avaliations", "description": "Avaliações de estudos" },
     { "name": "AvaliationsVacancy", "description": "Avaliações de vagas" },
-    { "name": "Metrics", "description": "Métricas do usuário e administrativas" }
+    { "name": "Metrics", "description": "Métricas do usuário e administrativas" },
+    { "name": "Reset", "description": "Reset de senha do usuário (fluxo público, sem sessão)" }
   ],
   "components": {
     "securitySchemes": {
@@ -318,6 +319,21 @@
         "properties": {
           "satisfied": { "type": "boolean" },
           "comment": { "type": "string" }
+        }
+      },
+      "CreateResetPasswordDTO": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": { "type": "string", "format": "email", "description": "E-mail do usuário que deseja resetar a senha. Um e-mail com o link/token de reset é enviado caso o usuário exista e não haja solicitação em aberto." }
+        }
+      },
+      "UpdateResetPasswordDTO": {
+        "type": "object",
+        "required": ["password", "token"],
+        "properties": {
+          "password": { "type": "string", "description": "Nova senha do usuário", "format": "password" },
+          "token": { "type": "string", "description": "Token de reset recebido por e-mail (mesmo valor do `id` usado em `/api/reset/get/{id}`)" }
         }
       }
     },
@@ -790,6 +806,68 @@
             "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": true }, "metrics": { "type": "object" }, "message": { "type": "string" } } } } }
           },
           "401": { "description": "Sessão ausente ou usuário não é administrador.", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse401" } } } },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/reset/create": {
+      "post": {
+        "tags": ["Reset"],
+        "summary": "Solicita o reset de senha (envia e-mail com o token)",
+        "description": "Rota pública, não requer sessão. Verifica se o e-mail existe e se não há uma solicitação de reset em aberto (últimos 2 dias) e, se estiver tudo certo, envia um e-mail com o link/token de reset.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateResetPasswordDTO" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Requisição processada. `status: true` indica que o e-mail de reset foi enviado; `status: false` indica que o e-mail não foi encontrado ou já existe uma solicitação em aberto (ver `message`).",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "message": { "type": "string", "example": "Este E-mail possui solicitações de reset em aberto, verifique a caixa de entrada ou spam" } } } } }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/reset/get/{id}": {
+      "get": {
+        "tags": ["Reset"],
+        "summary": "Verifica se um token de reset é válido para alterar a senha",
+        "description": "Rota pública, não requer sessão. O `id` corresponde ao `tokenToReset` enviado por e-mail na etapa de criação.",
+        "security": [],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "description": "Token de reset (tokenToReset) recebido por e-mail", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consulta realizada com sucesso. `status: true` indica que o cliente está apto a alterar a senha.",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean" }, "message": { "type": "string", "example": "Cliente apto a alterar senha" } } } } }
+          },
+          "500": {
+            "description": "Token (`id`) não informado, ou erro interno no servidor.",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse500" } } }
+          }
+        }
+      }
+    },
+    "/api/reset/update": {
+      "post": {
+        "tags": ["Reset"],
+        "summary": "Atualiza (efetiva) a nova senha do usuário a partir do token de reset",
+        "description": "Rota pública, não requer sessão. Utiliza o `authClient.resetPassword` (better-auth) para efetivar a nova senha.",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateResetPasswordDTO" } } }
+        },
+        "responses": {
+          "204": {
+            "description": "Senha atualizada com sucesso."
+          },
+          "400": {
+            "description": "Não foi possível atualizar a senha (token inválido/expirado ou outro erro retornado pelo better-auth).",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "status": { "type": "boolean", "example": false }, "message": { "type": "string" } } } } }
+          },
           "500": { "$ref": "#/components/responses/InternalServerError" }
         }
       }
