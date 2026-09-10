@@ -30,7 +30,7 @@ export class ResetPassword {
             }
         }
 
-        const resCheck = await this.checkIfUserHaveSolicitationOpend(user.email);
+        const resCheck = await this.checkIfUserHaveSolicitationOpend(user.id);
 
         if (resCheck.isValid == false) {
             return {
@@ -47,10 +47,12 @@ export class ResetPassword {
         }
     }
 
-    async checkIfUserHaveSolicitationOpend(email: string): Promise<ResCheck> {
+    async checkIfUserHaveSolicitationOpend(userId: string): Promise<ResCheck> {
         const resetPasswordRepository = new ResetPasswordRepository();
 
-        const resGetResetPasswordRepository = await resetPasswordRepository.getAllResetPassWordOpened(email);
+        const resGetResetPasswordRepository = await resetPasswordRepository.getAllResetPassWordOpened(userId);
+
+        console.log("resGetResetPasswordRepository", resGetResetPasswordRepository);
 
         if (resGetResetPasswordRepository.length == 0) {
             return {
@@ -73,6 +75,8 @@ export class ResetPassword {
                 resetsOpened.push(reset);
             }
         }
+
+        console.log("resetsOpened", resetsOpened);
 
         return {
             isValid: resetsOpened.length == 0, // Verifica se na lista resetsOpened
